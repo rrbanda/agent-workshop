@@ -1,0 +1,51 @@
+langfuse:
+  salt:
+    secretKeyRef:
+      name: langfuse-general
+      key: salt
+  nextauth:
+    url: "PLACEHOLDER_URL"
+    secret:
+      secretKeyRef:
+        name: langfuse-nextauth-secret
+        key: nextauth-secret
+
+postgresql:
+  auth:
+    username: langfuse
+    existingSecret: langfuse-postgresql-auth
+    secretKeys:
+      userPasswordKey: password
+
+clickhouse:
+  # Single-user: 1 replica instead of 3 (saves 2 pods)
+  replicaCount: 1
+  # Disable ON CLUSTER queries for single-replica (avoids cluster config issues)
+  clusterEnabled: false
+  auth:
+    existingSecret: langfuse-clickhouse-auth
+    existingSecretKey: password
+  # Allow nondeterministic mutations for trace deletion
+  usersdFiles:
+    allow_mutations.xml: |
+      <clickhouse>
+        <profiles>
+          <default>
+            <allow_nondeterministic_mutations>1</allow_nondeterministic_mutations>
+          </default>
+        </profiles>
+      </clickhouse>
+  # Single-user: 1 ZooKeeper replica instead of 3 (saves 2 pods)
+  zookeeper:
+    replicaCount: 1
+
+redis:
+  auth:
+    existingSecret: langfuse-redis-auth
+    existingSecretPasswordKey: password
+
+s3:
+  auth:
+    existingSecret: langfuse-s3-auth
+    rootUserSecretKey: rootUser
+    rootPasswordSecretKey: rootPassword

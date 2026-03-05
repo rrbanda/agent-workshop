@@ -1,0 +1,6 @@
+apiVersion: v2
+name: novacrest-agent
+description: Helm chart for NovaCrest agent services (LangGraph FastAPI and Chat UI)
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
