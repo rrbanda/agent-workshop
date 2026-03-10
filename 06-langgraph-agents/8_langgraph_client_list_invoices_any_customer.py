@@ -1,3 +1,5 @@
+"""LangGraph client to list invoices for any customer by email via MCP tools."""
+
 from langgraph.graph import StateGraph, END, START
 from langchain_openai import ChatOpenAI
 from typing import Annotated

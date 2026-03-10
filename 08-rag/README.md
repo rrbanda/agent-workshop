@@ -54,12 +54,55 @@ python 6_test_unique_terms.py
 python 4_debug_vector_search.py
 ```
 
+## What You Should See
+
+### Create Vector Store (script 1)
+
+```
+Creating vector store 'novacrest_hr_benefits'...
+Vector store created: vs_abc123
+Uploading document: source_docs/NovaCrest_HR_Benefits.txt
+Document uploaded and chunked into 12 chunks
+```
+
+### RAG Query (script 3)
+
+```
+Query: What do I receive when I retire?
+inference> Based on the HR Benefits document, when you retire you receive:
+  - A gold watch after 25 years of service
+  - Full pension benefits
+  ...
+```
+
+### Debug Vector Search (script 4)
+
+```
+Query: "gold watch"
+Result 1 (score: 0.87): "...employees with 25+ years receive a gold watch..."
+Result 2 (score: 0.72): "...retirement benefits include..."
+```
+
 ## Key Takeaways
 
 - Hybrid search (BM25 + semantic) improves retrieval over either approach alone
 - Static chunking with overlap ensures context is preserved across chunk boundaries
 - The `file_search` tool integrates seamlessly with Llama Stack agents
 - Vector store creation, file upload, and search are all done via the Llama Stack API
+
+## Concepts Applied
+
+- **From Module 03**: `LlamaStackClient` for API access, `Agent` for RAG queries
+- **New**: Vector stores, embedding models, hybrid search, `file_search` tool
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| "No embedding models found" | Ensure your Llama Stack server has an embedding model registered |
+| Empty search results | Check that the vector store was created and documents ingested (run script 2 to verify) |
+| "Vector store not found" | Re-run `1_create_vector_store.py` to create it |
+| Low retrieval scores | Try different chunking parameters (chunk size, overlap) |
 
 ## Next Module
 

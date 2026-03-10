@@ -1,3 +1,5 @@
+"""LangGraph client using finance MCP to fetch order history for a customer."""
+
 from langgraph.graph import StateGraph, END, START
 from langchain_openai import ChatOpenAI
 from langchain_core.tools import tool

@@ -9,7 +9,8 @@
 
 ## Prerequisites
 
-- [Module 02: MCP Servers](../02-mcp-servers/) running
+- [Module 01: Backend APIs](../01-backend-apis/) running (ports 8081 and 8082)
+- [Module 02: MCP Servers](../02-mcp-servers/) running (ports 9001 and 9002)
 - [Module 05: Multi-Turn and HITL](../05-multi-turn-and-hitl/) completed (for context)
 
 ## Concepts
@@ -23,6 +24,19 @@ Chat UI (Node.js) --> FastAPI Backend --> LangGraph StateGraph --> MCP Tools
                                               |
                                          ChatOpenAI (Llama Stack)
 ```
+
+## Exploration Scripts
+
+Before running the FastAPI backend, you can explore LangGraph concepts with these progressive scripts in the module root:
+
+| Script | What It Does |
+|--------|--------------|
+| `5_langgraph_client_customer.py` | Single-domain LangGraph agent (customer MCP only) |
+| `5_langgraph_client_finance.py` | Single-domain LangGraph agent (finance MCP only) |
+| `6_langgraph_client_list_orders_for_franwilson.py` | Multi-domain agent: email to orders |
+| `6_langgraph_client_list_orders_for_thomashardy.py` | Multi-domain agent: email to orders |
+| `7_langgraph_client_list_orders_any_customer.py` | Tool listing utility (Llama Stack client) |
+| `8_langgraph_client_list_invoices_any_customer.py` | Tool listing utility (Llama Stack client) |
 
 ## Step-by-Step
 
@@ -53,6 +67,25 @@ curl "http://localhost:8000/question?q=Who%20is%20Thomas%20Hardy"
 curl "http://localhost:8000/find_orders?email=thomashardy@example.com"
 curl "http://localhost:8000/find_invoices?email=thomashardy@example.com"
 ```
+
+## What You Should See
+
+### FastAPI Backend
+
+```
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+```
+
+### curl Test
+
+```bash
+$ curl "http://localhost:8000/question?q=Who%20is%20Thomas%20Hardy"
+{"answer":"Thomas Hardy is a customer at Around the Horn. His email is thomashardy@example.com."}
+```
+
+### Chat UI
+
+Open http://localhost:3001 and type a question. The agent responds in real-time with tool call results.
 
 ## Key Differences: Llama Stack vs LangGraph
 

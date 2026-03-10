@@ -1,3 +1,5 @@
+"""Create a vector store and ingest documents for RAG."""
+
 import os
 import logging
 import sys

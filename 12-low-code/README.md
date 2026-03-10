@@ -26,7 +26,15 @@ Import `flows/novacrest-agent-flow.json` through the Langflow UI.
 
 ### 3. Configure MCP Tool URLs
 
-Update the MCP Tools components to point to your MCP server URLs.
+Update the MCP Tools components in the flow to point to your MCP server URLs:
+
+- **Customer MCP**: `http://localhost:9001/mcp` (or `CUSTOMER_MCP_SERVER_URL` from your `.env`)
+- **Finance MCP**: `http://localhost:9002/mcp` (or `FINANCE_MCP_SERVER_URL` from your `.env`)
+
+For LLM configuration, set the vLLM/Llama Stack endpoint:
+- **API Base URL**: `http://localhost:8321/v1` (or `LLAMA_STACK_BASE_URL` from your `.env` + `/v1`)
+- **Model Name**: Same as your `INFERENCE_MODEL` value
+- **API Key**: Same as your `API_KEY` value (default: `fake`)
 
 ### 4. Test the Flow
 

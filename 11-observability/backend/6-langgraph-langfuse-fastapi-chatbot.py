@@ -1,3 +1,5 @@
+"""FastAPI chatbot with LangGraph, Langfuse tracing, and MCP tool integration."""
+
 import os
 import logging
 from typing import TypedDict, Any, List, Literal, Optional

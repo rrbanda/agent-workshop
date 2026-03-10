@@ -54,12 +54,60 @@ python 8_review_eval_job.py
 python 9_llm_as_judge.py
 ```
 
+## What You Should See
+
+### Register Dataset (script 2)
+
+```
+Registered dataset: basic-subset-of-evals
+Dataset URI: datasets/basic-subset-of-evals.csv
+```
+
+### Scoring Test (script 4)
+
+```
+Row 1: expected='Paris' generated='The capital of France is Paris'  -> PASS (1.0)
+Row 2: expected='Berlin' generated='The capital is Munich'          -> FAIL (0.0)
+```
+
+### Eval Job Review (script 8)
+
+```
+Job: eval-job-001  Status: completed
+  Rows evaluated: 10
+  Average score: 0.80
+  Pass: 8 / Fail: 2
+```
+
+### LLM-as-Judge (script 9)
+
+```
+Judge model: vllm/llama-scout-17b
+Query: What is the capital of France?
+Generated: Paris is the capital of France.
+Judge score: 5/5 - Correct and complete answer.
+```
+
 ## Key Takeaways
 
 - Evals measure agent quality systematically
 - `basic::subset_of` is a simple rule-based scorer (expected answer in generated answer)
 - LLM-as-judge uses a separate LLM to evaluate response quality
 - Benchmarks combine a dataset with scoring functions for repeatable evaluation
+
+## Concepts Applied
+
+- **From Module 03**: `LlamaStackClient` for API access
+- **New**: Datasets, scoring functions, benchmarks, evaluation jobs, LLM-as-judge
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| "Dataset not found" | Run `2_register_dataset_basic_subset_of.py` first |
+| "Benchmark not found" | Run `5_register_benchmark.py` before `7_execute_eval.py` |
+| Judge model errors | Verify `JUDGE_MODEL` is available on your Llama Stack server |
+| Low eval scores | Check if the candidate model can handle the query complexity |
 
 ## Next Module
 

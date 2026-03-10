@@ -1,0 +1,216 @@
+NovaCrest Financial Services — Mortgage Lending Policy
+Version 3.2 | Effective Date: January 1, 2026
+
+========================================
+SECTION 1: LOAN PROGRAMS AND ELIGIBILITY
+========================================
+
+1.1 Conventional Loans
+
+Conventional loans are not insured by any government agency. NovaCrest offers conventional loans with the following requirements:
+
+- Minimum credit score: 620
+- Maximum debt-to-income ratio (DTI): 43%
+- Minimum down payment: 5% (PMI required below 20%)
+- Maximum loan amount: $647,200 (conforming limit)
+
+1.2 FHA Loans
+
+Federal Housing Administration (FHA) loans are government-insured and designed for borrowers who may not qualify for conventional financing.
+
+- Minimum credit score: 580 (with 3.5% down payment)
+- Minimum credit score: 500 (with 10% down payment)
+- Maximum debt-to-income ratio (DTI): 50%
+- Minimum down payment: 3.5%
+- Mortgage Insurance Premium (MIP) is required for the life of the loan
+
+1.3 VA Loans
+
+VA loans are guaranteed by the Department of Veterans Affairs and available to eligible veterans, active-duty service members, and surviving spouses.
+
+- Minimum credit score: 620
+- Maximum debt-to-income ratio (DTI): 41% (may be exceeded with compensating factors)
+- No down payment required
+- No private mortgage insurance required
+- VA funding fee applies unless exempt
+
+1.4 Jumbo Loans
+
+Jumbo loans exceed conforming loan limits and carry stricter requirements.
+
+- Minimum credit score: 700
+- Maximum debt-to-income ratio (DTI): 38%
+- Minimum down payment: 10%
+- Additional reserve requirements: 6 months of payments in liquid assets
+
+============================================
+SECTION 2: REQUIRED DOCUMENTATION BY LOAN TYPE
+============================================
+
+2.1 Documentation Required for ALL Loan Types
+
+The following documents are required regardless of loan type:
+
+a) Income Verification:
+   - W-2 forms: Most recent year (current or prior tax year)
+   - Pay stubs: From the last 30 days, showing year-to-date earnings
+   - Bank statements: Last 2 months (within 60 days of application date), all pages including blank pages
+
+b) Property Documentation:
+   - Property appraisal: Independent appraisal conducted by a licensed appraiser, completed within 120 days of closing
+
+2.2 Additional Documentation for FHA Loans
+
+In addition to the standard documentation above, FHA loans require:
+   - Federal tax returns: Most recent 2 years (1040 with all schedules)
+   - Employment verification letter from current employer
+
+2.3 Additional Documentation for VA Loans
+
+In addition to the standard documentation above, VA loans require:
+   - DD-214 (Certificate of Release or Discharge from Active Duty)
+   - VA Certificate of Eligibility (COE)
+   - If active duty: Statement of Service from commanding officer
+
+2.4 Additional Documentation for Jumbo Loans
+
+In addition to the standard documentation above, Jumbo loans require:
+   - Federal tax returns: Most recent 2 years
+   - Business tax returns (if self-employed): Most recent 2 years
+   - Proof of additional liquid assets (investment statements, retirement accounts)
+
+=============================================
+SECTION 3: DOCUMENT ACCEPTANCE CRITERIA
+=============================================
+
+3.1 Bank Statements
+
+- Must be dated within 60 days of the application date
+- Must show the account holder's name matching the borrower
+- Must include all pages, even blank pages
+- Must show the financial institution's name and logo
+- Statements older than 60 days will be REJECTED
+- Screenshots or partial statements will be REJECTED
+
+3.2 W-2 Forms
+
+- Must be from the current or immediately prior tax year
+- Must show employer name, employee name, and employer identification number (EIN)
+- Must show total wages and tax withholdings
+- Handwritten or altered W-2 forms will be REJECTED
+
+3.3 Pay Stubs
+
+- Must be dated within 30 days of the application date
+- Must show employer name, employee name, pay period, and year-to-date earnings
+- Must show gross pay, deductions, and net pay
+- Pay stubs older than 30 days will be REJECTED
+
+3.4 Tax Returns
+
+- Must be signed copies or IRS transcripts
+- Must include all schedules and attachments
+- Must be from the most recent 2 tax years
+- Unsigned or incomplete returns will be REJECTED
+
+3.5 Property Appraisal
+
+- Must be conducted by a state-licensed or certified appraiser
+- Must be completed within 120 days of the anticipated closing date
+- Must include interior and exterior photographs
+- Must include comparable sales analysis
+- Desktop or drive-by appraisals are not acceptable for loans over $400,000
+
+3.6 DD-214 (VA Loans)
+
+- Must show character of discharge (Honorable or General Under Honorable Conditions)
+- Must show dates of service
+- Dishonorable discharge renders the applicant ineligible
+
+3.7 VA Certificate of Eligibility
+
+- Must be current (issued within the last 12 months or retrieved electronically)
+- Must show available entitlement
+
+=============================================
+SECTION 4: CONDITIONAL APPROVAL PROCESS
+=============================================
+
+4.1 Issuing Conditional Approval
+
+When an underwriter determines that an application meets basic qualification criteria but is missing required documentation, a Conditional Approval is issued. This means:
+
+- The borrower is approved pending satisfaction of specific conditions
+- Each condition specifies exactly what document or information is needed
+- Conditions must reference the specific document type from Section 2
+- The borrower is notified of all conditions simultaneously
+
+4.2 Condition Resolution Process
+
+For each outstanding condition:
+1. The borrower is notified of the specific requirement
+2. The borrower uploads the requested document
+3. The document is reviewed against the acceptance criteria in Section 3
+4. If the document meets criteria: the condition is marked SATISFIED
+5. If the document does not meet criteria: the condition remains OPEN and the borrower is notified with a specific explanation of what was wrong and what they need to provide instead
+
+4.3 Condition Resolution Timeline
+
+- Borrowers have 30 calendar days from conditional approval to satisfy all conditions
+- Extensions may be granted on a case-by-case basis
+- If conditions are not satisfied within 60 days, the application is suspended
+
+4.4 Moving from Conditional Approval to Full Approval
+
+An application moves from CONDITIONAL_APPROVAL to APPROVED when:
+- ALL conditions have a status of SATISFIED or WAIVED
+- No OPEN or PENDING_REVIEW conditions remain
+- The underwriter performs a final review
+
+=============================================
+SECTION 5: CREDIT AND INCOME REQUIREMENTS
+=============================================
+
+5.1 Credit Score Evaluation
+
+- The qualifying credit score is the middle score when three bureau scores are available
+- When only two bureau scores are available, the lower score is used
+- Recent derogatory marks (within 12 months) require additional explanation
+
+5.2 Debt-to-Income Ratio Calculation
+
+DTI = (Total Monthly Debt Obligations / Gross Monthly Income) x 100
+
+Monthly debt obligations include:
+- Proposed housing payment (principal, interest, taxes, insurance)
+- Minimum payments on revolving credit (credit cards)
+- Installment loan payments (auto, student, personal loans)
+- Alimony or child support obligations
+- Other recurring obligations
+
+5.3 Income Calculation
+
+- Salaried employees: Base salary plus average of last 2 years' bonuses/overtime
+- Hourly employees: Average hours x hourly rate, verified by 2 years of history
+- Self-employed: Average of last 2 years' net income from tax returns
+- Rental income: 75% of gross rental income (to account for vacancies/expenses)
+
+=============================================
+SECTION 6: PROPERTY REQUIREMENTS
+=============================================
+
+6.1 Appraisal Requirements
+
+- The appraised value must meet or exceed the purchase price
+- If the appraised value is below the purchase price, options include: renegotiate price, increase down payment, or dispute the appraisal
+- The appraisal must identify any health and safety concerns
+
+6.2 Title Requirements
+
+- Clear title with no outstanding liens (except existing mortgage being paid off)
+- Title insurance must be obtained
+- Survey may be required depending on property type and location
+
+=============================================
+END OF POLICY DOCUMENT
+=============================================

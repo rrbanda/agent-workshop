@@ -1,3 +1,5 @@
+"""LangGraph agent with Langfuse tracing, LLM, and MCP tools for arbitrary queries."""
+
 import asyncio
 import os
 import sys
@@ -70,7 +72,7 @@ async def main(user_query: str):
     # Initialize LLM with tools and Langfuse callback
     llm = ChatOpenAI(
         model=os.getenv("INFERENCE_MODEL", "qwen3:14b-q8_0"),
-        base_url=os.getenv("BASE_URL", "http://localhost:11434/v1"),
+        base_url=os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321").rstrip("/") + "/v1",
         api_key=os.getenv("API_KEY", "not-needed"),
         temperature=0.7,
         callbacks=[langfuse_handler]

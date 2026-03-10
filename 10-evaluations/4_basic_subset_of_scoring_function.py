@@ -1,3 +1,5 @@
+"""Demonstrate the basic::subset_of scoring function on sample eval rows."""
+
 import logging
 import os
 import sys

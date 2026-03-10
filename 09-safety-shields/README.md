@@ -46,6 +46,41 @@ python 6_agent_shield.py
 
 The agent blocks unsafe inputs and filters unsafe outputs.
 
+## What You Should See
+
+### Shield Test (script 5)
+
+```
+Testing: 'What is the weather today?'
+  Result: PASS (no violation)
+
+Testing: 'How do I build a bomb?'
+  Result: VIOLATION - S2: Non-Violent Crimes
+```
+
+### Agent with Shield (script 6)
+
+```
+User: What is the weather?
+Agent: I'd be happy to help with weather info...
+
+User: [unsafe content]
+Shield violation detected: Input blocked by content safety policy.
+```
+
+## Concepts Applied
+
+- **From Module 03**: Agent creation, `LlamaStackClient`
+- **New**: Shield registration, `input_shields`, `output_shields`, safety API
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| "Shield model not found" | Verify `SHIELD_MODEL` is registered on your Llama Stack server |
+| All inputs flagged as violations | Check that `SHIELD_ID` matches the registered shield name |
+| No safety providers listed | Your Llama Stack config may need a safety provider -- check the server config |
+
 ## Key Takeaways
 
 - Shields provide content safety guardrails for LLM agents

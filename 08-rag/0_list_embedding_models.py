@@ -1,3 +1,5 @@
+"""List available embedding models on the Llama Stack server."""
+
 import os
 import logging
 import sys

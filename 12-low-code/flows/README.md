@@ -8,18 +8,15 @@ Before creating flows that use custom components, you must first upload the cust
 
 1. Open Langflow UI
 2. Go to Settings (gear icon) → Custom Components → Upload
-3. Upload these files from `../custom_components/`:
-   - `vllm_model_component.py` - Basic vLLM model component
-   - `vllm_agent_component.py` - vLLM Agent with tool support
-   - `mcp_streamable_http_component.py` - MCP server connector
+3. Upload `vllm_model_component.py` from `../custom_components/`
 
 ## Available Flows
 
-### Chat_vLLM_Output.json
-Basic chat flow: Chat Input → vLLM Model → Chat Output
+### novacrest-agent-flow.json
+NovaCrest agent flow: Chat Input → Agent (with MCP tools for Customer and Finance) → Chat Output. Import this for local development.
 
-### simple-agent-template.json
-Agent flow with Calculator and URL tools (uses built-in Agent component)
+### vLLM_MaaS_Agent_MCP_Customer_Finance.json
+Production-ready flow configured for vLLM MaaS with MCP Customer and Finance tools. Use this when deploying to OpenShift with the MaaS platform.
 
 ## Creating a Customer MCP Agent Flow
 

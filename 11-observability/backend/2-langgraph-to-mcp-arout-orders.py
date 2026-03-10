@@ -1,3 +1,5 @@
+"""LangGraph agent calling Finance MCP for Around the Horn orders."""
+
 import asyncio
 import os
 import json

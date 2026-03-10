@@ -1,4 +1,7 @@
+"""Agent with customer MCP tools that searches customers by email."""
+
 import os
+import sys
 import logging
 from dotenv import load_dotenv
 from llama_stack_client import LlamaStackClient, Agent
@@ -11,7 +14,11 @@ logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 load_dotenv()
 
 # Get configuration from environment
-LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
+base_url = os.getenv("LLAMA_STACK_BASE_URL")
+if not base_url:
+    print("Error: LLAMA_STACK_BASE_URL not set. Copy .env.example to .env and configure it.")
+    sys.exit(1)
+LLAMA_STACK_BASE_URL = base_url
 INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "vllm/qwen3-14b")
 CUSTOMER_MCP_SERVER_URL = os.getenv("CUSTOMER_MCP_SERVER_URL")
 

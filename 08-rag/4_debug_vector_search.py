@@ -1,3 +1,5 @@
+"""Debug vector store search by running test queries and inspecting raw results."""
+
 import os
 import logging
 from dotenv import load_dotenv

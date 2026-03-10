@@ -10,7 +10,8 @@
 ## Prerequisites
 
 - [Module 06: LangGraph Agents](../06-langgraph-agents/) completed
-- Langfuse instance running (local Docker or hosted)
+- [Module 02: MCP Servers](../02-mcp-servers/) running (ports 9001, 9002)
+- Backend APIs running (ports 8081, 8082)
 
 ## Architecture
 
@@ -22,16 +23,38 @@ User --> FastAPI Chatbot --> LangGraph + MCP Tools
 
 ## Step-by-Step
 
-### 1. Configure Langfuse
+### 1. Set Up Langfuse
+
+You need a running Langfuse instance. The quickest way is Docker:
+
+```bash
+# Clone and start Langfuse locally
+git clone https://github.com/langfuse/langfuse.git
+cd langfuse
+docker compose up -d
+```
+
+Langfuse will be available at http://localhost:3000. Create an account, then:
+
+1. Go to **Settings > API Keys**
+2. Click **Create new API key**
+3. Copy the **Secret Key** and **Public Key**
+
+Alternatively, sign up at https://cloud.langfuse.com for a hosted instance.
+
+See [Langfuse self-hosting docs](https://langfuse.com/docs/deployment/self-host) for more options.
+
+### 2. Configure Environment
 
 Set these in your `.env`:
+
 ```
-LANGFUSE_SECRET_KEY=your-secret-key
-LANGFUSE_PUBLIC_KEY=your-public-key
+LANGFUSE_SECRET_KEY=sk-lf-...   # from step 1
+LANGFUSE_PUBLIC_KEY=pk-lf-...   # from step 1
 LANGFUSE_HOST=http://localhost:3000
 ```
 
-### 2. Run the Chatbot with Tracing
+### 3. Run the Chatbot with Tracing
 
 ```bash
 cd backend
@@ -39,13 +62,27 @@ pip install -r requirements.txt
 python 6-langgraph-langfuse-fastapi-chatbot.py
 ```
 
-### 3. Open the Chat UI
+### 4. Open the Chat UI
 
-Open `frontend/index.html` in your browser.
+From the `11-observability` directory, open `frontend/index.html` in your browser.
 
-### 4. View Traces in Langfuse
+### 5. View Traces in Langfuse
 
 Navigate to your Langfuse dashboard to see traces of every request.
+
+## Concepts Applied
+
+- **From Module 06**: LangGraph agents, FastAPI serving
+- **New**: Langfuse `CallbackHandler`, trace viewing, automated evaluation, user feedback
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| No traces in Langfuse | Verify `LANGFUSE_SECRET_KEY`, `LANGFUSE_PUBLIC_KEY`, and `LANGFUSE_HOST` are set correctly |
+| "Connection refused" on Langfuse | Ensure the Langfuse Docker container is running (`docker compose up -d`) |
+| Chat UI can't connect | Check that the FastAPI backend is running and the port matches |
+| Import errors | Run `pip install -r requirements.txt` from the `backend/` directory |
 
 ## Key Takeaways
 

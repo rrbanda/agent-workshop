@@ -1,3 +1,5 @@
+"""Test RAG agent with gold watch retirement query against HR benefits vector store."""
+
 import os
 import logging
 from dotenv import load_dotenv

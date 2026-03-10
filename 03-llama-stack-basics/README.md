@@ -52,6 +52,32 @@ python 3_list_customer_tools.py
 python 3_list_finance_tools.py
 ```
 
+> **Note:** Scripts 2 and 3 list MCP tools that must be registered with Llama Stack first. If you see empty results, complete the MCP server registration steps in [Module 02 examples](../02-mcp-servers/examples/) before running these scripts.
+
+## What You Should See
+
+### Hello World (script 1)
+
+```
+Agent> Hello! I'm a Llama Stack agent. How can I help you today?
+```
+
+### List Tools (script 2)
+
+```
+Toolgroup: mcp::customer (3 tools)
+Toolgroup: mcp::finance (4 tools)
+```
+
+### List Customer/Finance Tools (script 3)
+
+```
+Tool: search_customers
+  Description: Search for customers by name, email, or company
+  Parameters: query (string, required)
+...
+```
+
 ## Verification
 
 All scripts should run without errors and produce meaningful output.
@@ -62,6 +88,15 @@ All scripts should run without errors and produce meaningful output.
 - Agents use sessions (`create_session`) and turns (`create_turn`) to manage conversations
 - Streaming responses provide real-time feedback via event logging
 - Tools must be registered with Llama Stack before agents can use them
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| Connection refused | Verify `LLAMA_STACK_BASE_URL` is correct and the server is running |
+| Empty tool lists (scripts 2, 3) | Register MCP tools first -- see [Module 02](../02-mcp-servers/) |
+| "Model not found" | Check `INFERENCE_MODEL` matches a model available on your Llama Stack server |
+| Import errors | Run `pip install -r requirements.txt` from the repo root |
 
 ## Next Module
 

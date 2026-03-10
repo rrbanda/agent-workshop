@@ -1,3 +1,5 @@
+"""FastAPI app exposing LangGraph chatbot for customer orders and invoices via MCP tools."""
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, EmailStr, Field
 from langgraph.graph import StateGraph, END, START

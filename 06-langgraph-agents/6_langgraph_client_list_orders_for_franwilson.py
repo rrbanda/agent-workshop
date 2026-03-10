@@ -1,3 +1,5 @@
+"""LangGraph client to list orders for Fran Wilson (franwilson@example.com)."""
+
 from langgraph.graph import StateGraph, END, START
 from langchain_openai import ChatOpenAI
 from typing import Annotated

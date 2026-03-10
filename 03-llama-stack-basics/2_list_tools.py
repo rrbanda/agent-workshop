@@ -1,14 +1,21 @@
+"""List all registered MCP toolgroups/servers in Llama Stack."""
+
 from llama_stack_client import Client
 from dotenv import load_dotenv
 import os
+import sys
 import logging
 
 load_dotenv()
 
 # Suppress noisy httpx logging
 logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 
 BASE_URL = os.getenv("LLAMA_STACK_BASE_URL")
+if not BASE_URL:
+    print("Error: LLAMA_STACK_BASE_URL not set. Copy .env.example to .env and configure it.")
+    sys.exit(1)
 
 client = Client(
     base_url=BASE_URL,

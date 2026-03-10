@@ -1,3 +1,5 @@
+"""Test RAG by querying the HR benefits vector store for retirement information."""
+
 import os
 import logging
 from dotenv import load_dotenv

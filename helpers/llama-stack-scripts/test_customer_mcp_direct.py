@@ -2,16 +2,19 @@
 """Test MCP server directly to see if it exposes tools."""
 
 import asyncio
+import os
 import httpx
+from dotenv import load_dotenv
 from mcp.client.streamable_http import streamablehttp_client
 from mcp import ClientSession
 
+load_dotenv()
+
 
 async def test_mcp_server():
-    endpoints = [
-        "http://localhost:9001",        
-        "http://localhost:9001/mcp",
-    ]
+    base_url = os.getenv("CUSTOMER_MCP_SERVER_URL", "http://localhost:9001/mcp")
+    base_no_path = base_url.rsplit("/mcp", 1)[0]
+    endpoints = [base_no_path, base_url]
 
     for endpoint in endpoints:
         print(f"\n{'='*60}")

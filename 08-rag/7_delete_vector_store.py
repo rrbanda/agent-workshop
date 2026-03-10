@@ -1,3 +1,5 @@
+"""Delete vector stores interactively from the Llama Stack server."""
+
 import os
 import logging
 from dotenv import load_dotenv

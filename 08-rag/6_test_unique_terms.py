@@ -1,3 +1,5 @@
+"""Test RAG agent with queries containing unique terms from the retirement section."""
+
 import os
 import logging
 from dotenv import load_dotenv

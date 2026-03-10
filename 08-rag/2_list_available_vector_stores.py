@@ -1,3 +1,5 @@
+"""List available vector stores on the Llama Stack server."""
+
 import os
 import logging
 from dotenv import load_dotenv
