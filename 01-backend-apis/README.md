@@ -6,6 +6,8 @@
 - Run the Spring Boot REST APIs locally
 - Explore the API endpoints via Swagger UI
 
+> **Capstone Preview:** In the capstone, you will work with a Mortgage API that follows this same Spring Boot pattern -- same entity/repository/controller structure, same Swagger UI, same seed data approach.
+
 ## Prerequisites
 
 - [Module 00: Environment Setup](../00-setup/) completed

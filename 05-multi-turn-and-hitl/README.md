@@ -6,9 +6,15 @@
 - Implement an interactive human-in-the-loop (HITL) agent
 - Understand session persistence in Llama Stack
 
+> **Capstone Preview:** In the capstone, multi-turn sessions let the mortgage agent track an application across multiple interactions, and HITL lets you act as the underwriter.
+
 ## Prerequisites
 
 - [Module 04: Agents with Tools](../04-agents-with-tools/) completed
+
+## Concepts
+
+In a **multi-turn conversation**, the agent maintains context across sequential exchanges within a session. Each call to `create_turn` adds to the session's message history, so the agent can resolve references like "their orders" or "that application" from previous turns. **Human-in-the-loop (HITL)** adds a human operator to the agent loop -- the operator can steer the agent, override decisions, or ask follow-up questions in real time, which is critical for high-stakes workflows like financial approvals.
 
 ## Scripts
 

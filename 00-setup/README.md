@@ -10,6 +10,10 @@
 
 None -- this is the starting point.
 
+## Concepts
+
+**[Llama Stack](https://github.com/llamastack/llama-stack)** is an open-source, community-driven platform that standardizes the building blocks for AI agents. It provides a single unified API for inference, agents, tools, RAG, safety, and evaluations -- instead of stitching together separate libraries, you get one SDK (`llama-stack-client`) that handles the full agent lifecycle. Think of it as the "Kubernetes for agents": a run-anywhere contract with a plugin architecture that lets you swap model providers, vector databases, and runtimes without changing your agent code. In this workshop, Llama Stack is the backbone -- every module from 03 onward uses it.
+
 ## Tools Required
 
 | Tool | Version | Purpose | Install |

@@ -1,8 +1,22 @@
 # NovaCrest Agent Workshop
 
-> **Build production-ready AI agents from scratch using Llama Stack and MCP.**
+> **Build production-ready AI agents that run anywhere -- using Llama Stack, MCP, and open-source LLMs.**
 
-A progressive, hands-on workshop where you go from zero to a fully functional **Mortgage Approval Agent** that reasons over real APIs, retrieves lending policy via RAG, reviews documents, and interacts with human underwriters — all powered by open-source LLMs.
+A progressive, hands-on workshop where you learn each building block of AI agents -- tools, RAG, multi-turn conversations, safety, and evaluation -- then combine **all of them** into a fully functional **Mortgage Approval Agent** that reasons over real APIs, retrieves lending policy, reviews documents, guards against unsafe inputs, and measures its own accuracy.
+
+Every core module teaches a skill. The capstone uses every one of them.
+
+---
+
+## Why Llama Stack?
+
+**[Llama Stack](https://github.com/llamastack/llama-stack)** is an open-source, community-driven platform that standardizes the core building blocks for AI agents. It provides a **unified API** for inference, agents, tools, RAG, safety, and evaluations -- so you don't stitch together separate libraries for each capability.
+
+Think of it as **Kubernetes for agents**: a run-anywhere contract with a plugin architecture. You can swap model providers (Ollama, vLLM, AWS Bedrock), vector databases (ChromaDB, Milvus, PGVector), or runtimes -- without changing your agent code. Built-in support for **OpenAI-compatible APIs** and the **Model Context Protocol (MCP)** means existing tools and agents work without rewriting.
+
+While initiated by Meta, Llama Stack has moved to a [neutral standalone GitHub organization](https://github.com/llamastack) with contributions from Red Hat, Anthropic, OpenAI, NVIDIA, Groq, AI Alliance, and others.
+
+> *"Llama Stack is less about replacing your favorite agent library, and more about creating the open, run-anywhere contract beneath them."* -- [Red Hat Engineering Blog](https://www.redhat.com/en/blog/llama-stack-and-case-open-run-anywhere-contract-agents)
 
 ---
 
@@ -10,15 +24,16 @@ A progressive, hands-on workshop where you go from zero to a fully functional **
 
 By the end of this workshop, you will have built:
 
-- **Backend APIs** — Spring Boot services for customer, finance, and mortgage data
-- **MCP Tool Servers** — LLM-callable tool layers wrapping those APIs via Model Context Protocol
-- **Single and multi-domain agents** — agents that chain tools across multiple data sources
-- **Multi-turn conversational agents** — agents that remember context across turns
-- **Human-in-the-loop agents** — interactive agents with human oversight
-- **RAG-powered agents** — agents that retrieve and reason over documents
-- **Safety-guarded agents** — agents with Llama Guard content safety shields
-- **Evaluation pipelines** — automated scoring, benchmarks, and LLM-as-judge
-- **A Mortgage Approval Agent** (capstone) — combining all of the above into a real-world workflow
+- **Backend REST APIs** -- Spring Boot services for customer, finance, and mortgage data
+- **MCP Tool Servers** -- LLM-callable tool layers wrapping those APIs via Model Context Protocol
+- **Single and multi-domain agents** -- agents that chain tools across multiple data sources
+- **Multi-turn conversational agents** -- agents that remember context across turns
+- **Human-in-the-loop agents** -- interactive agents with human oversight
+- **RAG-powered agents** -- agents that retrieve and reason over documents
+- **Safety-guarded agents** -- agents with Llama Guard content safety shields
+- **Evaluation pipelines** -- automated scoring, benchmarks, and LLM-as-judge
+
+Then, in the **capstone**, you apply everything to a real business problem: building a **Mortgage Approval Agent** that automates NovaCrest's conditional approval workflow -- the most delay-prone step in mortgage processing.
 
 ---
 
@@ -60,7 +75,7 @@ By the end of this workshop, you will have built:
 
 ## Learning Path
 
-The workshop follows a linear main path with optional side-tracks. Complete the main path first, then explore optional modules based on your interests.
+The workshop follows a linear core path where every module builds toward the capstone. Complete the core path first, then explore optional modules based on your interests.
 
 ```
 ┌─────────┐   ┌───────────────┐   ┌──────────────┐   ┌────────────────────┐
@@ -96,56 +111,6 @@ The workshop follows a linear main path with optional side-tracks. Complete the 
 
 ---
 
-## Workshop Modules
-
-### Core Path
-
-| # | Module | What You Learn | Duration |
-|---|--------|----------------|----------|
-| 00 | [Environment Setup](00-setup/) | Install Python, Java, PostgreSQL; configure Llama Stack | 30 min |
-| 01 | [Backend APIs](01-backend-apis/) | Build and run NovaCrest Customer and Finance REST APIs | 30 min |
-| 02 | [MCP Servers](02-mcp-servers/) | Wrap REST APIs as LLM-callable tools using FastMCP | 20 min |
-| 03 | [Llama Stack Basics](03-llama-stack-basics/) | Create your first agent, streaming responses, tool inspection | 20 min |
-| 04 | [Agents with MCP Tools](04-agents-with-tools/) | Bind tools to agents, single-domain and multi-domain reasoning | 30 min |
-| 05 | [Multi-Turn & HITL](05-multi-turn-and-hitl/) | Conversation memory across turns, human-in-the-loop interaction | 20 min |
-| 08 | [RAG](08-rag/) | Vector stores, hybrid search (BM25 + semantic), `file_search` tool | 30 min |
-| 09 | [Safety Shields](09-safety-shields/) | Register Llama Guard shields, input/output content safety | 20 min |
-| 10 | [Evaluations](10-evaluations/) | Datasets, scoring functions, benchmarks, LLM-as-judge | 30 min |
-
-### Capstone
-
-| Module | What You Build | Duration |
-|--------|----------------|----------|
-| [Mortgage Approval Agent](mortgage-use-case/) | End-to-end agent combining MCP tools + RAG + multi-turn + HITL for mortgage conditional approval workflow | 60 min |
-
-### Optional Modules
-
-| # | Module | What You Learn |
-|---|--------|----------------|
-| 06 | [LangGraph Agents](06-langgraph-agents/) | Alternative framework: StateGraph, FastAPI backend, Chat UI |
-| 07 | [Composite Agents](07-composite-agents/) | Agent-as-Tool pattern — agents calling other agents |
-| 11 | [Observability](11-observability/) | Langfuse tracing, automated evaluation, user feedback |
-| 12 | [Low-Code](12-low-code/) | Langflow visual agent builder with custom components |
-| 13 | [Deployment](13-deployment/) | Helm charts, Dockerfiles, OpenShift deployment |
-
----
-
-## Prerequisites
-
-| Tool | Version | Purpose |
-|------|---------|---------|
-| Python | 3.12+ | Agent scripts, MCP servers |
-| uv | Latest | Run Llama Stack server (`curl -LsSf https://astral.sh/uv/install.sh \| sh`) |
-| Java | 21+ | Backend Spring Boot APIs |
-| Maven | 3.8+ | Java build tool |
-| PostgreSQL | 15+ | Database for Customer, Finance, Mortgage APIs |
-| Docker | Latest | Containerization (optional modules) |
-| Ollama **or** vLLM | Latest | LLM inference backend for Llama Stack |
-
-> **No GPU required for local development.** Ollama can run quantized models (e.g., `llama3.2:3b`) on CPU. For larger models, use a remote vLLM endpoint.
-
----
-
 ## Quick Start
 
 ```bash
@@ -175,23 +140,79 @@ createdb novacrest_mortgage    # for the capstone
 # Open 00-setup/README.md and follow the modules in order
 ```
 
+> **No GPU required for local development.** Ollama can run quantized models (e.g., `llama3.2:3b`) on CPU. For larger models, use a remote vLLM endpoint.
+
 ---
 
-## Key Concepts
+## Workshop Modules
+
+### Core Path
+
+| # | Module | What You Learn | Duration |
+|---|--------|----------------|----------|
+| 00 | [Environment Setup](00-setup/) | Install Python, Java, PostgreSQL; configure Llama Stack | 30 min |
+| 01 | [Backend APIs](01-backend-apis/) | Build and run NovaCrest Customer and Finance REST APIs | 30 min |
+| 02 | [MCP Servers](02-mcp-servers/) | Wrap REST APIs as LLM-callable tools using FastMCP | 20 min |
+| 03 | [Llama Stack Basics](03-llama-stack-basics/) | Create your first agent, streaming responses, tool inspection | 20 min |
+| 04 | [Agents with MCP Tools](04-agents-with-tools/) | Bind tools to agents, single-domain and multi-domain reasoning | 30 min |
+| 05 | [Multi-Turn & HITL](05-multi-turn-and-hitl/) | Conversation memory across turns, human-in-the-loop interaction | 20 min |
+| 08 | [RAG](08-rag/) | Vector stores, hybrid search (BM25 + semantic), `file_search` tool | 30 min |
+| 09 | [Safety Shields](09-safety-shields/) | Register Llama Guard shields, input/output content safety | 20 min |
+| 10 | [Evaluations](10-evaluations/) | Datasets, scoring functions, benchmarks, LLM-as-judge | 30 min |
+
+### Capstone
+
+| Module | What You Build | Duration |
+|--------|----------------|----------|
+| [Mortgage Approval Agent](mortgage-use-case/) | End-to-end agent combining MCP tools + RAG + multi-turn + HITL + safety shields + evaluation for mortgage conditional approval workflow | 90 min |
+
+### Optional Modules
+
+| # | Module | What You Learn |
+|---|--------|----------------|
+| 06 | [LangGraph Agents](06-langgraph-agents/) | Alternative framework: StateGraph, FastAPI backend, Chat UI |
+| 07 | [Composite Agents](07-composite-agents/) | Agent-as-Tool pattern -- agents calling other agents |
+| 11 | [Observability](11-observability/) | Langfuse tracing, automated evaluation, user feedback |
+| 12 | [Low-Code](12-low-code/) | Langflow visual agent builder with custom components |
+| 13 | [Deployment](13-deployment/) | Helm charts, Dockerfiles, OpenShift deployment |
+
+---
+
+## Prerequisites
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| Python | 3.12+ | Agent scripts, MCP servers |
+| uv | Latest | Run Llama Stack server (`curl -LsSf https://astral.sh/uv/install.sh \| sh`) |
+| Java | 21+ | Backend Spring Boot APIs |
+| Maven | 3.8+ | Java build tool |
+| PostgreSQL | 15+ | Database for Customer, Finance, Mortgage APIs |
+| Docker | Latest | Containerization (optional modules) |
+| Ollama **or** vLLM | Latest | LLM inference backend for Llama Stack |
+
+---
+
+## Domain
+
+**NovaCrest** is a fictional financial services company used as the example domain throughout this workshop. It has customers, financial orders/invoices, and a mortgage lending division. All seed data is pre-loaded via SQL scripts when you start the backend APIs.
+
+---
+
+## Reference
+
+### Key Concepts
 
 | Concept | What It Is | Where You Learn It |
 |---------|------------|-------------------|
-| **Llama Stack** | Meta's open-source platform for building AI applications — unified API for inference, agents, tools, RAG, safety, and evals | Module 03 |
-| **MCP** (Model Context Protocol) | Protocol for exposing backend APIs as tools that LLMs can call autonomously | Module 02 |
+| **Llama Stack** | Open-source, community-driven platform providing a unified API for inference, agents, tools, RAG, safety, and evals -- a run-anywhere contract for AI agents | Module 03 |
+| **MCP** (Model Context Protocol) | Open protocol for exposing backend APIs as tools that LLMs can call autonomously | Module 02 |
 | **FastMCP** | Python library for building MCP servers with minimal boilerplate | Module 02 |
 | **Agent** | An LLM with tools, instructions, and session management that can reason and act | Modules 03-05 |
-| **RAG** | Retrieval-Augmented Generation — augmenting LLM responses with relevant documents | Module 08 |
+| **RAG** | Retrieval-Augmented Generation -- augmenting LLM responses with relevant documents | Module 08 |
 | **Llama Guard** | Safety classifier that detects harmful content in inputs and outputs | Module 09 |
 | **LLM-as-Judge** | Using a separate LLM to evaluate response quality | Module 10 |
 
----
-
-## Script Numbering Convention
+### Script Numbering
 
 Scripts in the core learning path (Modules 03-05) use a **global numbering scheme** that runs continuously across modules:
 
@@ -203,11 +224,9 @@ Scripts in the core learning path (Modules 03-05) use a **global numbering schem
 
 Other modules (08, 09, 10, mortgage-use-case) use **module-local numbering** starting at `0_` or `1_`.
 
----
+### Environment Variables
 
-## Environment Variables
-
-All modules share a single `.env` file at the repo root. See [.env.example](.env.example) for the full list. Key variables:
+All modules share a single `.env` file at the repo root. See [.env.example](.env.example) for the full list.
 
 | Variable | Description | Default |
 |----------|-------------|---------|
@@ -217,9 +236,7 @@ All modules share a single `.env` file at the repo root. See [.env.example](.env
 | `FINANCE_MCP_SERVER_URL` | Finance MCP endpoint | `http://localhost:9002/mcp` |
 | `MORTGAGE_MCP_SERVER_URL` | Mortgage MCP endpoint | `http://localhost:9003/mcp` |
 
----
-
-## Port Reference
+### Port Reference
 
 | Service | Port | Module |
 |---------|------|--------|
@@ -233,12 +250,6 @@ All modules share a single `.env` file at the repo root. See [.env.example](.env
 | FastAPI (LangGraph) | 8000 | 06 |
 | Chat UI | 3001 | 06 |
 | Langfuse | 3000 | 11 |
-
----
-
-## Domain
-
-**NovaCrest** is a fictional financial services company used as the example domain throughout this workshop. It has customers, financial orders/invoices, and a mortgage lending division. All seed data is pre-loaded via SQL scripts when you start the backend APIs.
 
 ---
 

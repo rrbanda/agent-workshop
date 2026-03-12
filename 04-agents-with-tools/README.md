@@ -7,10 +7,16 @@
 - Build a multi-domain agent that reasons across customer and finance data
 - Understand cross-domain reasoning (email -> customer ID -> orders)
 
+> **Capstone Preview:** In the capstone, these tool-binding patterns drive a mortgage document review workflow where the agent chains MCP tools with RAG to accept or reject documents.
+
 ## Prerequisites
 
 - [Module 02: MCP Servers](../02-mcp-servers/) running (ports 9001 and 9002)
 - [Module 03: Llama Stack Basics](../03-llama-stack-basics/) completed
+
+## Concepts
+
+An **agent with tools** is an LLM that can take action in the real world. When you bind MCP tools to an agent, the LLM autonomously decides which tools to call based on the user's question -- it reads the tool descriptions, picks the right one, formats the arguments, and interprets the result. **Cross-domain reasoning** happens when a single agent has tools from multiple MCP servers and chains calls across them (e.g., look up a customer by email, then fetch their orders from a different API).
 
 ## Scripts
 

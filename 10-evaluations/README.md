@@ -7,9 +7,15 @@
 - Run benchmark evaluation jobs
 - Review and interpret evaluation results
 
+> **Capstone Preview:** In the capstone, you will build a mortgage-specific eval dataset and benchmark to measure your agent's accuracy against the lending policy.
+
 ## Prerequisites
 
 - [Module 03: Llama Stack Basics](../03-llama-stack-basics/) completed
+
+## Concepts
+
+**Evaluations (evals)** measure an agent's quality systematically rather than relying on manual spot-checks. A **dataset** contains question-answer pairs that define what "correct" looks like. A **scoring function** compares the model's generated answer against the expected answer -- rule-based scorers like `basic::subset_of` check for exact containment, while **LLM-as-judge** uses a separate LLM to assess quality on a scale. A **benchmark** combines a dataset with scoring functions into a repeatable test suite you can run against different models or configurations.
 
 ## Scripts
 

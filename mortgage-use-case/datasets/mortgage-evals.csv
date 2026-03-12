@@ -1,0 +1,9 @@
+input_query,expected_answer,chat_completion_input
+What is the minimum credit score for a conventional loan?,620,"[{""role"": ""user"", ""content"": ""What is the minimum credit score for a conventional loan?""}]"
+What is the maximum DTI ratio for an FHA loan?,50%,"[{""role"": ""user"", ""content"": ""What is the maximum DTI ratio for an FHA loan?""}]"
+How recent must bank statements be for mortgage approval?,within 60 days,"[{""role"": ""user"", ""content"": ""How recent must bank statements be for mortgage approval?""}]"
+What is the minimum down payment for a VA loan?,No down payment required,"[{""role"": ""user"", ""content"": ""What is the minimum down payment for a VA loan?""}]"
+What is the maximum loan amount for a conventional loan?,"$647,200","[{""role"": ""user"", ""content"": ""What is the maximum loan amount for a conventional loan?""}]"
+How long is a property appraisal valid?,120 days,"[{""role"": ""user"", ""content"": ""How long is a property appraisal valid?""}]"
+What is the minimum credit score for a jumbo loan?,700,"[{""role"": ""user"", ""content"": ""What is the minimum credit score for a jumbo loan?""}]"
+What documents are required specifically for VA loans beyond standard requirements?,"DD-214, Certificate of Eligibility","[{""role"": ""user"", ""content"": ""What documents are required specifically for VA loans beyond standard requirements?""}]"

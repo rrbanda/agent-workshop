@@ -7,6 +7,8 @@
 - Use the `file_search` tool with Llama Stack agents
 - Debug and optimize retrieval quality
 
+> **Capstone Preview:** In the capstone, RAG retrieves NovaCrest's mortgage lending policy so the agent can check document requirements and acceptance criteria when reviewing applications.
+
 ## Prerequisites
 
 - [Module 03: Llama Stack Basics](../03-llama-stack-basics/) completed

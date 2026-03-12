@@ -7,6 +7,8 @@
 - Register MCP servers with Llama Stack
 - Test MCP tools independently
 
+> **Capstone Preview:** In the capstone, a Mortgage MCP server wraps the Mortgage API using the same FastMCP pattern you learn here -- same `@mcp.tool()` decorators, same `httpx` calls, same structure.
+
 ## Prerequisites
 
 - [Module 01: Backend APIs](../01-backend-apis/) running (ports 8081 and 8082)

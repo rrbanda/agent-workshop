@@ -6,10 +6,16 @@
 - Test content safety directly via the safety API
 - Integrate input and output shields into agents
 
+> **Capstone Preview:** In the capstone, you will wrap the mortgage agent with these safety shields to block social-engineering attempts like "How can I forge bank statements?"
+
 ## Prerequisites
 
 - [Module 03: Llama Stack Basics](../03-llama-stack-basics/) completed
 - A safety model (e.g., Llama-Guard-3-1B) available on your Llama Stack server
+
+## Concepts
+
+**Safety shields** are content classifiers that sit between the user and the LLM. An **input shield** scans the user's message before it reaches the model -- blocking prompt injection, social engineering, or harmful requests. An **output shield** scans the model's response before it reaches the user -- catching generated content that is unsafe, biased, or policy-violating. **Llama Guard** is a purpose-built safety model that powers these shields. In Llama Stack, shields are registered once and can be attached to any agent.
 
 ## Scripts
 

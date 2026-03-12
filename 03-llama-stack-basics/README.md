@@ -7,6 +7,8 @@
 - Inspect registered toolgroups and tools
 - Learn the key Llama Stack SDK classes: `LlamaStackClient`, `Agent`, `Client`
 
+> **Capstone Preview:** In the capstone, you will use these same `Agent` and `AgentEventLogger` patterns to create a Mortgage Approval Agent that reasons over real financial data.
+
 ## Prerequisites
 
 - [Module 00: Environment Setup](../00-setup/) completed
@@ -14,7 +16,7 @@
 
 ## Concepts
 
-**Llama Stack** is Meta's open-source platform for building AI applications. The `Agent` class provides a high-level API for creating agents with tools, while `Client` provides low-level access to individual Llama Stack APIs (models, tools, safety, etc.).
+**[Llama Stack](https://github.com/llamastack/llama-stack)** is an open-source, community-driven platform for building AI applications. It provides a unified API for inference, agents, tools, RAG, safety, and evals with a plugin architecture that supports providers like Ollama, vLLM, AWS Bedrock, and others. The `Agent` class provides a high-level API for creating agents with tools, while `LlamaStackClient` provides low-level access to individual APIs (models, tools, safety, etc.).
 
 ## Scripts
 
