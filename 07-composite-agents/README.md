@@ -31,6 +31,10 @@ Llama Stack Agent --> Customer MCP Server --> Customer API
 
 ## Step-by-Step
 
+> **Working directory:** Commands run from subdirectories within `07-composite-agents/`.
+>
+> **Services needed:** Llama Stack, Customer API (8081), Finance API (8082), Customer MCP (9001), Finance MCP (9002).
+
 ### 1. Start the Customer Agent MCP Server
 
 ```bash

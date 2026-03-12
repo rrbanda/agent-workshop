@@ -23,6 +23,10 @@ User --> FastAPI Chatbot --> LangGraph + MCP Tools
 
 ## Step-by-Step
 
+> **Working directory:** Backend commands run from `11-observability/backend/`. Frontend is at `11-observability/frontend/`.
+>
+> **Services needed:** Llama Stack, Customer MCP (9001), Finance MCP (9002), Langfuse.
+
 ### 1. Set Up Langfuse
 
 You need a running Langfuse instance. The quickest way is Docker:

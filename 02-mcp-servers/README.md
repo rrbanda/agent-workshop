@@ -33,25 +33,55 @@ The **Model Context Protocol (MCP)** provides a standard way to expose tools to 
 
 ## Step-by-Step
 
+> **Working directory:** All commands in this module run from `02-mcp-servers/`.
+>
+> **Services needed:** Customer API (8081), Finance API (8082) from Module 01.
+
 ### 1. Start Customer MCP
+
+In a dedicated terminal:
 
 ```bash
 cd customer-mcp
-cp .env.example .env
-# Verify CUSTOMER_API_BASE_URL=http://localhost:8081
+```
+
+Create a `.env` file with:
+
+```env
+CUSTOMER_API_BASE_URL=http://localhost:8081
+PORT_FOR_CUSTOMER_MCP=9001
+HOST_FOR_CUSTOMER_MCP=0.0.0.0
+```
+
+```bash
 python customer-api-mcp-server.py
 ```
 
 ### 2. Start Finance MCP
 
+In a new terminal:
+
 ```bash
 cd finance-mcp
-cp .env.example .env
-# Verify FINANCE_API_BASE_URL=http://localhost:8082
+```
+
+Create a `.env` file with:
+
+```env
+FINANCE_API_BASE_URL=http://localhost:8082
+PORT_FOR_FINANCE_MCP=9002
+HOST_FOR_FINANCE_MCP=0.0.0.0
+```
+
+```bash
 python finance-api-mcp-server.py
 ```
 
 ### 3. Register with Llama Stack
+
+> **Requires:** Llama Stack server running (started in Module 00).
+
+In a new terminal, from the repo root:
 
 ```bash
 cd examples

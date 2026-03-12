@@ -19,6 +19,10 @@
 
 ## Step-by-Step
 
+> **Working directory:** All commands in this module run from `05-multi-turn-and-hitl/`.
+>
+> **Services needed:** Llama Stack, Customer API (8081), Finance API (8082), Customer MCP (9001), Finance MCP (9002).
+
 ### 1. Multi-Turn Conversation
 
 ```bash
@@ -38,26 +42,34 @@ Type questions interactively. The agent remembers the full conversation. Type `e
 
 ## What You Should See
 
-### Multi-Turn
+### Multi-Turn (script 6)
 
 ```
---- Turn 1 ---
-User: Who does Thomas Hardy work for?
-inference> [tool_call] search_customers(...)
-inference> Thomas Hardy works for Around the Horn.
+============================================================
+Turn 1: who does Thomas Hardy work for?
+============================================================
+Thomas Hardy works for Around the Horn (customer ID: AROUT)...
 
---- Turn 2 ---
-User: What are their orders?
-inference> [tool_call] fetch_order_history({"customer_id": "AROUT"})
-inference> Around the Horn has the following orders: ...
+============================================================
+Turn 2: what are their orders?
+============================================================
+Around the Horn has the following orders: order #10355...
 ```
 
-### Human-in-the-Loop
+The agent uses context from Turn 1 (customer ID AROUT) to look up orders in Turn 2. Only the final text is printed.
+
+### Human-in-the-Loop (script 7)
 
 ```
+============================================================
+Human-in-the-Loop Agent
+Type 'exit' or 'quit' to end the conversation
+============================================================
+
 You: Who is the contact for LONEP?
-Agent> [tool_call] search_customers(...)
-Agent> The contact for Lonesome Pine Restaurant is Fran Wilson.
+[Turn 1]
+Agent: The contact for Lonesome Pine Restaurant is Fran Wilson...
+
 You: exit
 Goodbye!
 ```

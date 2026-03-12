@@ -135,6 +135,7 @@ The workshop follows a linear main path with optional side-tracks. Complete the 
 | Tool | Version | Purpose |
 |------|---------|---------|
 | Python | 3.12+ | Agent scripts, MCP servers |
+| uv | Latest | Run Llama Stack server (`curl -LsSf https://astral.sh/uv/install.sh \| sh`) |
 | Java | 21+ | Backend Spring Boot APIs |
 | Maven | 3.8+ | Java build tool |
 | PostgreSQL | 15+ | Database for Customer, Finance, Mortgage APIs |

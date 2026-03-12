@@ -42,7 +42,11 @@ Four entities: Order, Invoice, Dispute, Receipt -- all linked by customerId.
 
 ## Step-by-Step
 
+> **Working directory:** All commands in this module run from `01-backend-apis/`.
+
 ### 1. Build and Run Customer API
+
+In a dedicated terminal:
 
 ```bash
 cd customer-api
@@ -51,6 +55,8 @@ mvn spring-boot:run
 ```
 
 ### 2. Build and Run Finance API
+
+In a second terminal:
 
 ```bash
 cd finance-api

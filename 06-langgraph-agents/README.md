@@ -25,6 +25,12 @@ Chat UI (Node.js) --> FastAPI Backend --> LangGraph StateGraph --> MCP Tools
                                          ChatOpenAI (Llama Stack)
 ```
 
+> **Working directory:** Exploration scripts run from `06-langgraph-agents/`. The FastAPI backend runs from `06-langgraph-agents/langgraph-fastapi/`. The Chat UI runs from `06-langgraph-agents/chat-ui/`.
+>
+> **Services needed:** Llama Stack, Customer API (8081), Finance API (8082), Customer MCP (9001), Finance MCP (9002).
+>
+> **Environment:** Copy the root `.env` into this directory: `cp ../.env .env` (the Chat UI loads `.env` from this directory).
+
 ## Exploration Scripts
 
 Before running the FastAPI backend, you can explore LangGraph concepts with these progressive scripts in the module root:

@@ -12,14 +12,19 @@ None -- this is the starting point.
 
 ## Tools Required
 
-| Tool | Version | Purpose |
-|------|---------|---------|
-| Python | 3.12+ | Agent scripts, MCP servers |
-| Java | 21+ | Backend Spring Boot APIs |
-| Maven | 3.8+ | Java build tool |
-| Node.js | 18+ | Chat UI (Module 06) |
-| PostgreSQL | 15+ | Database for APIs |
-| Docker | Latest | Containerization (Module 13) |
+| Tool | Version | Purpose | Install |
+|------|---------|---------|---------|
+| Python | 3.12+ | Agent scripts, MCP servers | https://python.org |
+| uv | Latest | Run Llama Stack server | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
+| Java | 21+ | Backend Spring Boot APIs | https://adoptium.net |
+| Maven | 3.8+ | Java build tool | https://maven.apache.org |
+| Node.js | 18+ | Chat UI (Module 06) | https://nodejs.org |
+| PostgreSQL | 15+ | Database for APIs | https://postgresql.org |
+| Docker | Latest | Containerization (Module 13) | https://docker.com |
+
+> **Working directory:** All commands in this module run from the **repo root** (`agent-workshop/`).
+
+> **Multiple terminals:** This workshop requires several services running simultaneously (Llama Stack, backend APIs, MCP servers). Use separate terminal tabs or windows for each long-running process. Keep services running across modules.
 
 ## Step-by-Step Setup
 
@@ -62,7 +67,8 @@ cp .env.example .env
 ## Verification
 
 ```bash
-# Check Llama Stack
+# Check Llama Stack (replace with your URL, or source .env first)
+source .env
 curl $LLAMA_STACK_BASE_URL/v1/models
 
 # Check Python

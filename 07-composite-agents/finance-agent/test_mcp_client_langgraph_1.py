@@ -37,14 +37,14 @@ logger.info("="*80)
 logger.info("Environment Variables at Startup:")
 logger.info("="*80)
 logger.info(f"OLLAMA_MODEL: {os.getenv('OLLAMA_MODEL', 'llama3.2:3b (default)')}")
-logger.info(f"MCP_URL: http://127.0.0.1:8000/mcp")
+logger.info(f"MCP_URL: {MCP_URL}")
 for key, value in os.environ.items():
     if key.startswith(('OLLAMA_', 'MCP_', 'LANGGRAPH_', 'LANGCHAIN_')):
         logger.info(f"{key}: {value}")
 logger.info("="*80)
 
 # MCP Server Configuration
-MCP_URL = "http://127.0.0.1:8000/mcp"
+MCP_URL = os.getenv("FINANCE_AGENT_URL", "http://127.0.0.1:8002/mcp")
 MCP_SESSION_ID = None
 
 

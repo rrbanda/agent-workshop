@@ -32,6 +32,10 @@
 
 ## Step-by-Step
 
+> **Working directory:** All commands in this module run from `08-rag/`.
+>
+> **Services needed:** Llama Stack server with an embedding model available.
+
 ### 1. Create the Vector Store
 
 ```bash
@@ -59,28 +63,41 @@ python 4_debug_vector_search.py
 ### Create Vector Store (script 1)
 
 ```
-Creating vector store 'novacrest_hr_benefits'...
-Vector store created: vs_abc123
-Uploading document: source_docs/NovaCrest_HR_Benefits.txt
-Document uploaded and chunked into 12 chunks
+LLAMA_STACK_BASE_URL: http://localhost:8321
+EMBEDDING_MODEL: granite-embedding-125m
+EMBEDDING_DIMENSION: 768
+--------------------------------------------------------------------------------
+Initializing Llama Stack client...
+Client initialized successfully
+Creating vector store...
+✓ Vector store created: hr-benefits-hybrid
+Loading document from local file...
+✓ Loaded 5432 characters from source_docs/NovaCrestHRBenefits_clean.txt
+Uploading document to Llama Stack...
+✓ File uploaded: file-abc123
+Attaching file to vector store...
+  Chunking: 100 tokens per chunk, 10 token overlap
+✓ File attached to vector store
 ```
 
 ### RAG Query (script 3)
 
+The agent uses `file_search` to retrieve relevant chunks, then answers:
+
 ```
 Query: What do I receive when I retire?
-inference> Based on the HR Benefits document, when you retire you receive:
-  - A gold watch after 25 years of service
-  - Full pension benefits
-  ...
+Agent> Based on the HR Benefits document, when you retire ...
 ```
+
+(Exact text varies by model.)
 
 ### Debug Vector Search (script 4)
 
 ```
-Query: "gold watch"
-Result 1 (score: 0.87): "...employees with 25+ years receive a gold watch..."
-Result 2 (score: 0.72): "...retirement benefits include..."
+Search results type: <class 'list'>
+Results:
+Result 1: Score: 0.87  Content: ...employees with 25+ years of service...
+Result 2: Score: 0.72  Content: ...retirement benefits include...
 ```
 
 ## Key Takeaways

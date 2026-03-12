@@ -28,6 +28,10 @@
 
 ## Step-by-Step
 
+> **Working directory:** All commands in this module run from `03-llama-stack-basics/`.
+>
+> **Services needed:** Llama Stack server.
+
 ### 1. Run Hello World (Non-Streaming)
 
 ```bash
@@ -56,26 +60,48 @@ python 3_list_finance_tools.py
 
 ## What You Should See
 
-### Hello World (script 1)
+### Hello World (script 1 -- non-streaming)
 
 ```
-Agent> Hello! I'm a Llama Stack agent. How can I help you today?
+Base URL: http://localhost:8321
+Model: ollama/llama3.2:3b
+An AI agent is a software system that perceives its environment...
 ```
+
+The last line is the agent's answer to "Explain what an AI agent is in one sentence." (Exact text varies by model.)
 
 ### List Tools (script 2)
 
 ```
-Toolgroup: mcp::customer (3 tools)
-Toolgroup: mcp::finance (4 tools)
+==================================================
+Registered Toolgroups
+==================================================
+Toolgroup ID:  customer_mcp
+Provider ID:   ...
+MCP Endpoint:  http://localhost:9001/mcp
+--------------------------------------------------
+Toolgroup ID:  finance_mcp
+Provider ID:   ...
+MCP Endpoint:  http://localhost:9002/mcp
+--------------------------------------------------
+Total toolgroups: 2
+==================================================
 ```
 
-### List Customer/Finance Tools (script 3)
+### List Customer Tools (script 3)
 
 ```
-Tool: search_customers
-  Description: Search for customers by name, email, or company
-  Parameters: query (string, required)
-...
+==================================================
+Customer MCP Server Tools
+==================================================
+MCP Server URL: http://localhost:9001/mcp
+Tool Name:    search_customers
+Description:  Search for customers by name, email, or company
+Parameters:
+  - query (string)[required]: ...
+--------------------------------------------------
+Total tools: 2
+==================================================
 ```
 
 ## Verification

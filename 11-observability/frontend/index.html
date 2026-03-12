@@ -96,9 +96,11 @@
 
     <script>
         // Configuration - Use same origin when served from backend, otherwise localhost:8002
-        const API_URL = window.location.port === '8002' || window.location.port === ''
-            ? window.location.origin
-            : 'http://localhost:8002';
+        const API_URL = (window.location.protocol === 'file:')
+            ? 'http://localhost:8002'
+            : (window.location.port === '8002' || window.location.port === '')
+                ? window.location.origin
+                : 'http://localhost:8002';
 
         // Generate session ID
         const sessionId = crypto.randomUUID();

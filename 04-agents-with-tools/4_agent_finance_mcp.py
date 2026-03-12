@@ -21,6 +21,9 @@ if not base_url:
 LLAMA_STACK_BASE_URL = base_url
 INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "vllm/qwen3-14b")
 FINANCE_MCP_SERVER_URL = os.getenv("FINANCE_MCP_SERVER_URL")
+if not FINANCE_MCP_SERVER_URL:
+    print("Error: FINANCE_MCP_SERVER_URL not set. Copy .env.example to .env and configure it.")
+    sys.exit(1)
 
 print(f"Base URL:    {LLAMA_STACK_BASE_URL}")
 print(f"Model:       {INFERENCE_MODEL}")

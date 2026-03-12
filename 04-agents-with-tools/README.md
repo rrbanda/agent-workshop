@@ -22,6 +22,10 @@
 
 ## Step-by-Step
 
+> **Working directory:** All commands in this module run from `04-agents-with-tools/`.
+>
+> **Services needed:** Llama Stack, Customer API (8081), Finance API (8082), Customer MCP (9001), Finance MCP (9002).
+
 ### 1. Single-Domain: Customer Agent
 
 ```bash
@@ -48,25 +52,30 @@ The agent chains tools: email -> `search_customers` -> customer ID -> `fetch_ord
 
 ## What You Should See
 
-### Customer Agent
+### Customer Agent (script 4)
 
 ```
-inference> Looking up the customer with email thomashardy@example.com...
-[tool_call] search_customers({"query": "thomashardy@example.com"})
-[tool_result] [{"customer_id": "AROUT", "company_name": "Around the Horn", ...}]
-inference> The customer with email thomashardy@example.com is Thomas Hardy from Around the Horn.
+Base URL: http://localhost:8321
+Model: ollama/llama3.2:3b
+Customer MCP: http://localhost:9001/mcp
+The customer with email thomashardy@example.com is Thomas Hardy,
+contact for Around the Horn (customer ID: AROUT)...
 ```
 
-### Multi-Domain Agent
+The agent calls `search_customers` behind the scenes. Only the final text response is printed. (Exact wording varies by model.)
+
+### Multi-Domain Agent (script 5)
 
 ```
-inference> Let me first find the customer, then look up their orders.
-[tool_call] search_customers({"query": "thomashardy@example.com"})
-[tool_result] [{"customer_id": "AROUT", ...}]
-[tool_call] fetch_order_history({"customer_id": "AROUT"})
-[tool_result] [{"order_id": 10355, "order_date": "...", ...}]
-inference> Thomas Hardy (AROUT) from Around the Horn has the following orders: ...
+Base URL: http://localhost:8321
+Model: ollama/llama3.2:3b
+Customer MCP: http://localhost:9001/mcp
+Finance MCP: http://localhost:9002/mcp
+The customer with email thomashardy@example.com is Thomas Hardy from
+Around the Horn (AROUT). Their orders include order #10355...
 ```
+
+The agent chains `search_customers` then `fetch_order_history` autonomously. Only the final text is printed.
 
 ## How Tool Binding Works
 

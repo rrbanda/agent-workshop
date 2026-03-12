@@ -28,6 +28,10 @@
 
 ## Step-by-Step
 
+> **Working directory:** All commands in this module run from `10-evaluations/`.
+>
+> **Services needed:** Llama Stack server.
+
 ### 1. Register a Dataset
 
 ```bash
@@ -45,6 +49,12 @@ python 4_basic_subset_of_scoring_function.py
 ```bash
 python 5_register_benchmark.py
 python 7_execute_eval.py
+```
+
+Script 7 will print a job ID when it completes. Copy it and set it before running script 8:
+
+```bash
+export LLAMA_STACK_JOB_ID=<job-id-from-script-7-output>
 python 8_review_eval_job.py
 ```
 
@@ -59,33 +69,51 @@ python 9_llm_as_judge.py
 ### Register Dataset (script 2)
 
 ```
+Connecting to Llama Stack server at: http://localhost:8321
+Registering dataset: basic-subset-of-evals
+Using dataset provider: localfs
 Registered dataset: basic-subset-of-evals
-Dataset URI: datasets/basic-subset-of-evals.csv
 ```
 
 ### Scoring Test (script 4)
 
 ```
-Row 1: expected='Paris' generated='The capital of France is Paris'  -> PASS (1.0)
-Row 2: expected='Berlin' generated='The capital is Munich'          -> FAIL (0.0)
+=== basic::subset_of ===
+Accuracy: 100.0%
+Correct: 1 / 1
+
+Row scores:
+  Row 1: ✓ (score: 1.0)
 ```
 
-### Eval Job Review (script 8)
+The script scores `"What is 2 + 2?"` with expected answer `"4"` against generated answer `"4"`.
+
+### Execute Eval (script 7)
 
 ```
-Job: eval-job-001  Status: completed
-  Rows evaluated: 10
-  Average score: 0.80
-  Pass: 8 / Fail: 2
+Running eval for benchmark: my-basic-quality-benchmark
+Using candidate model: vllm/qwen3-14b
+Eval job started: eval-job-abc123
 ```
+
+Copy the job ID from this output for the next step.
 
 ### LLM-as-Judge (script 9)
 
 ```
-Judge model: vllm/llama-scout-17b
-Query: What is the capital of France?
-Generated: Paris is the capital of France.
-Judge score: 5/5 - Correct and complete answer.
+================================================================================
+EVALUATION RESULTS
+================================================================================
+
+--- Evaluation 1 ---
+Generated Answer: 4
+Score: 1.0
+Judge Feedback:
+The answer is correct and complete...
+
+================================================================================
+Total evaluations: 1
+================================================================================
 ```
 
 ## Key Takeaways

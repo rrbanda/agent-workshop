@@ -83,6 +83,12 @@ And have running:
 
 ## Setup
 
+> **Working directory:** All commands in this module run from `mortgage-use-case/`.
+>
+> **Services needed:** Llama Stack server, PostgreSQL.
+>
+> **Environment:** Ensure your root `.env` includes the Mortgage variables (`MORTGAGE_API_BASE_URL`, `MORTGAGE_MCP_SERVER_URL`, etc.) from `.env.example`.
+
 ### 1. Create the database
 
 ```bash
