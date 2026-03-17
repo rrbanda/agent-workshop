@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: novacrest-finance-api
+  labels:
+    app: novacrest-finance-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: novacrest-finance-api
+  template:
+    metadata:
+      labels:
+        app: novacrest-finance-api
+    spec:
+      containers:
+      - name: novacrest-finance-api
+        image: quay.io/novacrest/novacrest-finance-api:1.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8082
+          name: http
+          protocol: TCP
+        env:
+        - name: SPRING_DATASOURCE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: novacrest-finance-config
+              key: database.url
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: novacrest-finance-config
+              key: database.username
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: novacrest-finance-secret
+              key: database.password
+        livenessProbe:
+          httpGet:
+            path: /api/finance/health
+            port: 8082
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/finance/health
+            port: 8082
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 250m
+            memory: 256Mi

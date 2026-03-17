@@ -1,0 +1,6 @@
+apiVersion: v2
+name: novacrest-app
+description: Helm chart for NovaCrest microservices (Customer and Finance)
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
