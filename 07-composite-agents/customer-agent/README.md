@@ -5,7 +5,7 @@ An MCP server that wraps a Llama Stack customer agent, exposing it as MCP tools 
 ## Architecture
 
 ```
-MCP Client (LangGraph)
+MCP Client
        |
        | customer_agent(prompt) / customer_agent_detailed(prompt)
        v
@@ -19,7 +19,6 @@ Llama Stack Agent --> Customer MCP Server --> Customer API
 ## Files
 
 - **mcp_server_llama_stack_agent.py** -- MCP server exposing the customer agent as tools
-- **test_mcp_client_langgraph_1.py** -- LangGraph client that uses the agent-as-tool
 - **requirements.txt** -- Python dependencies
 
 ## Available Tools
@@ -60,12 +59,6 @@ python mcp_server_llama_stack_agent.py
 ```
 
 The server runs on the port defined by `CUSTOMER_AGENT_PORT` in `.env` (default: 8001).
-
-### Test with the LangGraph Client
-
-```bash
-python test_mcp_client_langgraph_1.py
-```
 
 ## Environment Variables
 

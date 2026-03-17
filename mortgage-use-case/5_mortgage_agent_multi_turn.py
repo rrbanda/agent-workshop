@@ -6,9 +6,10 @@ Demonstrates conversation memory across multiple turns -- the agent remembers
 context from earlier turns to resolve references like "that application" or
 "remaining conditions." Same pattern as Module 05.
 
-Turn 1: Review the conditional approval status for application 1
-Turn 2: A borrower uploaded a new bank statement -- review it
-Turn 3: Notify the borrower about remaining missing documents
+Turn 1: Check the outstanding conditions for application 1
+Turn 2: What documents have been submitted for that same application?
+Turn 3: A borrower uploaded a new bank statement -- does it meet the 60-day rule?
+Turn 4: Notify the borrower about remaining missing documents
 
 Prerequisites:
     - Run 1_create_vector_store.py first
@@ -16,32 +17,25 @@ Prerequisites:
 """
 
 import os
+import sys
 import logging
 from dotenv import load_dotenv
-from llama_stack_client import LlamaStackClient, Agent, AgentEventLogger
+from llama_stack_client import LlamaStackClient, Agent
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 
 load_dotenv()
 
+sys.path.insert(0, os.path.dirname(__file__))
+from mortgage_client_tools import ALL_TOOLS
+
 LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
 INFERENCE_MODEL = os.getenv("INFERENCE_MODEL")
-MORTGAGE_MCP_SERVER_URL = os.getenv("MORTGAGE_MCP_SERVER_URL", "http://localhost:9003/mcp")
 
 client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
 
-# Find vector store
-vector_stores = list(client.vector_stores.list())
-matching = [vs for vs in vector_stores if vs.name == "mortgage-lending-policy"]
-if not matching:
-    print("ERROR: Vector store 'mortgage-lending-policy' not found.")
-    print("Please run 1_create_vector_store.py first.")
-    exit(1)
-
-vector_store = max(matching, key=lambda vs: vs.created_at)
 print(f"Model: {INFERENCE_MODEL}")
-print(f"Vector store: {vector_store.id}")
 print("=" * 60)
 
 agent = Agent(
@@ -50,76 +44,51 @@ agent = Agent(
     instructions=(
         "You are a mortgage underwriting assistant at NovaCrest Financial Services. "
         "You manage the conditional approval process -- reviewing applications, "
-        "checking documents against policy, and communicating with borrowers.\n\n"
-        "Use file_search to look up lending policy requirements. "
-        "Use MCP tools to access application data and take actions."
+        "checking documents against policy, and communicating with borrowers. "
+        "Use the available tools to access application data and take actions."
     ),
-    tools=[
-        {
-            "type": "mcp",
-            "server_url": MORTGAGE_MCP_SERVER_URL,
-            "server_label": "mortgage",
-        },
-        {
-            "type": "file_search",
-            "vector_store_ids": [vector_store.id],
-        },
-    ],
+    tools=ALL_TOOLS,
 )
 
 session_id = agent.create_session(session_name="multi-turn-mortgage")
 
-# --- Turn 1 ---
-turn1 = (
-    "Review the conditional approval status for mortgage application 1. "
-    "List all outstanding conditions and what documents have been submitted so far."
-)
-print(f"[Turn 1] User: {turn1}")
-print("-" * 60)
 
-response = agent.create_turn(
-    messages=[{"role": "user", "content": turn1}],
-    session_id=session_id,
-    stream=True,
-)
-for log in AgentEventLogger().log(response):
-    print(log, end="")
+def print_response(response):
+    """Extract and print text from the agent response."""
+    for output in response.output:
+        if hasattr(output, 'content'):
+            for content in output.content:
+                if hasattr(content, 'text'):
+                    print(content.text)
 
-print("\n" + "=" * 60)
 
-# --- Turn 2 ---
-turn2 = (
-    "The borrower just uploaded a new bank statement dated February 2026. "
-    "According to our lending policy, does this meet the 60-day requirement? "
-    "If so, what should we do about the bank statement condition?"
-)
-print(f"[Turn 2] User: {turn2}")
-print("-" * 60)
+turns = [
+    (
+        "What are the outstanding conditions for mortgage application 1?"
+    ),
+    (
+        "What documents have been submitted for that same application?"
+    ),
+    (
+        "The borrower just uploaded a new bank statement dated February 2026. "
+        "Does this meet the 60-day requirement? "
+        "If so, what should we do about the bank statement condition?"
+    ),
+    (
+        "Send a notification to the borrower (customer AROUT) listing the "
+        "remaining missing documents they still need to provide."
+    ),
+]
 
-response = agent.create_turn(
-    messages=[{"role": "user", "content": turn2}],
-    session_id=session_id,
-    stream=True,
-)
-for log in AgentEventLogger().log(response):
-    print(log, end="")
+for i, turn in enumerate(turns, 1):
+    print(f"[Turn {i}] User: {turn}")
+    print("-" * 60)
 
-print("\n" + "=" * 60)
+    response = agent.create_turn(
+        messages=[{"role": "user", "content": turn}],
+        session_id=session_id,
+        stream=False,
+    )
+    print_response(response)
 
-# --- Turn 3 ---
-turn3 = (
-    "Now send a notification to the borrower listing the remaining missing "
-    "documents they still need to provide to complete their application."
-)
-print(f"[Turn 3] User: {turn3}")
-print("-" * 60)
-
-response = agent.create_turn(
-    messages=[{"role": "user", "content": turn3}],
-    session_id=session_id,
-    stream=True,
-)
-for log in AgentEventLogger().log(response):
-    print(log, end="")
-
-print()
+    print("\n" + "=" * 60)

@@ -6,7 +6,3 @@ helm install novacrest-app ./novacrest-app
 ```bash
 helm install novacrest-mcp ./novacrest-mcp
 ```
-3. Deploy Langgraph agent
-```bash
-helm install novacrest-agent ./novacrest-agent
-```

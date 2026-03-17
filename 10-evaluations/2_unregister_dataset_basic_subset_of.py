@@ -41,7 +41,7 @@ def main():
     client = LlamaStackClient(base_url=base_url)
 
     try:
-        client.datasets.unregister(DATASET_ID)
+        client.beta.datasets.unregister(DATASET_ID)
     except Exception as exc:
         logger.error(f"Failed to unregister dataset: {exc}")
         sys.exit(1)

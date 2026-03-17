@@ -7,6 +7,7 @@
 - Build a multi-domain agent that reasons across customer and finance data
 - Understand cross-domain reasoning (email -> customer ID -> orders)
 
+> [!TIP]
 > **Capstone Preview:** In the capstone, these tool-binding patterns drive a mortgage document review workflow where the agent chains MCP tools with RAG to accept or reject documents.
 
 ## Prerequisites
@@ -28,6 +29,7 @@ An **agent with tools** is an LLM that can take action in the real world. When y
 
 ## Step-by-Step
 
+> [!NOTE]
 > **Working directory:** All commands in this module run from `04-agents-with-tools/`.
 >
 > **Services needed:** Llama Stack, Customer API (8081), Finance API (8082), Customer MCP (9001), Finance MCP (9002).
@@ -60,9 +62,9 @@ The agent chains tools: email -> `search_customers` -> customer ID -> `fetch_ord
 
 ### Customer Agent (script 4)
 
-```
+```text
 Base URL: http://localhost:8321
-Model: ollama/llama3.2:3b
+Model: vllm-inference/gpt-oss-120b
 Customer MCP: http://localhost:9001/mcp
 The customer with email thomashardy@example.com is Thomas Hardy,
 contact for Around the Horn (customer ID: AROUT)...
@@ -72,9 +74,9 @@ The agent calls `search_customers` behind the scenes. Only the final text respon
 
 ### Multi-Domain Agent (script 5)
 
-```
+```text
 Base URL: http://localhost:8321
-Model: ollama/llama3.2:3b
+Model: vllm-inference/gpt-oss-120b
 Customer MCP: http://localhost:9001/mcp
 Finance MCP: http://localhost:9002/mcp
 The customer with email thomashardy@example.com is Thomas Hardy from
@@ -120,7 +122,7 @@ agent = Agent(client, model=MODEL, instructions="...", tools=mcp_tools)
 |---------|----------|
 | Empty tool list | Verify MCP servers are running on ports 9001/9002 |
 | Connection refused | Check `LLAMA_STACK_BASE_URL` and that the Llama Stack server is running |
-| Agent doesn't call tools | Ensure `INFERENCE_MODEL` supports tool calling (e.g., `llama3.2:3b`) |
+| Agent doesn't call tools | Ensure `INFERENCE_MODEL` supports tool calling (check your Llama Stack server's available models) |
 
 ## Next Module
 

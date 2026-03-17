@@ -6,6 +6,7 @@
 - Implement an interactive human-in-the-loop (HITL) agent
 - Understand session persistence in Llama Stack
 
+> [!TIP]
 > **Capstone Preview:** In the capstone, multi-turn sessions let the mortgage agent track an application across multiple interactions, and HITL lets you act as the underwriter.
 
 ## Prerequisites
@@ -25,6 +26,7 @@ In a **multi-turn conversation**, the agent maintains context across sequential 
 
 ## Step-by-Step
 
+> [!NOTE]
 > **Working directory:** All commands in this module run from `05-multi-turn-and-hitl/`.
 >
 > **Services needed:** Llama Stack, Customer API (8081), Finance API (8082), Customer MCP (9001), Finance MCP (9002).
@@ -50,7 +52,7 @@ Type questions interactively. The agent remembers the full conversation. Type `e
 
 ### Multi-Turn (script 6)
 
-```
+```text
 ============================================================
 Turn 1: who does Thomas Hardy work for?
 ============================================================
@@ -66,7 +68,7 @@ The agent uses context from Turn 1 (customer ID AROUT) to look up orders in Turn
 
 ### Human-in-the-Loop (script 7)
 
-```
+```text
 ============================================================
 Human-in-the-Loop Agent
 Type 'exit' or 'quit' to end the conversation
@@ -116,6 +118,8 @@ agent.create_turn(session_id=session_id, messages=[{"role": "user", "content": "
 
 ## Next Module
 
-Choose your path:
-- [06-langgraph-agents](../06-langgraph-agents/) -- Try the same patterns with LangGraph
+Continue on the core path:
+- [08-rag](../08-rag/) -- Add retrieval-augmented generation to your agents
+
+Or explore an optional module:
 - [07-composite-agents](../07-composite-agents/) -- Build agent-as-tool architectures

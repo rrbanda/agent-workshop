@@ -29,7 +29,7 @@ load_dotenv(_env_path)
 
 # Configuration - load environment variables once
 API_KEY = os.getenv("API_KEY", "not-needed")
-INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "qwen3:14b-q8_0")
+INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "vllm-inference/gpt-oss-120b")
 LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321/v1")
 # Ensure the URL ends with /v1 for OpenAI-compatible API
 if not LLAMA_STACK_BASE_URL.endswith("/v1"):

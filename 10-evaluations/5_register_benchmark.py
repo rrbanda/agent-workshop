@@ -44,7 +44,7 @@ def main():
     logger.info("Registering benchmark: my-basic-quality-benchmark")
 
     try:
-        client.benchmarks.register(
+        client.alpha.benchmarks.register(
             benchmark_id="my-basic-quality-benchmark",
             dataset_id="basic-subset-of-evals",
             scoring_functions=["basic::subset_of"]

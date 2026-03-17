@@ -47,11 +47,10 @@ def main():
     logger.info(f"Found {len(models)} model(s):\n")
 
     for model in models:
-        print(f"  Model ID: {model.identifier}")
-        print(f"    Type: {model.model_type}")
-        print(f"    Provider: {model.provider_id}")
-        if hasattr(model, 'metadata') and model.metadata:
-            print(f"    Metadata: {model.metadata}")
+        meta = getattr(model, 'custom_metadata', {}) or {}
+        print(f"  Model ID: {model.id}")
+        print(f"    Type: {meta.get('model_type', 'unknown')}")
+        print(f"    Provider: {meta.get('provider_id', 'unknown')}")
         print()
 
 if __name__ == "__main__":

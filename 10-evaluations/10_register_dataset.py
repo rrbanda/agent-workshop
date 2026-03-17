@@ -5,6 +5,7 @@ Supports CLI arguments with fallback to environment variables.
 """
 
 import argparse
+import csv
 import logging
 import os
 import sys
@@ -80,27 +81,30 @@ def main():
         filename = os.path.basename(dataset_uri)
         dataset_id = os.path.splitext(filename)[0]
 
-    # Resolve provider_id: CLI > env var > default
-    provider_id = args.provider_id or os.getenv("LLAMA_STACK_DATASET_PROVIDER_ID", "localfs")
-
     logger.info(f"Connecting to Llama Stack server at: {base_url}")
     logger.info(f"Registering dataset: {dataset_id}")
-    logger.info(f"Dataset URI: {dataset_uri}")
-    logger.info(f"Using dataset provider: {provider_id}")
+    logger.info(f"Dataset path: {dataset_uri}")
     logger.info(f"Purpose: {args.purpose}")
 
     # Create the Llama Stack client
     client = LlamaStackClient(base_url=base_url)
 
+    if os.path.isfile(dataset_uri):
+        rows = []
+        with open(dataset_uri, "r") as f:
+            reader = csv.DictReader(f)
+            for r in reader:
+                rows.append(dict(r))
+        logger.info(f"Loaded {len(rows)} rows from local file")
+        source = {"type": "rows", "rows": rows}
+    else:
+        source = {"type": "uri", "uri": dataset_uri}
+
     try:
-        dataset = client.datasets.register(
+        dataset = client.beta.datasets.register(
             purpose=args.purpose,
-            source={
-                "type": "uri",
-                "uri": dataset_uri,
-            },
+            source=source,
             dataset_id=dataset_id,
-            extra_body={"provider_id": provider_id},
         )
     except Exception as exc:
         logger.error(f"Failed to register dataset: {exc}")

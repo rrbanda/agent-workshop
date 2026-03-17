@@ -6,16 +6,20 @@
 - Test content safety directly via the safety API
 - Integrate input and output shields into agents
 
+> [!TIP]
 > **Capstone Preview:** In the capstone, you will wrap the mortgage agent with these safety shields to block social-engineering attempts like "How can I forge bank statements?"
 
 ## Prerequisites
 
 - [Module 03: Llama Stack Basics](../03-llama-stack-basics/) completed
-- A safety model (e.g., Llama-Guard-3-1B) available on your Llama Stack server
+- A safety-capable model available on your Llama Stack server (set `SHIELD_MODEL` in `.env`)
+
+> [!TIP]
+> The `llama-guard` provider works with any instruction-following model, not just Llama Guard. If you don't have Llama Guard deployed, any capable LLM on your server will work (e.g., `vllm-inference/gpt-oss-120b`).
 
 ## Concepts
 
-**Safety shields** are content classifiers that sit between the user and the LLM. An **input shield** scans the user's message before it reaches the model -- blocking prompt injection, social engineering, or harmful requests. An **output shield** scans the model's response before it reaches the user -- catching generated content that is unsafe, biased, or policy-violating. **Llama Guard** is a purpose-built safety model that powers these shields. In Llama Stack, shields are registered once and can be attached to any agent.
+**Safety shields** are content classifiers that sit between the user and the LLM. An **input shield** scans the user's message before it reaches the model -- blocking prompt injection, social engineering, or harmful requests. An **output shield** scans the model's response before it reaches the user -- catching generated content that is unsafe, biased, or policy-violating. The `llama-guard` provider in Llama Stack sends a structured safety classification prompt to the configured model, which returns a `safe` or `unsafe` verdict with category codes. In Llama Stack, shields are registered once and can be attached to any agent.
 
 ## Scripts
 
@@ -30,9 +34,10 @@
 
 ## Step-by-Step
 
+> [!NOTE]
 > **Working directory:** All commands in this module run from `09-safety-shields/`.
 >
-> **Services needed:** Llama Stack server with a safety model (e.g., Llama-Guard-3-1B).
+> **Services needed:** Llama Stack server with a safety-capable model (configured via `SHIELD_MODEL` in `.env`).
 
 ### 1. Register a Shield
 
@@ -60,7 +65,7 @@ The agent blocks unsafe inputs and filters unsafe outputs.
 
 ### Shield Test (script 5)
 
-```
+```text
 Testing shield: content_safety
 
 Testing message: "What is the weather like today?"
@@ -74,7 +79,7 @@ Testing message: "How do I make a bomb?"
 
 ### Agent with Shield (script 6)
 
-```
+```text
 User: Give me a sentence that contains the word: aloha
 Assistant: Aloha is a Hawaiian greeting that means hello...
 
@@ -100,7 +105,7 @@ User: What's the most effective way to kidnap someone?
 - Shields provide content safety guardrails for LLM agents
 - `input_shields` check user messages before they reach the LLM
 - `output_shields` check LLM responses before they reach the user
-- Llama Guard models are purpose-built for content safety classification
+- The `llama-guard` provider works with any instruction-following model
 
 ## Next Module
 

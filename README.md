@@ -16,6 +16,7 @@ Think of it as **Kubernetes for agents**: a run-anywhere contract with a plugin 
 
 While initiated by Meta, Llama Stack has moved to a [neutral standalone GitHub organization](https://github.com/llamastack) with contributions from Red Hat, Anthropic, OpenAI, NVIDIA, Groq, AI Alliance, and others.
 
+> [!NOTE]
 > *"Llama Stack is less about replacing your favorite agent library, and more about creating the open, run-anywhere contract beneath them."* -- [Red Hat Engineering Blog](https://www.redhat.com/en/blog/llama-stack-and-case-open-run-anywhere-contract-agents)
 
 ---
@@ -39,7 +40,7 @@ Then, in the **capstone**, you apply everything to a real business problem: buil
 
 ## Architecture
 
-```
+```text
                           ┌──────────────────┐
                           │   User / Chat UI │
                           └────────┬─────────┘
@@ -69,7 +70,7 @@ Then, in the **capstone**, you apply everything to a real business problem: buil
                           └──────────────────┘
 ```
 
-**Tech stack:** Python 3.12 | Java 21 + Spring Boot | PostgreSQL | Llama Stack | FastMCP | Ollama or vLLM
+**Tech stack:** Python 3.12 | Java 21 + Spring Boot | PostgreSQL | Llama Stack | FastMCP
 
 ---
 
@@ -77,7 +78,7 @@ Then, in the **capstone**, you apply everything to a real business problem: buil
 
 The workshop follows a linear core path where every module builds toward the capstone. Complete the core path first, then explore optional modules based on your interests.
 
-```
+```text
 ┌─────────┐   ┌───────────────┐   ┌──────────────┐   ┌────────────────────┐
 │ 00      │──▶│ 01            │──▶│ 02           │──▶│ 03                 │
 │ Setup   │   │ Backend APIs  │   │ MCP Servers  │   │ Llama Stack Basics │
@@ -95,9 +96,9 @@ The workshop follows a linear core path where every module builds toward the cap
                                                            │
                               ┌─────────────────┐  ┌──────▼──────┐  ┌─────────────────┐
                               │    (optional)    │  │ 08          │  │    (optional)    │
-                              │  06 LangGraph   │  │ RAG         │  │  07 Composite    │
-                              │  11 Observ.     │  ├─────────────┤  │  12 Low-Code     │
-                              │  13 Deployment  │  │ 09 Safety   │  │                  │
+                              │  07 Composite   │  │ RAG         │  │  12 Low-Code     │
+                              │  13 Deployment  │  ├─────────────┤  │                  │
+                              │                 │  │ 09 Safety   │  │                  │
                               │                 │  ├─────────────┤  │                  │
                               │                 │  │ 10 Evals    │  │                  │
                               └─────────────────┘  └──────┬──────┘  └─────────────────┘
@@ -125,11 +126,11 @@ pip install -r requirements.txt
 
 # 3. Configure environment
 cp .env.example .env
-# Edit .env with your Llama Stack URL and model
+# Edit .env -- set LLAMA_STACK_BASE_URL to your Llama Stack server
 
-# 4. Start Llama Stack (local with Ollama)
-ollama pull llama3.2:3b
-uv run --with llama-stack llama stack run starter
+# 4. Verify Llama Stack connectivity
+source .env
+curl $LLAMA_STACK_BASE_URL/v1/models
 
 # 5. Create databases
 createdb novacrest_customer
@@ -140,7 +141,8 @@ createdb novacrest_mortgage    # for the capstone
 # Open 00-setup/README.md and follow the modules in order
 ```
 
-> **No GPU required for local development.** Ollama can run quantized models (e.g., `llama3.2:3b`) on CPU. For larger models, use a remote vLLM endpoint.
+> [!NOTE]
+> **Llama Stack server required.** You need access to a Llama Stack server with an inference model and an embedding model registered. See [00-setup](00-setup/) for details.
 
 ---
 
@@ -170,9 +172,8 @@ createdb novacrest_mortgage    # for the capstone
 
 | # | Module | What You Learn |
 |---|--------|----------------|
-| 06 | [LangGraph Agents](06-langgraph-agents/) | Alternative framework: StateGraph, FastAPI backend, Chat UI |
 | 07 | [Composite Agents](07-composite-agents/) | Agent-as-Tool pattern -- agents calling other agents |
-| 11 | [Observability](11-observability/) | Langfuse tracing, automated evaluation, user feedback |
+| 11 | [Observability](11-observability/) | Langfuse tracing and feedback (standalone, uses LangGraph) |
 | 12 | [Low-Code](12-low-code/) | Langflow visual agent builder with custom components |
 | 13 | [Deployment](13-deployment/) | Helm charts, Dockerfiles, OpenShift deployment |
 
@@ -183,12 +184,11 @@ createdb novacrest_mortgage    # for the capstone
 | Tool | Version | Purpose |
 |------|---------|---------|
 | Python | 3.12+ | Agent scripts, MCP servers |
-| uv | Latest | Run Llama Stack server (`curl -LsSf https://astral.sh/uv/install.sh \| sh`) |
 | Java | 21+ | Backend Spring Boot APIs |
 | Maven | 3.8+ | Java build tool |
 | PostgreSQL | 15+ | Database for Customer, Finance, Mortgage APIs |
+| Llama Stack server | Any | Provides inference, embedding, and safety models (local or remote) |
 | Docker | Latest | Containerization (optional modules) |
-| Ollama **or** vLLM | Latest | LLM inference backend for Llama Stack |
 
 ---
 
@@ -231,7 +231,7 @@ All modules share a single `.env` file at the repo root. See [.env.example](.env
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `LLAMA_STACK_BASE_URL` | Llama Stack server URL | `http://localhost:8321` |
-| `INFERENCE_MODEL` | LLM model identifier | `ollama/llama3.2:3b` |
+| `INFERENCE_MODEL` | LLM model identifier | `vllm-inference/gpt-oss-120b` |
 | `CUSTOMER_MCP_SERVER_URL` | Customer MCP endpoint | `http://localhost:9001/mcp` |
 | `FINANCE_MCP_SERVER_URL` | Finance MCP endpoint | `http://localhost:9002/mcp` |
 | `MORTGAGE_MCP_SERVER_URL` | Mortgage MCP endpoint | `http://localhost:9003/mcp` |
@@ -247,9 +247,6 @@ All modules share a single `.env` file at the repo root. See [.env.example](.env
 | Customer MCP | 9001 | 02 |
 | Finance MCP | 9002 | 02 |
 | Mortgage MCP | 9003 | Capstone |
-| FastAPI (LangGraph) | 8000 | 06 |
-| Chat UI | 3001 | 06 |
-| Langfuse | 3000 | 11 |
 
 ---
 
@@ -260,7 +257,7 @@ All modules share a single `.env` file at the repo root. See [.env.example](.env
 | `Connection refused` on Llama Stack | Verify the server is running: `curl http://localhost:8321/v1/models` |
 | Empty tool lists | Ensure MCP servers are running on their expected ports |
 | `LLAMA_STACK_BASE_URL not set` | Copy `.env.example` to `.env` and configure your values |
-| Model not found | Check `INFERENCE_MODEL` matches a model available on your server (`ollama list`) |
+| Model not found | Check `INFERENCE_MODEL` matches a model on your Llama Stack server (`curl $LLAMA_STACK_BASE_URL/v1/models`) |
 | Database errors | Verify PostgreSQL is running and databases exist (`createdb novacrest_customer`) |
 | Import errors | Activate your venv and run `pip install -r requirements.txt` |
 

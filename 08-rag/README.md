@@ -7,12 +7,14 @@
 - Use the `file_search` tool with Llama Stack agents
 - Debug and optimize retrieval quality
 
+> [!TIP]
 > **Capstone Preview:** In the capstone, RAG retrieves NovaCrest's mortgage lending policy so the agent can check document requirements and acceptance criteria when reviewing applications.
 
 ## Prerequisites
 
 - [Module 03: Llama Stack Basics](../03-llama-stack-basics/) completed
-- Llama Stack server running with an embedding model available
+- Llama Stack server running with an embedding model available (e.g., `sentence-transformers/nomic-ai/nomic-embed-text-v1.5`)
+- `EMBEDDING_MODEL` and `EMBEDDING_DIMENSION` set in your `.env` (see `.env.example`)
 
 ## Concepts
 
@@ -30,13 +32,21 @@
 | `5_test_gold_watch.py` | Test "When do I get my gold watch?" |
 | `6_test_unique_terms.py` | Test with multiple unique-term queries |
 | `7_delete_vector_store.py` | Clean up vector stores |
-| `8_langgraph_example.py` | LangGraph + RAG integration |
 
 ## Step-by-Step
 
+> [!NOTE]
 > **Working directory:** All commands in this module run from `08-rag/`.
 >
 > **Services needed:** Llama Stack server with an embedding model available.
+
+### 0. Verify Embedding Model
+
+```bash
+python 0_list_embedding_models.py
+```
+
+Confirm your embedding model (e.g., `sentence-transformers/nomic-ai/nomic-embed-text-v1.5`) appears in the list. If it does not, check that your Llama Stack server has an embedding provider configured.
 
 ### 1. Create the Vector Store
 
@@ -64,9 +74,9 @@ python 4_debug_vector_search.py
 
 ### Create Vector Store (script 1)
 
-```
+```text
 LLAMA_STACK_BASE_URL: http://localhost:8321
-EMBEDDING_MODEL: granite-embedding-125m
+EMBEDDING_MODEL: <your-embedding-model>
 EMBEDDING_DIMENSION: 768
 --------------------------------------------------------------------------------
 Initializing Llama Stack client...
@@ -86,7 +96,7 @@ Attaching file to vector store...
 
 The agent uses `file_search` to retrieve relevant chunks, then answers:
 
-```
+```text
 Query: What do I receive when I retire?
 Agent> Based on the HR Benefits document, when you retire ...
 ```
@@ -95,7 +105,7 @@ Agent> Based on the HR Benefits document, when you retire ...
 
 ### Debug Vector Search (script 4)
 
-```
+```text
 Search results type: <class 'list'>
 Results:
 Result 1: Score: 0.87  Content: ...employees with 25+ years of service...

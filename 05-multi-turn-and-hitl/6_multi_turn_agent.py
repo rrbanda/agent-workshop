@@ -19,7 +19,7 @@ if not base_url:
     print("Error: LLAMA_STACK_BASE_URL not set. Copy .env.example to .env and configure it.")
     sys.exit(1)
 LLAMA_STACK_BASE_URL = base_url
-INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "vllm/qwen3-14b")
+INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "vllm-inference/gpt-oss-120b")
 CUSTOMER_MCP_SERVER_URL = os.getenv("CUSTOMER_MCP_SERVER_URL")
 FINANCE_MCP_SERVER_URL = os.getenv("FINANCE_MCP_SERVER_URL")
 

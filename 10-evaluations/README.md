@@ -7,6 +7,7 @@
 - Run benchmark evaluation jobs
 - Review and interpret evaluation results
 
+> [!TIP]
 > **Capstone Preview:** In the capstone, you will build a mortgage-specific eval dataset and benchmark to measure your agent's accuracy against the lending policy.
 
 ## Prerequisites
@@ -34,6 +35,7 @@
 
 ## Step-by-Step
 
+> [!NOTE]
 > **Working directory:** All commands in this module run from `10-evaluations/`.
 >
 > **Services needed:** Llama Stack server.
@@ -57,12 +59,15 @@ python 5_register_benchmark.py
 python 7_execute_eval.py
 ```
 
-Script 7 will print a job ID when it completes. Copy it and set it before running script 8:
+Script 7 will print a job ID when it completes (typically `0` for the first eval run). Copy it and set it before running script 8:
 
 ```bash
-export LLAMA_STACK_JOB_ID=<job-id-from-script-7-output>
+export LLAMA_STACK_JOB_ID=0
 python 8_review_eval_job.py
 ```
+
+> [!TIP]
+> The job ID is printed in the output of script 7 as `Eval job started: 0`. Use whatever value appears after the colon.
 
 ### 4. LLM-as-Judge
 
@@ -74,7 +79,7 @@ python 9_llm_as_judge.py
 
 ### Register Dataset (script 2)
 
-```
+```text
 Connecting to Llama Stack server at: http://localhost:8321
 Registering dataset: basic-subset-of-evals
 Using dataset provider: localfs
@@ -83,7 +88,7 @@ Registered dataset: basic-subset-of-evals
 
 ### Scoring Test (script 4)
 
-```
+```text
 === basic::subset_of ===
 Accuracy: 100.0%
 Correct: 1 / 1
@@ -96,17 +101,17 @@ The script scores `"What is 2 + 2?"` with expected answer `"4"` against generate
 
 ### Execute Eval (script 7)
 
-```
+```text
 Running eval for benchmark: my-basic-quality-benchmark
-Using candidate model: vllm/qwen3-14b
-Eval job started: eval-job-abc123
+Using candidate model: <your-candidate-model>
+Eval job started: 0
 ```
 
 Copy the job ID from this output for the next step.
 
 ### LLM-as-Judge (script 9)
 
-```
+```text
 ================================================================================
 EVALUATION RESULTS
 ================================================================================
@@ -145,4 +150,8 @@ Total evaluations: 1
 
 ## Next Module
 
-Proceed to [11-observability](../11-observability/) for production tracing and feedback.
+You have completed the core learning path. Proceed to the capstone:
+- [Mortgage Approval Agent](../mortgage-use-case/) -- Apply everything you learned to build a complete agent
+
+Or explore optional modules:
+- [11-observability](../11-observability/) -- Production tracing with Langfuse (standalone module, uses LangGraph)

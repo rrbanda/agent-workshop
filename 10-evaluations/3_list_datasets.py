@@ -38,7 +38,7 @@ def main():
 
     # List all available datasets
     logger.info("Fetching available datasets...")
-    datasets = client.datasets.list()
+    datasets = client.beta.datasets.list()
 
     if not datasets:
         logger.warning("No datasets found")

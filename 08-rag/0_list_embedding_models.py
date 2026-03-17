@@ -50,27 +50,21 @@ try:
         logger.info("\nYou need to register models using client.models.register()")
         sys.exit(0)
 
-    # Filter for embedding models only
     embedding_models = []
     for model in model_list:
-        model_type = getattr(model, 'model_type', 'unknown')
-        if model_type == 'embedding':
+        meta = getattr(model, 'custom_metadata', {}) or {}
+        if meta.get('model_type') == 'embedding':
             embedding_models.append(model)
 
-    # Display Embedding Models
     if embedding_models:
         logger.info(f"\nFound {len(embedding_models)} embedding model(s):\n")
         for i, model in enumerate(embedding_models, 1):
-            logger.info(f"{i}. {model.identifier}")
-            if hasattr(model, 'provider_id'):
-                logger.info(f"   Provider: {model.provider_id}")
-            if hasattr(model, 'provider_resource_id'):
-                logger.info(f"   Resource ID: {model.provider_resource_id}")
-            if hasattr(model, 'metadata'):
-                embedding_dim = model.metadata.get('embedding_dimension', 'unknown')
-                logger.info(f"   Dimension: {embedding_dim}")
-                if model.metadata.get('default_configured'):
-                    logger.info(f"   ⭐ Default configured")
+            meta = getattr(model, 'custom_metadata', {}) or {}
+            logger.info(f"{i}. {model.id}")
+            logger.info(f"   Provider: {meta.get('provider_id', 'unknown')}")
+            logger.info(f"   Resource ID: {meta.get('provider_resource_id', 'unknown')}")
+            dim = meta.get('embedding_dimension', 'unknown')
+            logger.info(f"   Dimension: {dim}")
             logger.info("")
     else:
         logger.warning("\n⚠ No embedding models found!")

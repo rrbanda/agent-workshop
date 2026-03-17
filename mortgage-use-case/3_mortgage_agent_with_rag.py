@@ -13,6 +13,7 @@ Prerequisites:
 """
 
 import os
+import sys
 import logging
 from dotenv import load_dotenv
 from llama_stack_client import LlamaStackClient, Agent, AgentEventLogger
@@ -22,9 +23,11 @@ logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 
 load_dotenv()
 
+sys.path.insert(0, os.path.dirname(__file__))
+from mortgage_client_tools import ALL_TOOLS
+
 LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
 INFERENCE_MODEL = os.getenv("INFERENCE_MODEL")
-MORTGAGE_MCP_SERVER_URL = os.getenv("MORTGAGE_MCP_SERVER_URL", "http://localhost:9003/mcp")
 
 client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
 
@@ -39,7 +42,6 @@ if not matching:
 vector_store = max(matching, key=lambda vs: vs.created_at)
 print(f"Model: {INFERENCE_MODEL}")
 print(f"Vector store: {vector_store.id}")
-print(f"Mortgage MCP: {MORTGAGE_MCP_SERVER_URL}")
 print("=" * 60)
 
 agent = Agent(
@@ -48,19 +50,14 @@ agent = Agent(
     instructions=(
         "You are a mortgage underwriting assistant at NovaCrest Financial Services. "
         "You have access to two capabilities:\n"
-        "1. MCP tools to look up mortgage applications, documents, conditions, and credit reports\n"
+        "1. Function tools to look up mortgage applications, documents, conditions, and credit reports\n"
         "2. file_search to look up NovaCrest's mortgage lending policy for document "
         "requirements and acceptance criteria\n\n"
         "When asked about what documents are needed, ALWAYS use file_search to check "
-        "the lending policy. When asked about a specific application, use the MCP tools "
+        "the lending policy. When asked about a specific application, use the function tools "
         "to get the actual data, then cross-reference with the policy."
     ),
-    tools=[
-        {
-            "type": "mcp",
-            "server_url": MORTGAGE_MCP_SERVER_URL,
-            "server_label": "mortgage",
-        },
+    tools=ALL_TOOLS + [
         {
             "type": "file_search",
             "vector_store_ids": [vector_store.id],

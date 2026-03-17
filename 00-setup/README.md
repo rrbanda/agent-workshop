@@ -2,8 +2,8 @@
 
 ## Learning Objectives
 
-- Install all required tools (Python, Java, Maven, Node.js, PostgreSQL, Docker)
-- Configure and start a Llama Stack server
+- Install all required tools (Python, Java, Maven, PostgreSQL)
+- Connect to a Llama Stack server
 - Verify connectivity to all services
 
 ## Prerequisites
@@ -19,16 +19,18 @@ None -- this is the starting point.
 | Tool | Version | Purpose | Install |
 |------|---------|---------|---------|
 | Python | 3.12+ | Agent scripts, MCP servers | https://python.org |
-| uv | Latest | Run Llama Stack server | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
 | Java | 21+ | Backend Spring Boot APIs | https://adoptium.net |
 | Maven | 3.8+ | Java build tool | https://maven.apache.org |
-| Node.js | 18+ | Chat UI (Module 06) | https://nodejs.org |
 | PostgreSQL | 15+ | Database for APIs | https://postgresql.org |
 | Docker | Latest | Containerization (Module 13) | https://docker.com |
 
+You also need access to a **Llama Stack server** with at least an inference model and an embedding model registered. The server can run locally or on a remote cluster (e.g., OpenShift).
+
+> [!NOTE]
 > **Working directory:** All commands in this module run from the **repo root** (`agent-workshop/`).
 
-> **Multiple terminals:** This workshop requires several services running simultaneously (Llama Stack, backend APIs, MCP servers). Use separate terminal tabs or windows for each long-running process. Keep services running across modules.
+> [!IMPORTANT]
+> **Multiple terminals:** This workshop requires several services running simultaneously (backend APIs, MCP servers). Use separate terminal tabs or windows for each long-running process. Keep services running across modules.
 
 ## Step-by-Step Setup
 
@@ -40,39 +42,40 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Llama Stack Server
-
-**Option A: Local with Ollama**
+### 2. Environment Variables
 
 ```bash
-# Install Ollama from https://ollama.com
-ollama pull llama3.2:3b
-uv run --with llama-stack llama stack run starter
+cp .env.example .env
+# Edit .env -- set LLAMA_STACK_BASE_URL and verify model names match your server
 ```
 
-**Option B: Remote vLLM endpoint**
+The `.env.example` defaults to `vllm-inference/gpt-oss-120b` for inference and `sentence-transformers/nomic-ai/nomic-embed-text-v1.5` for embedding. Update these if your Llama Stack server uses different model identifiers.
 
-Set `LLAMA_STACK_BASE_URL` in your `.env` to point to your vLLM/MaaS endpoint.
+### 3. Verify Llama Stack Server
 
-### 3. PostgreSQL Databases
+```bash
+source .env
+curl $LLAMA_STACK_BASE_URL/v1/models
+```
+
+You should see at least an inference model (e.g., `vllm-inference/gpt-oss-120b`) and an embedding model (e.g., `sentence-transformers/nomic-ai/nomic-embed-text-v1.5`) in the response.
+
+> [!IMPORTANT]
+> **MCP connectivity:** The Llama Stack server must be able to reach your MCP servers over the network. If your Llama Stack is remote, MCP servers must also be deployed remotely (or exposed via a public URL). MCP servers running on `localhost` are not reachable from a remote Llama Stack.
+
+### 4. PostgreSQL Databases
 
 ```bash
 createdb novacrest_customer
 createdb novacrest_finance
-```
-
-### 4. Environment Variables
-
-```bash
-cp .env.example .env
-# Edit .env with your configuration
+createdb novacrest_mortgage    # needed for the capstone
 ```
 
 ## Verification
 
 ```bash
-# Check Llama Stack (replace with your URL, or source .env first)
 source .env
+# Check Llama Stack
 curl $LLAMA_STACK_BASE_URL/v1/models
 
 # Check Python

@@ -34,8 +34,10 @@ DATASET_ID = "mortgage-policy-evals"
 BENCHMARK_ID = "mortgage-quality-benchmark"
 SCORING_FN = "basic::subset_of"
 
+import csv
+
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DATASET_URI = os.path.join(_SCRIPT_DIR, "datasets", "mortgage-evals.csv")
+CSV_PATH = os.path.join(_SCRIPT_DIR, "datasets", "mortgage-evals.csv")
 
 if not CANDIDATE_MODEL:
     logger.error("CANDIDATE_MODEL (or INFERENCE_MODEL) environment variable is not set")
@@ -44,18 +46,28 @@ if not CANDIDATE_MODEL:
 client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
 
 print(f"Model: {CANDIDATE_MODEL}")
-print(f"Dataset: {DATASET_URI}")
+print(f"Dataset: {CSV_PATH}")
 print(f"Scoring: {SCORING_FN}")
 print("=" * 60)
 
-# --- 1. Register the mortgage eval dataset ---
+# --- 1. Register the mortgage eval dataset (using rows for remote server) ---
 print("\n1. Registering eval dataset...")
+rows = []
+with open(CSV_PATH, "r") as f:
+    reader = csv.DictReader(f)
+    for r in reader:
+        rows.append({
+            "input_query": r["input_query"],
+            "expected_answer": r["expected_answer"],
+            "chat_completion_input": r["chat_completion_input"],
+        })
+print(f"   Loaded {len(rows)} eval rows from CSV")
+
 try:
-    client.datasets.register(
+    client.beta.datasets.register(
         purpose="eval/question-answer",
-        source={"type": "uri", "uri": DATASET_URI},
+        source={"type": "rows", "rows": rows},
         dataset_id=DATASET_ID,
-        extra_body={"provider_id": "localfs"},
     )
     print(f"   Dataset '{DATASET_ID}' registered")
 except BadRequestError as e:
@@ -67,7 +79,7 @@ except BadRequestError as e:
 # --- 2. Register the benchmark ---
 print("\n2. Registering benchmark...")
 try:
-    client.benchmarks.register(
+    client.alpha.benchmarks.register(
         benchmark_id=BENCHMARK_ID,
         dataset_id=DATASET_ID,
         scoring_functions=[SCORING_FN],

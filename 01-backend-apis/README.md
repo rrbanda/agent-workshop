@@ -6,6 +6,7 @@
 - Run the Spring Boot REST APIs locally
 - Explore the API endpoints via Swagger UI
 
+> [!TIP]
 > **Capstone Preview:** In the capstone, you will work with a Mortgage API that follows this same Spring Boot pattern -- same entity/repository/controller structure, same Swagger UI, same seed data approach.
 
 ## Prerequisites
@@ -44,6 +45,7 @@ Four entities: Order, Invoice, Dispute, Receipt -- all linked by customerId.
 
 ## Step-by-Step
 
+> [!NOTE]
 > **Working directory:** All commands in this module run from `01-backend-apis/`.
 
 ### 1. Build and Run Customer API

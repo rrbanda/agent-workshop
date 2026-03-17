@@ -8,8 +8,7 @@ import os
 import sys
 
 from dotenv import load_dotenv
-from llama_stack_client import LlamaStackClient, NoneType
-from llama_stack_client._models import FinalRequestOptions
+from llama_stack_client import LlamaStackClient
 
 # Configure logging
 logging.basicConfig(
@@ -41,14 +40,8 @@ def main():
     # Create the Llama Stack client
     client = LlamaStackClient(base_url=base_url)
 
-    opts = FinalRequestOptions.construct(
-        method="delete",
-        url=f"/v1alpha/eval/benchmarks/{benchmark_id}",
-        headers={"Accept": "*/*"},
-    )
-
     try:
-        client.request(NoneType, opts)
+        client.alpha.benchmarks.unregister(benchmark_id)
     except Exception as exc:
         logger.error(f"Failed to unregister benchmark: {exc}")
         sys.exit(1)

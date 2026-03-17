@@ -17,8 +17,8 @@ The **Agent-as-Tool** pattern wraps an entire agent behind an MCP server. This c
 
 ## Architecture
 
-```
-Parent Agent / LangGraph Client
+```text
+Parent Agent / MCP Client
        |
        | MCP call: customer_agent(prompt)
        v
@@ -31,50 +31,68 @@ Llama Stack Agent --> Customer MCP Server --> Customer API
 
 ## Step-by-Step
 
+> [!NOTE]
 > **Working directory:** Commands run from subdirectories within `07-composite-agents/`.
 >
 > **Services needed:** Llama Stack, Customer API (8081), Finance API (8082), Customer MCP (9001), Finance MCP (9002).
 
 ### 1. Start the Customer Agent MCP Server
 
+In a dedicated terminal:
+
 ```bash
 cd customer-agent
-cp ../../.env .env  # copy from repo root
 python mcp_server_llama_stack_agent.py
 ```
 
 ### 2. Start the Finance Agent MCP Server
 
+In a second terminal:
+
 ```bash
 cd finance-agent
-cp ../../.env .env  # copy from repo root
 python mcp_server_llama_stack_agent.py
 ```
 
-### 3. Test with the LangGraph Client
+### 3. Test the Composite Agents
+
+From the `07-composite-agents/` directory:
 
 ```bash
-cd customer-agent
-python test_mcp_client_langgraph_1.py
+python test_composite_agent.py
 ```
+
+This script acts as a parent agent, calling the customer and finance agent MCP servers as tools via the Responses API. It runs three tests: customer lookup, order history, and a cross-agent orchestration query.
 
 ## What You Should See
 
-### Customer Agent MCP Server
+### Agent MCP Servers (Steps 1-2)
 
-```
+```text
 INFO:     Started server process
 INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
 ```
 
-### LangGraph Client Test
+### Test Script (Step 3)
 
+```text
+--- Test 1: Customer Agent ---
+Query: Find customer with contact email thomashardy@example.com
+
+Thomas Hardy is the contact for Around the Horn (customer ID: AROUT)...
+
+--- Test 2: Finance Agent ---
+Query: Get order history for customer AROUT
+
+The order history for customer AROUT includes order #10355...
+
+--- Test 3: Both Agents (Orchestration) ---
+Query: Find the customer with email thomashardy@example.com and get their orders
+
+Thomas Hardy works for Around the Horn (AROUT). Their orders include...
 ```
-Connecting to Customer Agent MCP at http://localhost:8001/mcp...
-Tools found: ['customer_agent', 'customer_agent_detailed']
-Query: Search customer with name Anabela Domingues
-Agent response: The customer Anabela Domingues works for Tradição Hipermercados...
-```
+
+(Exact text varies by model.)
 
 ## Key APIs
 

@@ -20,7 +20,6 @@ Shell scripts and Python tests for directly interacting with the Llama Stack ser
 | `9_rag_tool.sh` | Test RAG toolgroup |
 | `start_debug.sh` / `start_debug_detailed.sh` | Start Llama Stack with debug logging |
 | `clean_slate.sh` | Reset Llama Stack state |
-| `update-llamastack-langfuse.sh` | Update Langfuse integration config |
 | `test_customer_mcp_direct.py` / `test_finance_mcp_direct.py` | Python scripts to test MCP servers directly |
 
 ## web-search/
@@ -35,4 +34,5 @@ Progressive examples demonstrating web search tool integration with Llama Stack:
 | `4_what_is_my_knowledge_cutoff.py` | Ask the model about its own knowledge cutoff |
 | `5_web_search_*_today.py` | Real-time queries using web search |
 
+> [!NOTE]
 > **Prerequisite:** Set `TAVILY_SEARCH_API_KEY` in your `.env` for web search scripts.

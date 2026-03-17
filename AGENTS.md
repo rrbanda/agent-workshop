@@ -10,14 +10,14 @@ This is a progressive workshop organized into numbered modules:
 - `03-llama-stack-basics/`: Llama Stack hello world, tool listing
 - `04-agents-with-tools/`: Single and multi-domain agents with MCP tools
 - `05-multi-turn-and-hitl/`: Multi-turn conversations, human-in-the-loop
-- `06-langgraph-agents/`: LangGraph alternative framework, FastAPI backend, Chat UI
 - `07-composite-agents/`: Agent-as-Tool pattern (agents calling agents)
 - `08-rag/`: RAG with vector stores and hybrid search
 - `09-safety-shields/`: Content safety with Llama Guard
 - `10-evaluations/`: Eval pipelines, scoring, LLM-as-judge
-- `11-observability/`: Langfuse tracing, feedback, automated evaluation
+- `11-observability/`: Langfuse tracing and feedback (standalone, uses LangGraph)
 - `12-low-code/`: Langflow visual agent builder
 - `13-deployment/`: Helm charts, Dockerfiles, OpenShift deployment
+- `mortgage-use-case/`: Capstone -- Mortgage Approval Agent
 - `helpers/`: Llama Stack server scripts, web search demos
 
 ## Build, Test, and Development Commands
@@ -38,12 +38,6 @@ python 02-mcp-servers/finance-mcp/finance-api-mcp-server.py
 ```bash
 python3.12 -m venv .venv && source .venv/bin/activate
 uv run --with llama-stack llama stack run starter
-```
-
-### LangGraph Agent (Module 06)
-```bash
-cd 06-langgraph-agents/langgraph-fastapi && python 9_langgraph_fastapi.py
-cd 06-langgraph-agents/chat-ui && npm install && npm start
 ```
 
 ## Coding Style & Naming Conventions

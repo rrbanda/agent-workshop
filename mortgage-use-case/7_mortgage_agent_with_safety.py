@@ -16,9 +16,13 @@ Prerequisites:
 """
 
 import os
+import sys
 import logging
 from dotenv import load_dotenv
 from llama_stack_client import LlamaStackClient, Agent, AgentEventLogger
+
+sys.path.insert(0, os.path.dirname(__file__))
+from mortgage_client_tools import ALL_TOOLS
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
@@ -27,7 +31,6 @@ load_dotenv()
 
 LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
 INFERENCE_MODEL = os.getenv("INFERENCE_MODEL")
-MORTGAGE_MCP_SERVER_URL = os.getenv("MORTGAGE_MCP_SERVER_URL", "http://localhost:9003/mcp")
 SHIELD_ID = os.getenv("SHIELD_ID")
 
 if not INFERENCE_MODEL:
@@ -54,7 +57,6 @@ vector_store = max(matching, key=lambda vs: vs.created_at)
 print(f"Model: {INFERENCE_MODEL}")
 print(f"Shield: {SHIELD_ID}")
 print(f"Vector store: {vector_store.id}")
-print(f"Mortgage MCP: {MORTGAGE_MCP_SERVER_URL}")
 print("=" * 60)
 
 agent = Agent(
@@ -62,14 +64,9 @@ agent = Agent(
     model=INFERENCE_MODEL,
     instructions=(
         "You are a mortgage underwriting assistant at NovaCrest Financial Services. "
-        "You have access to MCP tools for mortgage data and file_search for lending policy."
+        "You have access to tools for mortgage data and file_search for lending policy."
     ),
-    tools=[
-        {
-            "type": "mcp",
-            "server_url": MORTGAGE_MCP_SERVER_URL,
-            "server_label": "mortgage",
-        },
+    tools=ALL_TOOLS + [
         {
             "type": "file_search",
             "vector_store_ids": [vector_store.id],
@@ -104,7 +101,7 @@ for i, test in enumerate(test_queries, 1):
     input_result = client.safety.run_shield(
         shield_id=SHIELD_ID,
         messages=[{"role": "user", "content": test["query"]}],
-        params={},
+    
     )
 
     if input_result.violation:
@@ -134,7 +131,7 @@ for i, test in enumerate(test_queries, 1):
         output_result = client.safety.run_shield(
             shield_id=SHIELD_ID,
             messages=[{"role": "assistant", "content": output_text}],
-            params={},
+        
         )
 
         if output_result.violation:

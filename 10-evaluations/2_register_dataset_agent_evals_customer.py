@@ -3,6 +3,7 @@
 Register datasets/agent-evals-customer.csv with a Llama Stack server.
 """
 
+import csv
 import logging
 import os
 import sys
@@ -36,26 +37,30 @@ def main():
         logger.error("LLAMA_STACK_BASE_URL environment variable is not set")
         sys.exit(1)
 
-    dataset_uri = os.getenv("AGENT_EVALS_CUSTOMER_DATASET_URI", DEFAULT_DATASET_URI)
-
-    provider_id = os.getenv("LLAMA_STACK_DATASET_PROVIDER_ID", "localfs")
+    dataset_path = os.getenv("AGENT_EVALS_CUSTOMER_DATASET_URI", DEFAULT_DATASET_URI)
 
     logger.info(f"Connecting to Llama Stack server at: {base_url}")
     logger.info(f"Registering dataset: {DATASET_ID}")
-    logger.info(f"Using dataset provider: {provider_id}")
 
     # Create the Llama Stack client
     client = LlamaStackClient(base_url=base_url)
 
+    rows = []
+    with open(dataset_path, "r") as f:
+        reader = csv.DictReader(f)
+        for r in reader:
+            rows.append({
+                "input_query": r["input_query"],
+                "expected_answer": r["expected_answer"],
+                "chat_completion_input": r["chat_completion_input"],
+            })
+    logger.info(f"Loaded {len(rows)} rows from {dataset_path}")
+
     try:
-        dataset = client.datasets.register(
+        dataset = client.beta.datasets.register(
             purpose="eval/messages-answer",
-            source={
-                "type": "uri",
-                "uri": dataset_uri,
-            },
+            source={"type": "rows", "rows": rows},
             dataset_id=DATASET_ID,
-            extra_body={"provider_id": provider_id},
         )
     except Exception as exc:
         logger.error(f"Failed to register dataset: {exc}")

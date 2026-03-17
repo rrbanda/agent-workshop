@@ -12,7 +12,7 @@ logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 load_dotenv()
 
 LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
-INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "ollama/qwen3:14b-q8_0")
+INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "vllm-inference/gpt-oss-120b")
 
 client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
 

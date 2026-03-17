@@ -7,6 +7,7 @@
 - Register MCP servers with Llama Stack
 - Test MCP tools independently
 
+> [!TIP]
 > **Capstone Preview:** In the capstone, a Mortgage MCP server wraps the Mortgage API using the same FastMCP pattern you learn here -- same `@mcp.tool()` decorators, same `httpx` calls, same structure.
 
 ## Prerequisites
@@ -35,6 +36,7 @@ The **Model Context Protocol (MCP)** provides a standard way to expose tools to 
 
 ## Step-by-Step
 
+> [!NOTE]
 > **Working directory:** All commands in this module run from `02-mcp-servers/`.
 >
 > **Services needed:** Customer API (8081), Finance API (8082) from Module 01.
@@ -45,19 +47,11 @@ In a dedicated terminal:
 
 ```bash
 cd customer-mcp
-```
-
-Create a `.env` file with:
-
-```env
-CUSTOMER_API_BASE_URL=http://localhost:8081
-PORT_FOR_CUSTOMER_MCP=9001
-HOST_FOR_CUSTOMER_MCP=0.0.0.0
-```
-
-```bash
 python customer-api-mcp-server.py
 ```
+
+> [!NOTE]
+> The MCP server uses `load_dotenv()` which loads `.env` from the current working directory. Since you run these from `02-mcp-servers/customer-mcp/`, make sure your root `.env` is also accessible. The simplest approach: run from the repo root instead (e.g., `python 02-mcp-servers/customer-mcp/customer-api-mcp-server.py`), or set the env vars `CUSTOMER_API_BASE_URL`, `PORT_FOR_CUSTOMER_MCP`, and `HOST_FOR_CUSTOMER_MCP` in your shell before starting.
 
 ### 2. Start Finance MCP
 
@@ -65,25 +59,15 @@ In a new terminal:
 
 ```bash
 cd finance-mcp
-```
-
-Create a `.env` file with:
-
-```env
-FINANCE_API_BASE_URL=http://localhost:8082
-PORT_FOR_FINANCE_MCP=9002
-HOST_FOR_FINANCE_MCP=0.0.0.0
-```
-
-```bash
 python finance-api-mcp-server.py
 ```
 
 ### 3. Register with Llama Stack
 
+> [!IMPORTANT]
 > **Requires:** Llama Stack server running (started in Module 00).
 
-In a new terminal, from the repo root:
+In a new terminal, from the `02-mcp-servers/` directory:
 
 ```bash
 cd examples
@@ -99,12 +83,12 @@ python 2_list_tools.py
 
 ## Verification
 
-```bash
-# Test Customer MCP directly
-curl http://localhost:9001/mcp
+The best way to verify MCP registration is `python 2_list_tools.py` (Step 4 above). You can also check that the MCP servers themselves are responding:
 
-# Test Finance MCP directly
-curl http://localhost:9002/mcp
+```bash
+# Should return a JSON response (MCP protocol handshake)
+curl -s http://localhost:9001/mcp | head -c 200
+curl -s http://localhost:9002/mcp | head -c 200
 ```
 
 ## Key Takeaways

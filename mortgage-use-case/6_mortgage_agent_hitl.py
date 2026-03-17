@@ -22,9 +22,13 @@ Prerequisites:
 """
 
 import os
+import sys
 import logging
 from dotenv import load_dotenv
 from llama_stack_client import LlamaStackClient, Agent, AgentEventLogger
+
+sys.path.insert(0, os.path.dirname(__file__))
+from mortgage_client_tools import ALL_TOOLS
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
@@ -33,7 +37,6 @@ load_dotenv()
 
 LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
 INFERENCE_MODEL = os.getenv("INFERENCE_MODEL")
-MORTGAGE_MCP_SERVER_URL = os.getenv("MORTGAGE_MCP_SERVER_URL", "http://localhost:9003/mcp")
 
 client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
 
@@ -73,12 +76,7 @@ agent = Agent(
         "Always be precise and reference specific document numbers, condition numbers, "
         "and policy sections when applicable."
     ),
-    tools=[
-        {
-            "type": "mcp",
-            "server_url": MORTGAGE_MCP_SERVER_URL,
-            "server_label": "mortgage",
-        },
+    tools=ALL_TOOLS + [
         {
             "type": "file_search",
             "vector_store_ids": [vector_store.id],

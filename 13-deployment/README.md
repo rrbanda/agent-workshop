@@ -19,7 +19,6 @@
 |-------|-----------|
 | `novacrest-app` | Customer API + Finance API + PostgreSQL instances |
 | `novacrest-mcp` | Customer MCP + Finance MCP servers |
-| `novacrest-agent` | LangGraph FastAPI backend + Chat UI |
 
 ## Step-by-Step
 
@@ -35,30 +34,22 @@ helm install novacrest-app ./helm/novacrest-app
 helm install novacrest-mcp ./helm/novacrest-mcp
 ```
 
-### 3. Deploy Agent + UI
-
-```bash
-helm install novacrest-agent ./helm/novacrest-agent
-```
-
 ## Service Wiring
 
-```
+```text
 PostgreSQL (postgres-cust:5432)
        |
 Customer API (novacrest-customer-service:8081)
        |
-Customer MCP (mcp-customer-service:9001)  <-->  LangGraph FastAPI (langgraph-fastapi:8000)
+Customer MCP (mcp-customer-service:9001)
                                                         |
 Llama Stack (llamastack-distribution-vllm-service:8321)
                                                         |
-Finance MCP (mcp-finance-service:9002)  <-->  LangGraph FastAPI
+Finance MCP (mcp-finance-service:9002)
        |
 Finance API (novacrest-finance-service:8082)
        |
 PostgreSQL (postgres-fin:5432)
-
-Chat UI (simple-agent-chat-ui:3000) --> langgraph-fastapi:8000
 ```
 
 ## Dockerfiles
@@ -71,8 +62,6 @@ Pre-built Dockerfiles are in `dockerfiles/`:
 | `Dockerfile.finance-api` | NovaCrest Finance API |
 | `Dockerfile.customer-mcp` | Customer MCP Server |
 | `Dockerfile.finance-mcp` | Finance MCP Server |
-| `Dockerfile.langgraph-fastapi` | LangGraph FastAPI Agent |
-| `Dockerfile.chat-ui` | Chat UI |
 
 ## Key Takeaways
 

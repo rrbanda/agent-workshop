@@ -3,7 +3,7 @@
 ## Langfuse Localhost
 
 Ingredients:
-```bash
+```text
 MacBook (localhost)
 ├── Podman machine (Linux VM)
 │   ├── Langfuse Web UI     http://localhost:3000
@@ -23,7 +23,7 @@ podman machine start
 podman machine list
 ```
 
-```
+```text
 NAME                    VM TYPE     CREATED       LAST UP             CPUS        MEMORY      DISK SIZE
 podman-machine-default  applehv     3 months ago  Currently starting  4           16GiB       100GiB
 ```
@@ -43,7 +43,7 @@ brew services stop postgresql@14
 brew services list
 ```
 
-```
+```text
 Name          Status  User    File
 kafka         started bsutter ~/Library/LaunchAgents/homebrew.mxcl.kafka.plist
 ollama        none
@@ -62,7 +62,7 @@ cd langfuse
 ls *.yml
 ```
 
-```
+```text
 docker-compose.build.yml			docker-compose.dev-redis-cluster.yml	docker-compose.yml
 docker-compose.dev-azure.yml		docker-compose.dev.yml
 ```
@@ -75,7 +75,7 @@ podman compose up
 podman compose ps
 ```
 
-```
+```text
 CONTAINER ID  IMAGE                                          COMMAND               CREATED         STATUS                   PORTS                                                         NAMES
 2a053acda112  docker.io/clickhouse/clickhouse-server:latest                        50 seconds ago  Up 50 seconds (healthy)  127.0.0.1:8123->8123/tcp, 127.0.0.1:9000->9000/tcp, 9009/tcp  langfuse-clickhouse-1
 12377208f0ed  cgr.dev/chainguard/minio:latest                -c mkdir -p /data...  50 seconds ago  Up 50 seconds (healthy)  127.0.0.1:9091->9001/tcp, 0.0.0.0:9090->9000/tcp              langfuse-minio-1
@@ -91,7 +91,7 @@ Note: the unassisted `podman compose up` did not correctly start postgres due to
 open http://localhost:3000
 ```
 
-![Langfuse Login](images/login-1.png)
+<!-- ![Langfuse Login](images/login-1.png) -->
 
 Sign-Up
 
@@ -146,7 +146,7 @@ helm install langfuse langfuse/langfuse \
 oc get pods 
 ```
 
-```
+```text
 NAME                               READY   STATUS              RESTARTS   AGE
 langfuse-clickhouse-shard0-0       0/1     ContainerCreating   0          6s
 langfuse-clickhouse-shard0-1       0/1     ContainerCreating   0          6s
@@ -186,7 +186,7 @@ psql -h localhost -p 5432 -U postgres -d postgres
 \l
 ```
 
-```
+```text
                                  List of databases
    Name    |  Owner   | Encoding |  Collate   |   Ctype    |   Access privileges
 -----------+----------+----------+------------+------------+-----------------------
@@ -207,7 +207,7 @@ CREATE DATABASE novacrest_finance;
 \l
 ```
 
-```
+```text
                                     List of databases
        Name       |  Owner   | Encoding |  Collate   |   Ctype    |   Access privileges
 ------------------+----------+----------+------------+------------+-----------------------

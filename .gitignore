@@ -26,3 +26,6 @@ package-lock.json
 
 # Llama Stack
 .llama/
+
+# MkDocs
+site/

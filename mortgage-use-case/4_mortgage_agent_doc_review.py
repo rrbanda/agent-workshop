@@ -15,6 +15,7 @@ Prerequisites:
 """
 
 import os
+import sys
 import logging
 from dotenv import load_dotenv
 from llama_stack_client import LlamaStackClient, Agent, AgentEventLogger
@@ -24,9 +25,11 @@ logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 
 load_dotenv()
 
+sys.path.insert(0, os.path.dirname(__file__))
+from mortgage_client_tools import ALL_TOOLS
+
 LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
 INFERENCE_MODEL = os.getenv("INFERENCE_MODEL")
-MORTGAGE_MCP_SERVER_URL = os.getenv("MORTGAGE_MCP_SERVER_URL", "http://localhost:9003/mcp")
 
 client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
 
@@ -60,12 +63,7 @@ agent = Agent(
         "6. Call send_notification to inform the borrower of the outcome\n\n"
         "Be specific in rejection reasons so the borrower knows exactly what to fix."
     ),
-    tools=[
-        {
-            "type": "mcp",
-            "server_url": MORTGAGE_MCP_SERVER_URL,
-            "server_label": "mortgage",
-        },
+    tools=ALL_TOOLS + [
         {
             "type": "file_search",
             "vector_store_ids": [vector_store.id],

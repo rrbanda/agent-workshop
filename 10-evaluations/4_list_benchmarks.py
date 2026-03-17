@@ -38,7 +38,7 @@ def main():
     client = LlamaStackClient(base_url=base_url)
 
     logger.info("Fetching available benchmarks...")
-    benchmarks = client.benchmarks.list()
+    benchmarks = client.alpha.benchmarks.list()
 
     if not benchmarks:
         logger.warning("No benchmarks found")

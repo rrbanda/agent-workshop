@@ -22,7 +22,7 @@ logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 load_dotenv()
 
 LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
-EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "granite-embedding-125m")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/nomic-ai/nomic-embed-text-v1.5")
 EMBEDDING_DIMENSION = int(os.getenv("EMBEDDING_DIMENSION", "768"))
 
 client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
@@ -32,40 +32,25 @@ print(f"Embedding model: {EMBEDDING_MODEL}")
 print(f"Embedding dimension: {EMBEDDING_DIMENSION}")
 print("-" * 60)
 
-# Create the vector store with hybrid search
-print("Creating vector store 'mortgage-lending-policy'...")
-vector_store = client.vector_stores.create(
-    name="mortgage-lending-policy",
-    embedding_model=EMBEDDING_MODEL,
-    embedding_dimension=EMBEDDING_DIMENSION,
-    config={
-        "type": "on_demand",
-        "search_mode": "hybrid",
-        "bm25_weight": 0.5,
-        "semantic_weight": 0.5,
-    },
-)
-print(f"Vector store created: {vector_store.id}")
-
-# Upload the mortgage policy document
 policy_path = os.path.join(os.path.dirname(__file__), "source_docs", "MortgageLendingPolicy.txt")
-print(f"Uploading policy document: {policy_path}")
 
 with open(policy_path, "r") as f:
     content = f.read()
     print(f"Document size: {len(content)} characters")
 
+# Upload the file first
+print(f"Uploading policy document: {policy_path}")
 file = client.files.create(
-    purpose="file-search",
-    file_path=policy_path,
+    purpose="assistants",
+    file=open(policy_path, "rb"),
 )
 print(f"File uploaded: {file.id}")
 
-# Attach file to vector store with chunking
-print("Ingesting document into vector store (chunking + embedding)...")
-client.vector_stores.files.create(
-    vector_store_id=vector_store.id,
-    file_id=file.id,
+# Create the vector store and attach the file in one step
+print("Creating vector store 'mortgage-lending-policy'...")
+vector_store = client.vector_stores.create(
+    name="mortgage-lending-policy",
+    file_ids=[file.id],
     chunking_strategy={
         "type": "static",
         "static": {
@@ -74,6 +59,7 @@ client.vector_stores.files.create(
         },
     },
 )
+print(f"Vector store created: {vector_store.id}")
 
 print("-" * 60)
 print("Vector store ready!")

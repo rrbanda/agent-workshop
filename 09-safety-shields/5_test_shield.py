@@ -55,7 +55,6 @@ def main():
         response = client.safety.run_shield(
             shield_id=shield_id,
             messages=[msg],
-            params={}
         )
 
         if response.violation:

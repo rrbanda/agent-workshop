@@ -10,7 +10,7 @@ You have completed the core modules. Now apply everything you learned -- MCP too
 
 When a mortgage application receives conditional approval, the borrower must provide additional documents (W-2s, bank statements, appraisals, etc.) before final approval. This back-and-forth loop causes the most delays in mortgage processing:
 
-```
+```text
 Conditional Approval
         |
         v
@@ -62,14 +62,14 @@ Every capstone step exercises skills from a core module. By the time you finish,
 | 2 | `2_mortgage_agent_basic.py` | Agent creation, MCP tool binding | Modules 03-04 |
 | 3 | `3_mortgage_agent_with_rag.py` | RAG with file_search | Module 08 |
 | 4 | `4_mortgage_agent_doc_review.py` | Multi-tool orchestration | Module 04 |
-| 5 | `5_mortgage_agent_multi_turn.py` | Multi-turn sessions | Module 05 |
+| 5 | `5_mortgage_agent_multi_turn.py` | Multi-turn sessions (4 turns) | Module 05 |
 | 6 | `6_mortgage_agent_hitl.py` | Human-in-the-loop | Module 05 |
 | 7 | `7_mortgage_agent_with_safety.py` | Input/output safety shields | Module 09 |
 | 8 | `8_mortgage_agent_eval.py` | Eval datasets, scoring, benchmarks | Module 10 |
 
 ## Architecture
 
-```
+```text
                     Llama Stack (:8321)
                          |
                     Mortgage Agent
@@ -104,6 +104,7 @@ And have running:
 
 ## Setup
 
+> [!NOTE]
 > **Working directory:** All commands in this module run from `mortgage-use-case/`.
 >
 > **Services needed:** Llama Stack server, PostgreSQL.
@@ -126,9 +127,12 @@ mvn spring-boot:run
 
 The API starts on port 8083 with seed data (4 applications, 12 documents, 4 conditions, 6 credit reports). Verify at http://localhost:8083/swagger-ui.html.
 
+> [!TIP]
 > **Recognize the pattern:** This API follows the same Spring Boot structure you ran in Module 01. Compare `mortgage-api/src/` with `customer-api/src/` -- same entity/repository/service/controller layers, same `data.sql` seed data approach.
 
 ### 3. Start the Mortgage MCP Server
+
+In a new terminal, from the `mortgage-use-case/` directory:
 
 ```bash
 cd mortgage-mcp
@@ -138,13 +142,14 @@ python mortgage-api-mcp-server.py
 
 The MCP server starts on port 9003 with 8 tools.
 
+> [!TIP]
 > **Recognize the pattern:** This MCP server uses the same FastMCP pattern from Module 02. Compare `mortgage-api-mcp-server.py` with `customer-api-mcp-server.py` -- same `@mcp.tool()` decorators wrapping `httpx` REST calls.
 
 ### 4. Configure environment
 
 Ensure your `.env` file includes:
 
-```
+```text
 MORTGAGE_API_BASE_URL=http://localhost:8083
 MORTGAGE_MCP_SERVER_URL=http://localhost:9003/mcp
 PORT_FOR_MORTGAGE_MCP=9003
@@ -172,6 +177,7 @@ A simple agent with only MCP tools (no RAG). Queries the mortgage API to list ou
 
 **Concepts applied:** Agent creation, MCP tool binding, tool calling (from Modules 03-04)
 
+> [!TIP]
 > **Try it yourself:** Open `2_mortgage_agent_basic.py` and change the query to ask about application APP-002 instead. APP-002 is an FHA loan still in underwriting -- how does the agent's response differ from APP-001's conditional approval?
 
 ### Step 3: Agent with RAG + Tools
@@ -186,6 +192,7 @@ Adds RAG (`file_search`) alongside MCP tools. The agent can now:
 
 **Concepts applied:** RAG with file_search, combining tools with file_search (from Module 08)
 
+> [!TIP]
 > **Try it yourself:** Write your own query that asks about VA loan document requirements. Does the agent use file_search, MCP tools, or both? Watch the tool calls in the output to see the agent's reasoning.
 
 ### Step 4: Document Review Agent
@@ -204,6 +211,7 @@ The core use case. The agent reviews an uploaded bank statement (dated August 20
 
 **Concepts applied:** Multi-tool orchestration, RAG-informed decision making, write operations via tools
 
+> [!TIP]
 > **Try it yourself:** The script reviews a bank statement dated August 2025 and rejects it. Open `4_mortgage_agent_doc_review.py` and change the date to February 2026. Does the agent accept it now? The lending policy requires statements within 60 days.
 
 ### Step 5: Multi-Turn Conversation
@@ -212,15 +220,17 @@ The core use case. The agent reviews an uploaded bank statement (dated August 20
 python 5_mortgage_agent_multi_turn.py
 ```
 
-Three-turn conversation showing session memory:
+Four-turn conversation showing session memory:
 
-- **Turn 1:** "Review the conditional approval for application 1" -- agent lists all conditions and documents
-- **Turn 2:** "The borrower uploaded a new bank statement dated February 2026" -- agent checks policy, determines it meets the 60-day requirement
-- **Turn 3:** "Notify the borrower about remaining documents" -- agent remembers the application context and sends a targeted notification
+- **Turn 1:** "What are the outstanding conditions for application 1?" -- agent calls the conditions tool
+- **Turn 2:** "What documents have been submitted for that same application?" -- agent uses context from Turn 1
+- **Turn 3:** "The borrower uploaded a new bank statement dated February 2026" -- agent checks policy, determines it meets the 60-day requirement
+- **Turn 4:** "Send a notification to the borrower listing remaining missing documents" -- agent remembers the full application context and sends a targeted notification
 
 **Concepts applied:** Multi-turn sessions, conversation memory (from Module 05)
 
-> **Try it yourself:** Add a fourth turn to the script that asks the agent to pull the borrower's credit report. Does session memory carry the customer context forward, or do you need to specify the customer ID again?
+> [!TIP]
+> **Try it yourself:** Add a fifth turn to the script that asks the agent to pull the borrower's credit report. Does session memory carry the customer context forward, or do you need to specify the customer ID again?
 
 ### Step 6: Human-in-the-Loop
 
@@ -238,6 +248,7 @@ Interactive session where you act as the underwriter. Try:
 
 **Concepts applied:** Interactive HITL agent (from Module 05)
 
+> [!TIP]
 > **Try it yourself:** Ask about APP-004 (the denied application). Ask the agent to explain why it was denied based on the lending policy. Can the agent cross-reference the credit report with policy minimums?
 
 ### Step 7: Safety-Guarded Agent
@@ -258,6 +269,7 @@ The pattern is composable: `client.safety.run_shield()` acts as a guard layer ar
 
 **Concepts applied:** Shield registration, `run_shield` API, input/output content safety (from Module 09)
 
+> [!TIP]
 > **Try it yourself:** Try a borderline query like "What happens if a borrower lies about their income on a mortgage application?" Does the shield block it or let it through? Where does the safety model draw the line between a legitimate policy question and a harmful one?
 
 ### Step 8: Evaluate the Agent
@@ -277,6 +289,7 @@ The key insight: the model evaluated **without RAG** will likely miss NovaCrest-
 
 **Concepts applied:** Dataset registration, benchmark registration, eval execution, scoring functions (from Module 10)
 
+> [!TIP]
 > **Try it yourself:** Look at the accuracy results. Pick a question the model got wrong. Now run Step 3's script and ask the RAG-powered agent the same question. Does RAG fix the answer? This is the core argument for retrieval augmentation.
 
 ## Seed Data
@@ -314,8 +327,7 @@ You now have a complete agent stack: REST API, MCP tools, Agent with RAG, safety
 - Add a new MCP tool for appraisal valuation checks (does the appraised value meet the purchase price?)
 - Create a second vector store with NovaCrest's compliance policies and add it to the agent
 - Build an LLM-as-judge eval that scores the agent's document review reasoning, not just factual accuracy (Module 10, script `9_llm_as_judge.py`)
-- Add Langfuse tracing to monitor the agent in production (Module 11)
-- Deploy the agent behind a FastAPI endpoint with a Chat UI (Module 06 pattern)
+- Deploy the agent behind a FastAPI endpoint with a Chat UI
 
 **Apply to your own domain:**
 
@@ -336,7 +348,8 @@ The patterns you learned are domain-agnostic. To build an agent for a different 
 | MCP tools not found | Check `MORTGAGE_MCP_SERVER_URL` in `.env` and that the MCP server is running on port 9003 |
 | Vector store creation fails | Ensure your Llama Stack server has an embedding model registered |
 | RAG returns no results | Verify `MortgageLendingPolicy.txt` was ingested (re-run `1_create_vector_store.py`) |
-| Agent doesn't chain tools | Try a more capable model (e.g., `qwen3:14b`) -- small models may struggle with complex tool chains |
+| Agent doesn't chain tools | Try a more capable model -- small models may struggle with complex tool chains. Check `curl $LLAMA_STACK_BASE_URL/v1/models` for available options |
+| `Turn did not complete` or `INVALID_ARGUMENT` | Client-side tools (`@client_tool`) can fail with `stream=True` when the model makes parallel tool calls. Use `stream=False` for scripts with client tools, or simplify queries so the agent calls one tool at a time |
 | `SHIELD_ID not set` (Step 7) | Register a shield first: see Module 09, script `4_register_shield.py`. Set `SHIELD_ID` in `.env` |
 | Shield doesn't block unsafe input | Ensure the shield model (Llama Guard) is available on your Llama Stack server |
 | Eval dataset registration fails (Step 8) | Check that the `datasets/mortgage-evals.csv` file exists and `CANDIDATE_MODEL` or `INFERENCE_MODEL` is set |

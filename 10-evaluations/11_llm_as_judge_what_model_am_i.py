@@ -88,11 +88,10 @@ Provide a score from 1-5 and explain your reasoning."""
             raise
 
     try:
-        client.benchmarks.register(
+        client.alpha.benchmarks.register(
             benchmark_id=BENCHMARK_ID,
             dataset_id=DATASET_ID,
             scoring_functions=[SCORING_FN_ID],
-            provider_id="meta-reference",
         )
         logger.info(f"Benchmark '{BENCHMARK_ID}' registered successfully")
     except BadRequestError as e:

@@ -12,7 +12,7 @@ load_dotenv()
 
 # Get configuration from environment
 LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
-INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "vllm/qwen3-14b")
+INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "vllm-inference/gpt-oss-120b")
 TAVILY_SEARCH_API_KEY = os.getenv("TAVILY_SEARCH_API_KEY")
 QUESTION = os.getenv("QUESTION", "Who is the current F1 World Champion?")
 

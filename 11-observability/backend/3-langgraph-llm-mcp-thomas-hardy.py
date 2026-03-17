@@ -55,7 +55,7 @@ async def main():
 
     # Initialize LLM
     llm = ChatOpenAI(
-        model=os.getenv("INFERENCE_MODEL", "qwen3:14b-q8_0"),
+        model=os.getenv("INFERENCE_MODEL", "vllm-inference/gpt-oss-120b"),
         base_url=os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321").rstrip("/") + "/v1",
         api_key=os.getenv("API_KEY", "not-needed"),
         temperature=0.7

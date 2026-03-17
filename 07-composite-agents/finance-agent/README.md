@@ -5,7 +5,7 @@ An MCP server that wraps a Llama Stack finance agent, exposing it as MCP tools v
 ## Architecture
 
 ```
-MCP Client (LangGraph)
+MCP Client
        |
        | finance_agent(prompt) / finance_agent_detailed(prompt)
        v
@@ -19,7 +19,6 @@ Llama Stack Agent --> Finance MCP Server --> Finance API
 ## Files
 
 - **mcp_server_llama_stack_agent.py** -- MCP server exposing the finance agent as tools
-- **test_mcp_client_langgraph_1.py** -- LangGraph client that uses the agent-as-tool
 - **requirements.txt** -- Python dependencies
 
 ## Available Tools
@@ -60,12 +59,6 @@ python mcp_server_llama_stack_agent.py
 ```
 
 The server runs on the port defined by `FINANCE_AGENT_PORT` in `.env` (default: 8002).
-
-### Test with the LangGraph Client
-
-```bash
-python test_mcp_client_langgraph_1.py
-```
 
 ## Environment Variables
 

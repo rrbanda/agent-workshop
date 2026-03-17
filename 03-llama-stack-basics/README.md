@@ -7,6 +7,7 @@
 - Inspect registered toolgroups and tools
 - Learn the key Llama Stack SDK classes: `LlamaStackClient`, `Agent`, `Client`
 
+> [!TIP]
 > **Capstone Preview:** In the capstone, you will use these same `Agent` and `AgentEventLogger` patterns to create a Mortgage Approval Agent that reasons over real financial data.
 
 ## Prerequisites
@@ -30,6 +31,7 @@
 
 ## Step-by-Step
 
+> [!NOTE]
 > **Working directory:** All commands in this module run from `03-llama-stack-basics/`.
 >
 > **Services needed:** Llama Stack server.
@@ -58,15 +60,16 @@ python 3_list_customer_tools.py
 python 3_list_finance_tools.py
 ```
 
+> [!NOTE]
 > **Note:** Scripts 2 and 3 list MCP tools that must be registered with Llama Stack first. If you see empty results, complete the MCP server registration steps in [Module 02 examples](../02-mcp-servers/examples/) before running these scripts.
 
 ## What You Should See
 
 ### Hello World (script 1 -- non-streaming)
 
-```
+```text
 Base URL: http://localhost:8321
-Model: ollama/llama3.2:3b
+Model: vllm-inference/gpt-oss-120b
 An AI agent is a software system that perceives its environment...
 ```
 
@@ -74,7 +77,7 @@ The last line is the agent's answer to "Explain what an AI agent is in one sente
 
 ### List Tools (script 2)
 
-```
+```text
 ==================================================
 Registered Toolgroups
 ==================================================
@@ -92,7 +95,7 @@ Total toolgroups: 2
 
 ### List Customer Tools (script 3)
 
-```
+```text
 ==================================================
 Customer MCP Server Tools
 ==================================================
