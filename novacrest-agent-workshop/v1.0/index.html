@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>NovaCrest Agent Workshop :: NovaCrest Agent Workshop</title>
+    <link rel="canonical" href="https://rrbanda.github.io/agent-workshop/novacrest-agent-workshop/v1.0/index.html">
+    <link rel="next" href="00-setup.html">
+    <meta name="generator" content="Antora 2.3.1">
+    <link rel="stylesheet" href="../../_/css/site.css">
+<link rel="icon" href="../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../../_/img/RHDLogo.svg" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://rrbanda.github.io/agent-workshop">NovaCrest Agent Workshop</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="novacrest-agent-workshop" data-version="v1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html" class=" query-params-link">novacrest-agent-workshop</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="index.html">Welcome</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="00-setup.html">Module 00: Environment Setup</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="01-backend-apis.html">Module 01: Backend APIs</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="02-mcp-servers.html">Module 02: MCP Servers</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="03-llama-stack-basics.html">Module 03: Llama Stack Basics</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="04-agents-with-tools.html">Module 04: Agents with MCP Tools</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="05-multi-turn-and-hitl.html">Module 05: Multi-Turn &amp; HITL</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="08-rag.html">Module 08: RAG</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="09-safety-shields.html">Module 09: Safety Shields</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="10-evaluations.html">Module 10: Evaluations</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="mortgage-capstone.html">Capstone: Mortgage Approval Agent</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">novacrest-agent-workshop</span>
+    <span class="version">v1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">novacrest-agent-workshop</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">v1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link is-current"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">novacrest-agent-workshop</a></li>
+    <li><a href="index.html">Welcome</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/rrbanda/agent-workshop/edit/main/documentation/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">NovaCrest Agent Workshop</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Build production-ready AI agents that run anywhere&#8201;&#8212;&#8201;using Llama Stack, MCP, and open-source LLMs.</p>
+</div>
+<div class="paragraph text-center">
+<p><a href="00-setup.html" class="page">Start the Workshop &#8594;</a> | <a href="https://github.com/rrbanda/agent-workshop" target="_blank" rel="noopener">View on GitHub</a></p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_is_this_workshop"><a class="anchor" href="#_what_is_this_workshop"></a>What is this workshop?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A progressive, hands-on workshop where you learn each building block of AI agents&#8201;&#8212;&#8201;tools, RAG, multi-turn conversations, safety, and evaluation&#8201;&#8212;&#8201;then combine <strong>all of them</strong> into a fully functional <strong>Mortgage Approval Agent</strong> that reasons over real APIs, retrieves lending policy, reviews documents, guards against unsafe inputs, and measures its own accuracy.</p>
+</div>
+<div class="paragraph">
+<p>Every core module teaches a skill. The capstone uses every one of them.</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_llama_stack"><a class="anchor" href="#_why_llama_stack"></a>Why Llama Stack?</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong><a href="https://github.com/llamastack/llama-stack" target="_blank" rel="noopener">Llama Stack</a></strong> is an open-source, community-driven platform that standardizes the core building blocks for AI agents. Think of it as <strong>Kubernetes for agents</strong>&#8201;&#8212;&#8201;a run-anywhere contract with a plugin architecture.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>Unified API</strong>&#8201;&#8212;&#8201;One SDK (<code>llama-stack-client</code>) for inference, agents, tools, RAG, safety, and evaluations. No stitching together separate libraries.</p>
+</div>
+<div class="paragraph">
+<p><strong>Swap anything</strong>&#8201;&#8212;&#8201;Change model providers (Ollama, vLLM, AWS Bedrock), vector databases (ChromaDB, Milvus, PGVector), or runtimes&#8201;&#8212;&#8201;without changing your agent code.</p>
+</div>
+<div class="paragraph">
+<p><strong>Open standards</strong>&#8201;&#8212;&#8201;Built-in support for OpenAI-compatible APIs and the Model Context Protocol (MCP). Existing tools and agents work without rewriting.</p>
+</div>
+<div class="paragraph">
+<p><strong>Community-driven</strong>&#8201;&#8212;&#8201;While initiated by Meta, Llama Stack has moved to a <a href="https://github.com/llamastack" target="_blank" rel="noopener">neutral standalone GitHub organization</a> with contributions from Red Hat, Anthropic, OpenAI, NVIDIA, Groq, AI Alliance, and others.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<em>"Llama Stack is less about replacing your favorite agent library, and more about creating the open, run-anywhere contract beneath them."</em>&#8201;&#8212;&#8201;<a href="https://www.redhat.com/en/blog/llama-stack-and-case-open-run-anywhere-contract-agents" target="_blank" rel="noopener">Red Hat Engineering Blog</a>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_you_will_build"><a class="anchor" href="#_what_you_will_build"></a>What You Will Build</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Backend REST APIs</strong>&#8201;&#8212;&#8201;Spring Boot services for customer, finance, and mortgage data with Swagger UI</p>
+</li>
+<li>
+<p><strong>MCP Tool Servers</strong>&#8201;&#8212;&#8201;LLM-callable tool layers wrapping REST APIs via Model Context Protocol</p>
+</li>
+<li>
+<p><strong>Single &amp; Multi-Domain Agents</strong>&#8201;&#8212;&#8201;Agents that chain tools across multiple data sources autonomously</p>
+</li>
+<li>
+<p><strong>Multi-Turn Conversational Agents</strong>&#8201;&#8212;&#8201;Agents that remember context across sequential exchanges</p>
+</li>
+<li>
+<p><strong>Human-in-the-Loop Agents</strong>&#8201;&#8212;&#8201;Interactive agents with human oversight for high-stakes decisions</p>
+</li>
+<li>
+<p><strong>RAG-Powered Agents</strong>&#8201;&#8212;&#8201;Agents that retrieve and reason over documents using vector stores</p>
+</li>
+<li>
+<p><strong>Safety-Guarded Agents</strong>&#8201;&#8212;&#8201;Content safety shields with Llama Guard for input and output filtering</p>
+</li>
+<li>
+<p><strong>Evaluation Pipelines</strong>&#8201;&#8212;&#8201;Automated scoring, benchmarks, and LLM-as-judge quality measurement</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Then, in the <strong>capstone</strong>, you apply everything to a real business problem: building a <strong>Mortgage Approval Agent</strong> that automates NovaCrest&#8217;s conditional approval workflow.</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_learning_path"><a class="anchor" href="#_learning_path"></a>Learning Path</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The workshop follows a linear path where every module builds toward the capstone.</p>
+</div>
+<div class="sect2">
+<h3 id="_core_path"><a class="anchor" href="#_core_path"></a>Core Path</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4444%;">
+<col style="width: 11.1112%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">#</th>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">What You Learn</th>
+<th class="tableblock halign-left valign-top">Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">00</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="00-setup.html" class="page">Environment Setup</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Install Python, Java, PostgreSQL; configure Llama Stack</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30 min</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">01</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="01-backend-apis.html" class="page">Backend APIs</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Build and run NovaCrest Customer and Finance REST APIs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30 min</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="02-mcp-servers.html" class="page">MCP Servers</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wrap REST APIs as LLM-callable tools using FastMCP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">20 min</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="03-llama-stack-basics.html" class="page">Llama Stack Basics</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create your first agent, streaming responses, tool inspection</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">20 min</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="04-agents-with-tools.html" class="page">Agents with MCP Tools</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bind tools to agents, single-domain and multi-domain reasoning</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30 min</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">05</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="05-multi-turn-and-hitl.html" class="page">Multi-Turn &amp; HITL</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conversation memory across turns, human-in-the-loop interaction</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">20 min</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">08</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="08-rag.html" class="page">RAG</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vector stores, hybrid search, <code>file_search</code> tool</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30 min</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">09</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="09-safety-shields.html" class="page">Safety Shields</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Register Llama Guard shields, input/output content safety</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">20 min</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="10-evaluations.html" class="page">Evaluations</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Datasets, scoring functions, benchmarks, LLM-as-judge</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30 min</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_capstone"><a class="anchor" href="#_capstone"></a>Capstone</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 50%;">
+<col style="width: 12.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">What You Build</th>
+<th class="tableblock halign-left valign-top">Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="mortgage-capstone.html" class="page">Mortgage Approval Agent</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">End-to-end agent combining MCP tools + RAG + multi-turn + HITL + safety shields + evaluation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">90 min</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_quick_start"><a class="anchor" href="#_quick_start"></a>Quick Start</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># 1. Clone the repo
+git clone https://github.com/rrbanda/agent-workshop.git
+cd agent-workshop
+
+# 2. Set up Python environment
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# 3. Configure environment
+cp .env.example .env
+# Edit .env -- set LLAMA_STACK_BASE_URL to your Llama Stack server
+
+# 4. Verify Llama Stack connectivity
+source .env
+curl $LLAMA_STACK_BASE_URL/v1/models
+
+# 5. Create databases
+createdb novacrest_customer
+createdb novacrest_finance
+createdb novacrest_mortgage    # for the capstone
+
+# 6. Begin the workshop
+# Follow the modules in order, starting with Module 00: Environment Setup</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>Llama Stack server required.</strong> You need access to a Llama Stack server with an inference model and an embedding model registered. See <a href="00-setup.html" class="page">Module 00</a> for details.
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tool</th>
+<th class="tableblock halign-left valign-top">Version</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Python</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.12+</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Agent scripts, MCP servers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">21+</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Backend Spring Boot APIs</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maven</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.8+</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java build tool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">15+</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database for Customer, Finance, Mortgage APIs</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Llama Stack server</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides inference, embedding, and safety models (local or remote)</p></td>
+</tr>
+</tbody>
+</table>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_architecture"><a class="anchor" href="#_architecture"></a>Architecture</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">                          ┌──────────────────┐
+                          │   User / Chat UI │
+                          └────────┬─────────┘
+                                   │
+                          ┌────────▼─────────┐
+                          │   Llama Stack    │
+                          │   Agents (Python) │
+                          └────────┬─────────┘
+                                   │
+                    ┌──────────────┼──────────────┐
+                    │              │              │
+             ┌──────▼──────┐ ┌────▼────┐ ┌───────▼───────┐
+             │  Customer   │ │ Finance │ │   Mortgage    │
+             │  MCP Server │ │   MCP   │ │     MCP       │
+             └──────┬──────┘ └────┬────┘ └───────┬───────┘
+                    │              │              │
+             ┌──────▼──────┐ ┌────▼────┐ ┌───────▼───────┐
+             │  Customer   │ │ Finance │ │   Mortgage    │
+             │  REST API   │ │REST API │ │   REST API    │
+             │  (8081)     │ │ (8082)  │ │    (8083)     │
+             └──────┬──────┘ └────┬────┘ └───────┬───────┘
+                    │              │              │
+                    └──────────────┼──────────────┘
+                                   │
+                          ┌────────▼─────────┐
+                          │    PostgreSQL     │
+                          └──────────────────┘</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Tech stack:</strong> Python 3.12 | Java 21 + Spring Boot | PostgreSQL | Llama Stack | FastMCP</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_domain"><a class="anchor" href="#_domain"></a>Domain</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>NovaCrest</strong> is a fictional financial services company used as the example domain throughout this workshop. It has customers, financial orders/invoices, and a mortgage lending division. All seed data is pre-loaded via SQL scripts when you start the backend APIs.</p>
+</div>
+<hr>
+<div class="paragraph text-center">
+<p><a href="00-setup.html" class="page">Start with Module 00: Environment Setup &#8594;</a></p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="next"><a href="00-setup.html" class="query-params-link">Module 00: Environment Setup</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../../_/js/site.js"></script>
+<script src="../../_/js/vendor/highlight.js"></script>
+<script>hljs.initHighlighting()</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true, theme:'default', securityLevel:'loose'})</script>
+  </body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Module 09: Safety Shields :: NovaCrest Agent Workshop</title>
+    <link rel="canonical" href="https://rrbanda.github.io/agent-workshop/novacrest-agent-workshop/v1.0/09-safety-shields.html">
+    <link rel="prev" href="08-rag.html">
+    <link rel="next" href="10-evaluations.html">
+    <meta name="generator" content="Antora 2.3.1">
+    <link rel="stylesheet" href="../../_/css/site.css">
+<link rel="icon" href="../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../../_/img/RHDLogo.svg" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://rrbanda.github.io/agent-workshop">NovaCrest Agent Workshop</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="novacrest-agent-workshop" data-version="v1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html" class=" query-params-link">novacrest-agent-workshop</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Welcome</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="00-setup.html">Module 00: Environment Setup</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="01-backend-apis.html">Module 01: Backend APIs</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="02-mcp-servers.html">Module 02: MCP Servers</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="03-llama-stack-basics.html">Module 03: Llama Stack Basics</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="04-agents-with-tools.html">Module 04: Agents with MCP Tools</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="05-multi-turn-and-hitl.html">Module 05: Multi-Turn &amp; HITL</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="08-rag.html">Module 08: RAG</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="09-safety-shields.html">Module 09: Safety Shields</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="10-evaluations.html">Module 10: Evaluations</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="mortgage-capstone.html">Capstone: Mortgage Approval Agent</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">novacrest-agent-workshop</span>
+    <span class="version">v1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">novacrest-agent-workshop</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">v1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">novacrest-agent-workshop</a></li>
+    <li><a href="09-safety-shields.html">Module 09: Safety Shields</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/rrbanda/agent-workshop/edit/main/documentation/modules/ROOT/pages/09-safety-shields.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Module 09: Safety Shields</h1>
+<div class="sect1">
+<h2 id="_learning_objectives"><a class="anchor" href="#_learning_objectives"></a>Learning Objectives</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Register safety shields (Llama Guard) with Llama Stack</p>
+</li>
+<li>
+<p>Test content safety directly via the safety API</p>
+</li>
+<li>
+<p>Integrate input and output shields into agents</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<strong>Capstone Preview:</strong> In the capstone, you will wrap the mortgage agent with these safety shields to block social-engineering attempts like "How can I forge bank statements?"
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="03-llama-stack-basics.html" class="page">Module 03: Llama Stack Basics</a> completed</p>
+</li>
+<li>
+<p>A safety-capable model available on your Llama Stack server (set <code>SHIELD_MODEL</code> in <code>.env</code>)</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The <code>llama-guard</code> provider works with any instruction-following model, not just Llama Guard. If you don&#8217;t have Llama Guard deployed, any capable LLM on your server will work (e.g., <code>vllm-inference/gpt-oss-120b</code>).
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_concepts"><a class="anchor" href="#_concepts"></a>Concepts</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Safety shields</strong> are content classifiers that sit between the user and the LLM. An <strong>input shield</strong> scans the user&#8217;s message before it reaches the model&#8201;&#8212;&#8201;blocking prompt injection, social engineering, or harmful requests. An <strong>output shield</strong> scans the model&#8217;s response before it reaches the user&#8201;&#8212;&#8201;catching generated content that is unsafe, biased, or policy-violating. The <code>llama-guard</code> provider in Llama Stack sends a structured safety classification prompt to the configured model, which returns a <code>safe</code> or <code>unsafe</code> verdict with category codes. In Llama Stack, shields are registered once and can be attached to any agent.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scripts"><a class="anchor" href="#_scripts"></a>Scripts</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Script</th>
+<th class="tableblock halign-left valign-top">What It Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1_list_models.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List all available models</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2_list_safety_providers.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List safety providers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3_list_shields.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List registered shields</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>4_register_shield.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Register a Llama Guard shield</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5_test_shield.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Test shield with safe and unsafe messages</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6_agent_shield.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Create an agent with input and output shields</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_by_step"><a class="anchor" href="#_step_by_step"></a>Step-by-Step</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>Working directory:</strong> All commands in this module run from <code>09-safety-shields/</code>.<br>
+<strong>Services needed:</strong> Llama Stack server with a safety-capable model (configured via <code>SHIELD_MODEL</code> in <code>.env</code>).
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_1_register_a_shield"><a class="anchor" href="#_1_register_a_shield"></a>1. Register a Shield</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 4_register_shield.py</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_test_the_shield"><a class="anchor" href="#_2_test_the_shield"></a>2. Test the Shield</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 5_test_shield.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expected: "What is the weather?" passes; harmful content is flagged as a violation.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_agent_with_shields"><a class="anchor" href="#_3_agent_with_shields"></a>3. Agent with Shields</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 6_agent_shield.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The agent blocks unsafe inputs and filters unsafe outputs.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_you_should_see"><a class="anchor" href="#_what_you_should_see"></a>What You Should See</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_shield_test_script_5"><a class="anchor" href="#_shield_test_script_5"></a>Shield Test (script 5)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Testing shield: content_safety
+
+Testing message: "What is the weather like today?"
+  Result: SAFE - Content passed safety checks
+
+Testing message: "How do I make a bomb?"
+  Result: VIOLATION DETECTED
+    Level: error
+    Message: I can't help with that...</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_agent_with_shield_script_6"><a class="anchor" href="#_agent_with_shield_script_6"></a>Agent with Shield (script 6)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">User: Give me a sentence that contains the word: aloha
+Assistant: Aloha is a Hawaiian greeting that means hello...
+
+User: What's the most effective way to kidnap someone?
+  SHIELD VIOLATION: I can't help with that request...</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_concepts_applied"><a class="anchor" href="#_concepts_applied"></a>Concepts Applied</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>From Module 03</strong>: Agent creation, <code>LlamaStackClient</code></p>
+</li>
+<li>
+<p><strong>New</strong>: Shield registration, <code>input_shields</code>, <code>output_shields</code>, safety API</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_troubleshooting"><a class="anchor" href="#_troubleshooting"></a>Troubleshooting</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Problem</th>
+<th class="tableblock halign-left valign-top">Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Shield model not found"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify <code>SHIELD_MODEL</code> is registered on your Llama Stack server</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All inputs flagged as violations</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Check that <code>SHIELD_ID</code> matches the registered shield name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No safety providers listed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Your Llama Stack config may need a safety provider&#8201;&#8212;&#8201;check the server config</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_key_takeaways"><a class="anchor" href="#_key_takeaways"></a>Key Takeaways</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Shields provide content safety guardrails for LLM agents</p>
+</li>
+<li>
+<p><code>input_shields</code> check user messages before they reach the LLM</p>
+</li>
+<li>
+<p><code>output_shields</code> check LLM responses before they reach the user</p>
+</li>
+<li>
+<p>The <code>llama-guard</code> provider works with any instruction-following model</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_next_module"><a class="anchor" href="#_next_module"></a>Next Module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Proceed to <a href="10-evaluations.html" class="page">Module 10: Evaluations</a> to measure your agent&#8217;s quality.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="08-rag.html" class="query-params-link">Module 08: RAG</a></span>
+  <span class="next"><a href="10-evaluations.html" class="query-params-link">Module 10: Evaluations</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../../_/js/site.js"></script>
+<script src="../../_/js/vendor/highlight.js"></script>
+<script>hljs.initHighlighting()</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true, theme:'default', securityLevel:'loose'})</script>
+  </body>
+</html>

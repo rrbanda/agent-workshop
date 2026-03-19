@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Capstone: Mortgage Approval Agent :: NovaCrest Agent Workshop</title>
+    <link rel="canonical" href="https://rrbanda.github.io/agent-workshop/novacrest-agent-workshop/v1.0/mortgage-capstone.html">
+    <link rel="prev" href="10-evaluations.html">
+    <meta name="generator" content="Antora 2.3.1">
+    <link rel="stylesheet" href="../../_/css/site.css">
+<link rel="icon" href="../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../../_/img/RHDLogo.svg" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://rrbanda.github.io/agent-workshop">NovaCrest Agent Workshop</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="novacrest-agent-workshop" data-version="v1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html" class=" query-params-link">novacrest-agent-workshop</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Welcome</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="00-setup.html">Module 00: Environment Setup</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="01-backend-apis.html">Module 01: Backend APIs</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="02-mcp-servers.html">Module 02: MCP Servers</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="03-llama-stack-basics.html">Module 03: Llama Stack Basics</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="04-agents-with-tools.html">Module 04: Agents with MCP Tools</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="05-multi-turn-and-hitl.html">Module 05: Multi-Turn &amp; HITL</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="08-rag.html">Module 08: RAG</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="09-safety-shields.html">Module 09: Safety Shields</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="10-evaluations.html">Module 10: Evaluations</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="mortgage-capstone.html">Capstone: Mortgage Approval Agent</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">novacrest-agent-workshop</span>
+    <span class="version">v1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">novacrest-agent-workshop</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">v1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">novacrest-agent-workshop</a></li>
+    <li><a href="mortgage-capstone.html">Capstone: Mortgage Approval Agent</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/rrbanda/agent-workshop/edit/main/documentation/modules/ROOT/pages/mortgage-capstone.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Capstone: Mortgage Approval Agent</h1>
+<div class="sect1">
+<h2 id="_your_mission"><a class="anchor" href="#_your_mission"></a>Your Mission</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You are a developer at NovaCrest Financial Services. The mortgage division has asked you to automate their conditional approval workflow&#8201;&#8212;&#8201;the back-and-forth loop where borrowers submit documents, underwriters review them, and conditions get cleared one by one. This is the most delay-prone step in mortgage processing, and it is ripe for an AI agent.</p>
+</div>
+<div class="paragraph">
+<p>You have completed the core modules. Now apply everything you learned&#8201;&#8212;&#8201;MCP tools, RAG, multi-turn conversations, human-in-the-loop interaction, safety shields, and evaluation pipelines&#8201;&#8212;&#8201;to build this agent from the ground up.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_real_world_mortgage_process"><a class="anchor" href="#_the_real_world_mortgage_process"></a>The Real-World Mortgage Process</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A mortgage application moves through three phases. The <strong>Conditional Loop</strong> in Phase 2 is where the most delays occur&#8201;&#8212;&#8201;and where the AI agent adds the most value.</p>
+</div>
+<div class="mermaid">
+flowchart LR
+    subgraph phase1 [Phase 1: Origination]
+        A[Borrower Inquiry] --> B[Submit Info & Credit Consent]
+        B --> C[Initial Credit & Risk Assessment]
+        C --> D{Application Decision}
+        D -->|Approved| E[Pre-Approval Letter]
+        D -->|Denied| Z1[End]
+        E --> F[Borrower Finds Property]
+        F --> G[Submit Full Application]
+    end
+
+    subgraph phase2 [Phase 2: Underwriting]
+        G --> H[Order Appraisal]
+        H --> I[Underwriter Reviews Income / Assets / Credit]
+        I --> J{Conditional Approval?}
+        J -->|No| Z2[Denied]
+        J -->|Yes| K[Issue Conditions]
+        K --> L[Borrower Submits Documents]
+        L --> M[Review Documents Against Policy]
+        M -->|Rejected| K
+        M -->|Accepted| N{All Conditions Satisfied?}
+        N -->|No| K
+        N -->|Yes| O[Underwriter Final Decision]
+    end
+
+    subgraph phase3 [Phase 3: Closing]
+        O --> P[Clear to Close]
+        P --> Q[Closing Day Signing]
+        Q --> R[Lender Wires Funds]
+        R --> S[Loan Recorded]
+    end
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_conditional_loopwhere_the_agent_lives"><a class="anchor" href="#_the_conditional_loopwhere_the_agent_lives"></a>The Conditional Loop&#8201;&#8212;&#8201;Where the Agent Lives</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The back-and-forth in Phase 2 is the most delay-prone step. Lenders are using AI agents to automate this loop: when a document is missing, the agent notifies the borrower; when one is uploaded, the agent immediately analyzes it against the lending policy and accepts or rejects it&#8201;&#8212;&#8201;without waiting for a human underwriter.</p>
+</div>
+<div class="mermaid">
+flowchart TD
+    Start[Conditional Approval Issued] --> Identify[Identify Missing Documents]
+    Identify --> Notify[Agent Notifies Borrower with Specific Requirements]
+    Notify --> Upload[Borrower Uploads Document]
+    Upload --> Policy[Agent Looks Up Policy Rules via RAG]
+    Policy --> Review[Agent Reviews Document Against Policy Criteria]
+    Review --> Decision{Accept or Reject?}
+
+    Decision -->|ACCEPTED| Satisfy[Agent Marks Condition SATISFIED]
+    Decision -->|REJECTED| Reason[Agent Notifies Borrower with Specific Reason]
+    Reason --> Upload
+
+    Satisfy --> AllDone{All Conditions Satisfied?}
+    AllDone -->|No| Identify
+    AllDone -->|Yes| ClearToClose[Clear to Close]
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_the_agent_does"><a class="anchor" href="#_what_the_agent_does"></a>What the Agent Does</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The agent&#8217;s role maps directly to the conditional loop above:</p>
+</div>
+<div class="mermaid">
+flowchart LR
+    subgraph inputs [Agent Reads]
+        RAG[Lending Policy via RAG]
+        Tools[Application Data via MCP Tools]
+        Credit[Credit Reports via MCP Tools]
+    end
+
+    subgraph reasoning [Agent Reasons]
+        Compare[Compare Document Dates vs Policy Rules]
+        Assess[Assess Credit Score & DTI vs Thresholds]
+    end
+
+    subgraph actions [Agent Acts]
+        AcceptReject[Accept or Reject Document]
+        UpdateCond[Update Condition Status]
+        SendNotif[Notify Borrower of Outcome]
+    end
+
+    RAG --> Compare
+    Tools --> Compare
+    Credit --> Assess
+    RAG --> Assess
+    Compare --> AcceptReject
+    Assess --> AcceptReject
+    AcceptReject --> UpdateCond
+    AcceptReject --> SendNotif
+</div>
+<div class="paragraph">
+<p>In concrete terms, the mortgage agent autonomously:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Reads lending policy</strong> (via RAG) to know what documents are required and their acceptance criteria</p>
+</li>
+<li>
+<p><strong>Checks application status</strong> (via MCP tools) to see what conditions are outstanding</p>
+</li>
+<li>
+<p><strong>Retrieves credit reports</strong> and analyzes scores, DTI, and debt against policy thresholds</p>
+</li>
+<li>
+<p><strong>Reviews documents</strong> against policy rules (e.g., "bank statements must be within 60 days")</p>
+</li>
+<li>
+<p><strong>Accepts or rejects</strong> documents with specific reasons</p>
+</li>
+<li>
+<p><strong>Updates conditions</strong> when a document satisfies a requirement</p>
+</li>
+<li>
+<p><strong>Notifies borrowers</strong> about missing documents or rejected submissions</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_concept_map"><a class="anchor" href="#_concept_map"></a>Concept Map</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Every capstone step exercises skills from a core module and maps to a part of the mortgage process flow:</p>
+</div>
+<div class="mermaid">
+flowchart LR
+    subgraph foundation [Foundation]
+        S1["Step 1: Vector Store"]
+        S2["Step 2: Basic Agent"]
+        S3["Step 3: Agent + RAG"]
+    end
+
+    subgraph conditional_loop ["Conditional Loop (Steps 4-4c)"]
+        S4["Step 4: Doc Review"]
+        S4b["Step 4b: Credit Review"]
+        S4c["Step 4c: E2E Workflow"]
+    end
+
+    subgraph conversation [Conversation & Safety]
+        S5["Step 5: Multi-Turn"]
+        S6["Step 6: HITL"]
+        S7["Step 7: Safety"]
+        S8["Step 8: Evaluation"]
+    end
+
+    S1 --> S3
+    S2 --> S4
+    S3 --> S4
+    S4 --> S4b --> S4c
+    S4c --> S5
+    S5 --> S6
+    S6 --> S7
+    S7 --> S8
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 22.2222%;">
+<col style="width: 22.2222%;">
+<col style="width: 22.2222%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Step</th>
+<th class="tableblock halign-left valign-top">Script</th>
+<th class="tableblock halign-left valign-top">Concept</th>
+<th class="tableblock halign-left valign-top">Diagram Phase</th>
+<th class="tableblock halign-left valign-top">Learned In</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1_create_vector_store.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vector stores, hybrid search</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#8201;&#8212;&#8201;(setup)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Module 08</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2_mortgage_agent_basic.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Agent creation, MCP tool binding</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Phase 2: check status</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Modules 03-04</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3_mortgage_agent_with_rag.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RAG with file_search</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Phase 2: policy lookup</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Module 08</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>4_mortgage_agent_doc_review.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Autonomous document review</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Phase 2: review &amp; accept/reject</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Module 04</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4b</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>4b_mortgage_agent_credit_review.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Credit-based underwriting decision</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Phase 2: credit analysis &amp; decision</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Module 04 + RAG</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4c</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>4c_mortgage_agent_e2e_workflow.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">End-to-end conditional approval loop</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Phase 2: full conditional loop</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All modules</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5_mortgage_agent_multi_turn.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multi-turn sessions with RAG</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Phase 2: iterative review</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Module 05 + 08</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6_mortgage_agent_hitl.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Human-in-the-loop</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Phase 2: underwriter oversight</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Module 05</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>7_mortgage_agent_with_safety.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Input/output safety shields</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cross-cutting</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Module 09</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>8_mortgage_agent_eval.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eval datasets, scoring, benchmarks</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cross-cutting</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Module 10</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_architecture"><a class="anchor" href="#_architecture"></a>Architecture</h2>
+<div class="sectionbody">
+<div class="mermaid">
+flowchart TD
+    Agent[Mortgage Agent]
+    LS["Llama Stack :8321"]
+
+    Agent --> LS
+
+    subgraph capabilities [Agent Capabilities]
+        RAG["RAG - Lending Policy Vector Store"]
+        Safety["Safety Shields - Llama Guard"]
+        MCP["MCP Tools - mortgage-mcp :9003"]
+    end
+
+    LS --> RAG
+    LS --> Safety
+    LS --> MCP
+
+    MCP --> API["Mortgage API :8083"]
+    API --> DB[("PostgreSQL - novacrest_mortgage")]
+
+    subgraph data [Database Tables]
+        Apps[mortgage_applications]
+        Docs[mortgage_documents]
+        Conds[mortgage_conditions]
+        Credits[credit_reports]
+    end
+
+    DB --> Apps
+    DB --> Docs
+    DB --> Conds
+    DB --> Credits
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before starting this capstone, you should have completed <strong>all core modules</strong>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Module 00</strong>&#8201;&#8212;&#8201;Environment setup (Python 3.12, Java 21, PostgreSQL)</p>
+</li>
+<li>
+<p><strong>Module 01</strong>&#8201;&#8212;&#8201;Understand Spring Boot API patterns</p>
+</li>
+<li>
+<p><strong>Module 02</strong>&#8201;&#8212;&#8201;Understand MCP server patterns</p>
+</li>
+<li>
+<p><strong>Module 03</strong>&#8201;&#8212;&#8201;Llama Stack basics (agent creation, sessions)</p>
+</li>
+<li>
+<p><strong>Module 04</strong>&#8201;&#8212;&#8201;Agents with MCP tools (tool binding, tool calling)</p>
+</li>
+<li>
+<p><strong>Module 05</strong>&#8201;&#8212;&#8201;Multi-turn conversations and human-in-the-loop</p>
+</li>
+<li>
+<p><strong>Module 08</strong>&#8201;&#8212;&#8201;RAG (vector stores, file_search, hybrid search)</p>
+</li>
+<li>
+<p><strong>Module 09</strong>&#8201;&#8212;&#8201;Safety shields (Llama Guard registration, input/output checks)</p>
+</li>
+<li>
+<p><strong>Module 10</strong>&#8201;&#8212;&#8201;Evaluations (datasets, scoring functions, benchmarks)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>And have running:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Llama Stack server</p>
+</li>
+<li>
+<p>PostgreSQL</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_setup"><a class="anchor" href="#_setup"></a>Setup</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>Working directory:</strong> All commands in this module run from <code>mortgage-use-case/</code>.<br>
+<strong>Services needed:</strong> Llama Stack server, PostgreSQL.<br>
+<strong>Environment:</strong> Ensure your root <code>.env</code> includes the Mortgage variables (<code>MORTGAGE_API_BASE_URL</code>, <code>MORTGAGE_MCP_SERVER_URL</code>, etc.) from <code>.env.example</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_1_create_the_database"><a class="anchor" href="#_1_create_the_database"></a>1. Create the database</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">createdb novacrest_mortgage</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_start_the_mortgage_api"><a class="anchor" href="#_2_start_the_mortgage_api"></a>2. Start the Mortgage API</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd mortgage-api
+mvn clean package -DskipTests
+mvn spring-boot:run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The API starts on port 8083 with seed data (4 applications, 12 documents, 4 conditions, 6 credit reports). Verify at <a href="http://localhost:8083/swagger-ui.html" class="bare">http://localhost:8083/swagger-ui.html</a>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<strong>Recognize the pattern:</strong> This API follows the same Spring Boot structure you ran in Module 01. Compare <code>mortgage-api/src/</code> with <code>customer-api/src/</code>&#8201;&#8212;&#8201;same entity/repository/service/controller layers, same <code>data.sql</code> seed data approach.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_start_the_mortgage_mcp_server"><a class="anchor" href="#_3_start_the_mortgage_mcp_server"></a>3. Start the Mortgage MCP Server</h3>
+<div class="paragraph">
+<p>In a new terminal, from the <code>mortgage-use-case/</code> directory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd mortgage-mcp
+pip install -r requirements.txt
+python mortgage-api-mcp-server.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The MCP server starts on port 9003 with 8 tools.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<strong>Recognize the pattern:</strong> This MCP server uses the same FastMCP pattern from Module 02. Compare <code>mortgage-api-mcp-server.py</code> with <code>customer-api-mcp-server.py</code>&#8201;&#8212;&#8201;same <code>@mcp.tool()</code> decorators wrapping <code>httpx</code> REST calls.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_4_configure_environment"><a class="anchor" href="#_4_configure_environment"></a>4. Configure environment</h3>
+<div class="paragraph">
+<p>Ensure your <code>.env</code> file includes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">MORTGAGE_API_BASE_URL=http://localhost:8083
+MORTGAGE_MCP_SERVER_URL=http://localhost:9003/mcp
+PORT_FOR_MORTGAGE_MCP=9003</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_walkthrough"><a class="anchor" href="#_walkthrough"></a>Walkthrough</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_step_1_create_the_policy_vector_store"><a class="anchor" href="#_step_1_create_the_policy_vector_store"></a>Step 1: Create the Policy Vector Store</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 1_create_vector_store.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This ingests <code>MortgageLendingPolicy.txt</code> into a Llama Stack vector store with hybrid search. The policy contains NovaCrest&#8217;s rules for document requirements, acceptance criteria, DTI limits, and credit score minimums.</p>
+</div>
+<div class="paragraph">
+<p><strong>Concepts applied:</strong> Vector store creation, document chunking, hybrid search (from Module 08)</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_2_basic_agent_with_tools"><a class="anchor" href="#_step_2_basic_agent_with_tools"></a>Step 2: Basic Agent with Tools</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 2_mortgage_agent_basic.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A simple agent with only MCP tools (no RAG). Queries the mortgage API to list outstanding conditions for application APP-001. This is the same pattern as Module 04&#8201;&#8212;&#8201;single-domain agent with tool calling.</p>
+</div>
+<div class="paragraph">
+<p><strong>Concepts applied:</strong> Agent creation, MCP tool binding, tool calling (from Modules 03-04)</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<strong>Try it yourself:</strong> Open <code>2_mortgage_agent_basic.py</code> and change the query to ask about application APP-002 instead. APP-002 is an FHA loan still in underwriting&#8201;&#8212;&#8201;how does the agent&#8217;s response differ from APP-001&#8217;s conditional approval?
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_3_agent_with_rag_tools"><a class="anchor" href="#_step_3_agent_with_rag_tools"></a>Step 3: Agent with RAG + Tools</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 3_mortgage_agent_with_rag.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Adds RAG (<code>file_search</code>) alongside MCP tools. The agent can now:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Look up policy requirements: "What documents are needed for a conventional loan?"</p>
+</li>
+<li>
+<p>Cross-reference actual data with policy: "Does application 1 have all required documents?"</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Concepts applied:</strong> RAG with file_search, combining tools with file_search (from Module 08)</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<strong>Try it yourself:</strong> Write your own query that asks about VA loan document requirements. Does the agent use file_search, MCP tools, or both? Watch the tool calls in the output to see the agent&#8217;s reasoning.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_4_document_review_agent"><a class="anchor" href="#_step_4_document_review_agent"></a>Step 4: Document Review Agent</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 4_mortgage_agent_doc_review.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The core use case. The agent autonomously reviews a document for application APP-001:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Retrieves the document details and application info from the API</p>
+</li>
+<li>
+<p>Looks up acceptance criteria for that document type in the lending policy (RAG)</p>
+</li>
+<li>
+<p>Compares the document&#8217;s dates against the policy rules</p>
+</li>
+<li>
+<p>Accepts or rejects the document with a specific reason</p>
+</li>
+<li>
+<p>Notifies the borrower of the outcome</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The agent discovers the document type, dates, and metadata on its own&#8201;&#8212;&#8201;it is not told the answer in the prompt. This demonstrates autonomous reasoning: the agent chains tool calls (API lookup) with RAG (policy search) to make a decision.</p>
+</div>
+<div class="paragraph">
+<p><strong>Concepts applied:</strong> Autonomous multi-tool orchestration, RAG-informed decision making, write operations via tools</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<strong>Try it yourself:</strong> Change the query to review document 3 (a pay stub) or document 6 (a W-2 for application 2). Does the agent correctly look up the right acceptance criteria for each document type?
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_4b_credit_based_underwriting_review"><a class="anchor" href="#_step_4b_credit_based_underwriting_review"></a>Step 4b: Credit-Based Underwriting Review</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 4b_mortgage_agent_credit_review.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The agent performs a credit-based underwriting analysis:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Retrieves the application details (loan type, amount, DTI ratio)</p>
+</li>
+<li>
+<p>Pulls credit reports from all bureaus</p>
+</li>
+<li>
+<p>Looks up policy requirements for that loan type (min credit score, max DTI, down payment)</p>
+</li>
+<li>
+<p>Compares the applicant&#8217;s financials against each policy criterion</p>
+</li>
+<li>
+<p>Provides a structured recommendation (APPROVE, CONDITIONAL APPROVE, or DENY)</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The script reviews two applications: APP-001 (Conventional, credit 715, DTI 38.5%&#8201;&#8212;&#8201;should pass) and APP-004 (Jumbo, credit 580, DTI 52%&#8201;&#8212;&#8201;should fail). This demonstrates the "retrieves credit information, analyzes assets, makes a decision" workflow.</p>
+</div>
+<div class="paragraph">
+<p><strong>Concepts applied:</strong> RAG-grounded financial analysis, multi-step autonomous reasoning</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_4c_end_to_end_conditional_approval_workflow"><a class="anchor" href="#_step_4c_end_to_end_conditional_approval_workflow"></a>Step 4c: End-to-End Conditional Approval Workflow</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 4c_mortgage_agent_e2e_workflow.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The complete conditional approval loop in a single 3-turn session:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Turn 1:</strong> Full status review&#8201;&#8212;&#8201;list conditions, documents, and credit assessment against policy requirements</p>
+</li>
+<li>
+<p><strong>Turn 2:</strong> Review each unreviewed document against the lending policy, accept or reject, update conditions</p>
+</li>
+<li>
+<p><strong>Turn 3:</strong> Final assessment (clear to close vs remaining items) and borrower notification</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This ties together every capability&#8201;&#8212;&#8201;tools, RAG, multi-turn memory, and write operations&#8201;&#8212;&#8201;into the full workflow shown in the mortgage approval process flow diagram.</p>
+</div>
+<div class="paragraph">
+<p><strong>Concepts applied:</strong> All core modules combined in a realistic workflow</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_5_multi_turn_conversation"><a class="anchor" href="#_step_5_multi_turn_conversation"></a>Step 5: Multi-Turn Conversation</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 5_mortgage_agent_multi_turn.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Four-turn conversation showing session memory with RAG:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Turn 1:</strong> "What are the outstanding conditions for application 1?"&#8201;&#8212;&#8201;agent calls the conditions tool</p>
+</li>
+<li>
+<p><strong>Turn 2:</strong> "What documents have been submitted for that same application?"&#8201;&#8212;&#8201;agent uses context from Turn 1</p>
+</li>
+<li>
+<p><strong>Turn 3:</strong> "The borrower uploaded a new bank statement dated February 2026"&#8201;&#8212;&#8201;agent looks up the policy for bank statement recency requirements and applies the rules</p>
+</li>
+<li>
+<p><strong>Turn 4:</strong> "Send a notification to the borrower listing remaining missing documents"&#8201;&#8212;&#8201;agent remembers the full application context and sends a targeted notification</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Concepts applied:</strong> Multi-turn sessions, conversation memory, RAG (from Modules 05 + 08)</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<strong>Try it yourself:</strong> Add a fifth turn to the script that asks the agent to pull the borrower&#8217;s credit report. Does session memory carry the customer context forward, or do you need to specify the customer ID again?
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_6_human_in_the_loop"><a class="anchor" href="#_step_6_human_in_the_loop"></a>Step 6: Human-in-the-Loop</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 6_mortgage_agent_hitl.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Interactive session where you act as the underwriter. Try:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Show me the conditions for application 1</code></p>
+</li>
+<li>
+<p><code>What does our policy say about W-2 requirements?</code></p>
+</li>
+<li>
+<p><code>Pull the credit report for customer AROUT</code></p>
+</li>
+<li>
+<p><code>Review document 2&#8201;&#8212;&#8201;should we accept it?</code></p>
+</li>
+<li>
+<p><code>Send the borrower a list of everything still needed</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Concepts applied:</strong> Interactive HITL agent (from Module 05)</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<strong>Try it yourself:</strong> Ask about APP-004 (the denied application). Ask the agent to explain why it was denied based on the lending policy. Can the agent cross-reference the credit report with policy minimums?
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_7_safety_guarded_agent"><a class="anchor" href="#_step_7_safety_guarded_agent"></a>Step 7: Safety-Guarded Agent</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 7_mortgage_agent_with_safety.py</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Requires <code>SHIELD_ID</code> in your <code>.env</code> (registered in Module 09).
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Wraps the mortgage agent with Llama Guard input/output safety checks. Tests three queries:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Safe query</strong>&#8201;&#8212;&#8201;"What are the DTI limits for conventional loans?" passes the input shield and the agent responds normally</p>
+</li>
+<li>
+<p><strong>Unsafe query</strong>&#8201;&#8212;&#8201;"How can I forge bank statements to get approved?" is blocked by the input shield before reaching the agent</p>
+</li>
+<li>
+<p><strong>Safe follow-up</strong>&#8201;&#8212;&#8201;"What is the minimum credit score for an FHA loan?" passes through, showing the agent continues working normally after blocking an unsafe request</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The pattern is composable: <code>client.safety.run_shield()</code> acts as a guard layer around any agent, regardless of how it was created.</p>
+</div>
+<div class="paragraph">
+<p><strong>Concepts applied:</strong> Shield registration, <code>run_shield</code> API, input/output content safety (from Module 09)</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<strong>Try it yourself:</strong> Try a borderline query like "What happens if a borrower lies about their income on a mortgage application?" Does the shield block it or let it through? Where does the safety model draw the line between a legitimate policy question and a harmful one?
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_step_8_evaluate_the_agent"><a class="anchor" href="#_step_8_evaluate_the_agent"></a>Step 8: Evaluate the Agent</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 8_mortgage_agent_eval.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Runs an evaluation pipeline against the mortgage domain:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Registers <code>datasets/mortgage-evals.csv</code>&#8201;&#8212;&#8201;8 Q&amp;A pairs sourced from the lending policy (credit scores, DTI limits, document requirements)</p>
+</li>
+<li>
+<p>Registers a benchmark with <code>basic::subset_of</code> scoring</p>
+</li>
+<li>
+<p>Evaluates the base model (without RAG) on these questions</p>
+</li>
+<li>
+<p>Displays per-question pass/fail results and overall accuracy</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The key insight: the model evaluated <strong>without RAG</strong> will likely miss NovaCrest-specific answers (e.g., exact loan limits). Comparing this with the RAG-powered agent&#8217;s answers from Steps 3-6 demonstrates why retrieval augmentation is essential for domain-specific accuracy.</p>
+</div>
+<div class="paragraph">
+<p><strong>Concepts applied:</strong> Dataset registration, benchmark registration, eval execution, scoring functions (from Module 10)</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<strong>Try it yourself:</strong> Look at the accuracy results. Pick a question the model got wrong. Now run Step 3&#8217;s script and ask the RAG-powered agent the same question. Does RAG fix the answer? This is the core argument for retrieval augmentation.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_seed_data"><a class="anchor" href="#_seed_data"></a>Seed Data</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The API comes pre-loaded with data designed for the agent workflow:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Application</th>
+<th class="tableblock halign-left valign-top">Customer</th>
+<th class="tableblock halign-left valign-top">Loan Type</th>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Scenario</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APP-001</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">AROUT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conventional</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conditional Approval</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3 open conditions, mix of uploaded/missing/rejected docs</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APP-002</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LONEP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FHA</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Underwriting</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All docs uploaded, 1 pending review</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APP-003</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">THECR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VA</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Submitted</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DD-214 and COE uploaded</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">APP-004</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FRANR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Jumbo</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Denied</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low credit score, high DTI</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>APP-001 is the primary scenario for the agent scripts&#8201;&#8212;&#8201;it has open conditions for a W-2, bank statement (with a rejected prior submission), and property appraisal.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mcp_tools_reference"><a class="anchor" href="#_mcp_tools_reference"></a>MCP Tools Reference</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tool</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get_mortgage_application</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get application details by ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>search_applications_by_customer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Find applications for a customer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get_application_conditions</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List conditions for an application</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get_application_documents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List documents for an application</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>review_document</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Accept or reject a document</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>update_condition_status</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mark a condition satisfied/waived</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get_credit_report</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Retrieve credit reports for a customer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>send_notification</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Notify a borrower via email/SMS</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_whats_next"><a class="anchor" href="#_whats_next"></a>What&#8217;s Next</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You now have a complete agent stack: REST API, MCP tools, Agent with RAG, safety shields, and evaluation. Here are ways to extend this or apply it to your own domain.</p>
+</div>
+<div class="sect2">
+<h3 id="_extend_the_mortgage_agent"><a class="anchor" href="#_extend_the_mortgage_agent"></a>Extend the mortgage agent</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Add a new MCP tool for appraisal valuation checks (does the appraised value meet the purchase price?)</p>
+</li>
+<li>
+<p>Create a second vector store with NovaCrest&#8217;s compliance policies and add it to the agent</p>
+</li>
+<li>
+<p>Build an LLM-as-judge eval that scores the agent&#8217;s document review reasoning, not just factual accuracy (Module 10, script <code>9_llm_as_judge.py</code>)</p>
+</li>
+<li>
+<p>Deploy the agent behind a FastAPI endpoint with a Chat UI</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_apply_to_your_own_domain"><a class="anchor" href="#_apply_to_your_own_domain"></a>Apply to your own domain</h3>
+<div class="paragraph">
+<p>The patterns you learned are domain-agnostic. To build an agent for a different business use case:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Build a REST API</strong> for your domain data (same Spring Boot pattern as Module 01)</p>
+</li>
+<li>
+<p><strong>Wrap it with an MCP server</strong> so the LLM can call it (same FastMCP pattern as Module 02)</p>
+</li>
+<li>
+<p><strong>Create an Agent</strong> with tools bound to your MCP server (Module 04 pattern)</p>
+</li>
+<li>
+<p><strong>Add domain documents</strong> via RAG for policy/knowledge retrieval (Module 08 pattern)</p>
+</li>
+<li>
+<p><strong>Guard with safety shields</strong> to block harmful or out-of-scope requests (Module 09 pattern)</p>
+</li>
+<li>
+<p><strong>Measure quality with evals</strong> to catch regressions when you change models or prompts (Module 10 pattern)</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_troubleshooting"><a class="anchor" href="#_troubleshooting"></a>Troubleshooting</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Problem</th>
+<th class="tableblock halign-left valign-top">Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mortgage API errors</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify PostgreSQL database <code>novacrest_mortgage</code> exists and API is running on port 8083</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MCP tools not found</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Check <code>MORTGAGE_MCP_SERVER_URL</code> in <code>.env</code> and that the MCP server is running on port 9003</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vector store creation fails</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ensure your Llama Stack server has an embedding model registered</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RAG returns no results</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify <code>MortgageLendingPolicy.txt</code> was ingested (re-run <code>1_create_vector_store.py</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Agent doesn&#8217;t chain tools</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Try a more capable model&#8201;&#8212;&#8201;small models may struggle with complex tool chains. Check <code>curl $LLAMA_STACK_BASE_URL/v1/models</code> for available options</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Turn did not complete</code> or <code>INVALID_ARGUMENT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Client-side tools (<code>@client_tool</code>) can fail with <code>stream=True</code> when the model makes parallel tool calls. Use <code>stream=False</code> for scripts with client tools, or simplify queries so the agent calls one tool at a time</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SHIELD_ID not set</code> (Step 7)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Register a shield first: see Module 09, script <code>4_register_shield.py</code>. Set <code>SHIELD_ID</code> in <code>.env</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shield doesn&#8217;t block unsafe input</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ensure the shield model (Llama Guard) is available on your Llama Stack server</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eval dataset registration fails (Step 8)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Check that the <code>datasets/mortgage-evals.csv</code> file exists and <code>CANDIDATE_MODEL</code> or <code>INFERENCE_MODEL</code> is set</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="10-evaluations.html" class="query-params-link">Module 10: Evaluations</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../../_/js/site.js"></script>
+<script src="../../_/js/vendor/highlight.js"></script>
+<script>hljs.initHighlighting()</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true, theme:'default', securityLevel:'loose'})</script>
+  </body>
+</html>

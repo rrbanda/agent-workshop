@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Module 04: Agents with MCP Tools :: NovaCrest Agent Workshop</title>
+    <link rel="canonical" href="https://rrbanda.github.io/agent-workshop/novacrest-agent-workshop/v1.0/04-agents-with-tools.html">
+    <link rel="prev" href="03-llama-stack-basics.html">
+    <link rel="next" href="05-multi-turn-and-hitl.html">
+    <meta name="generator" content="Antora 2.3.1">
+    <link rel="stylesheet" href="../../_/css/site.css">
+<link rel="icon" href="../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../../_/img/RHDLogo.svg" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://rrbanda.github.io/agent-workshop">NovaCrest Agent Workshop</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="novacrest-agent-workshop" data-version="v1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html" class=" query-params-link">novacrest-agent-workshop</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Welcome</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="00-setup.html">Module 00: Environment Setup</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="01-backend-apis.html">Module 01: Backend APIs</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="02-mcp-servers.html">Module 02: MCP Servers</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="03-llama-stack-basics.html">Module 03: Llama Stack Basics</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="04-agents-with-tools.html">Module 04: Agents with MCP Tools</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="05-multi-turn-and-hitl.html">Module 05: Multi-Turn &amp; HITL</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="08-rag.html">Module 08: RAG</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="09-safety-shields.html">Module 09: Safety Shields</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="10-evaluations.html">Module 10: Evaluations</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="mortgage-capstone.html">Capstone: Mortgage Approval Agent</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">novacrest-agent-workshop</span>
+    <span class="version">v1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">novacrest-agent-workshop</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">v1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">novacrest-agent-workshop</a></li>
+    <li><a href="04-agents-with-tools.html">Module 04: Agents with MCP Tools</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/rrbanda/agent-workshop/edit/main/documentation/modules/ROOT/pages/04-agents-with-tools.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Module 04: Agents with MCP Tools</h1>
+<div class="sect1">
+<h2 id="_learning_objectives"><a class="anchor" href="#_learning_objectives"></a>Learning Objectives</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Bind MCP tools to a Llama Stack agent</p>
+</li>
+<li>
+<p>Build single-domain agents (customer-only or finance-only)</p>
+</li>
+<li>
+<p>Build a multi-domain agent that reasons across customer and finance data</p>
+</li>
+<li>
+<p>Understand cross-domain reasoning (email &#8594; customer ID &#8594; orders)</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<strong>Capstone Preview:</strong> In the capstone, these tool-binding patterns drive a mortgage document review workflow where the agent chains MCP tools with RAG to accept or reject documents.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="02-mcp-servers.html" class="page">Module 02: MCP Servers</a> running (ports 9001 and 9002)</p>
+</li>
+<li>
+<p><a href="03-llama-stack-basics.html" class="page">Module 03: Llama Stack Basics</a> completed</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_concepts"><a class="anchor" href="#_concepts"></a>Concepts</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>An <strong>agent with tools</strong> is an LLM that can take action in the real world. When you bind MCP tools to an agent, the LLM autonomously decides which tools to call based on the user&#8217;s question&#8201;&#8212;&#8201;it reads the tool descriptions, picks the right one, formats the arguments, and interprets the result. <strong>Cross-domain reasoning</strong> happens when a single agent has tools from multiple MCP servers and chains calls across them (e.g., look up a customer by email, then fetch their orders from a different API).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scripts"><a class="anchor" href="#_scripts"></a>Scripts</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Script</th>
+<th class="tableblock halign-left valign-top">What It Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>4_agent_customer_mcp.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Agent with customer tools only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>4_agent_finance_mcp.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Agent with finance tools only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5_agent_customer_and_finance.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Agent with both tool sets</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_by_step"><a class="anchor" href="#_step_by_step"></a>Step-by-Step</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>Working directory:</strong> All commands in this module run from <code>04-agents-with-tools/</code>.<br>
+<strong>Services needed:</strong> Llama Stack, Customer API (8081), Finance API (8082), Customer MCP (9001), Finance MCP (9002).
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_1_single_domain_customer_agent"><a class="anchor" href="#_1_single_domain_customer_agent"></a>1. Single-Domain: Customer Agent</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 4_agent_customer_mcp.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The agent searches for a customer by email using the <code>search_customers</code> tool.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_single_domain_finance_agent"><a class="anchor" href="#_2_single_domain_finance_agent"></a>2. Single-Domain: Finance Agent</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 4_agent_finance_mcp.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The agent retrieves orders for a customer ID using <code>fetch_order_history</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_multi_domain_customer_finance"><a class="anchor" href="#_3_multi_domain_customer_finance"></a>3. Multi-Domain: Customer + Finance</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 5_agent_customer_and_finance.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The agent chains tools: email &#8594; <code>search_customers</code> &#8594; customer ID &#8594; <code>fetch_order_history</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_you_should_see"><a class="anchor" href="#_what_you_should_see"></a>What You Should See</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_customer_agent_script_4"><a class="anchor" href="#_customer_agent_script_4"></a>Customer Agent (script 4)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Base URL: http://localhost:8321
+Model: vllm-inference/gpt-oss-120b
+Customer MCP: http://localhost:9001/mcp
+The customer with email thomashardy@example.com is Thomas Hardy,
+contact for Around the Horn (customer ID: AROUT)...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The agent calls <code>search_customers</code> behind the scenes. Only the final text response is printed. (Exact wording varies by model.)</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_multi_domain_agent_script_5"><a class="anchor" href="#_multi_domain_agent_script_5"></a>Multi-Domain Agent (script 5)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Base URL: http://localhost:8321
+Model: vllm-inference/gpt-oss-120b
+Customer MCP: http://localhost:9001/mcp
+Finance MCP: http://localhost:9002/mcp
+The customer with email thomashardy@example.com is Thomas Hardy from
+Around the Horn (AROUT). Their orders include order #10355...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The agent chains <code>search_customers</code> then <code>fetch_order_history</code> autonomously. Only the final text is printed.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_tool_binding_works"><a class="anchor" href="#_how_tool_binding_works"></a>How Tool Binding Works</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">mcp_tools = [
+    {
+        "type": "mcp",
+        "server_url": os.getenv("CUSTOMER_MCP_SERVER_URL"),
+        "server_label": "customer",
+    },
+    {
+        "type": "mcp",
+        "server_url": os.getenv("FINANCE_MCP_SERVER_URL"),
+        "server_label": "finance",
+    }
+]
+
+agent = Agent(client, model=MODEL, instructions="...", tools=mcp_tools)</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_key_takeaways"><a class="anchor" href="#_key_takeaways"></a>Key Takeaways</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>MCP tools are bound to agents via <code>tools=[{"type": "mcp", "server_url": &#8230;&#8203;, "server_label": &#8230;&#8203;}]</code></p>
+</li>
+<li>
+<p>The LLM autonomously decides which tools to call based on the user&#8217;s question</p>
+</li>
+<li>
+<p>Multi-domain agents can chain tool calls across different MCP servers</p>
+</li>
+<li>
+<p>The <code>instructions</code> parameter acts as the system prompt guiding agent behavior</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_concepts_applied"><a class="anchor" href="#_concepts_applied"></a>Concepts Applied</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>From Module 02</strong>: MCP server URLs and tool exposure</p>
+</li>
+<li>
+<p><strong>From Module 03</strong>: <code>Agent</code> class, <code>create_session</code>, <code>create_turn</code>, <code>AgentEventLogger</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_troubleshooting"><a class="anchor" href="#_troubleshooting"></a>Troubleshooting</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Problem</th>
+<th class="tableblock halign-left valign-top">Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Empty tool list</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify MCP servers are running on ports 9001/9002</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Connection refused</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Check <code>LLAMA_STACK_BASE_URL</code> and that the Llama Stack server is running</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Agent doesn&#8217;t call tools</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ensure <code>INFERENCE_MODEL</code> supports tool calling (check your Llama Stack server&#8217;s available models)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_next_module"><a class="anchor" href="#_next_module"></a>Next Module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Proceed to <a href="05-multi-turn-and-hitl.html" class="page">Module 05: Multi-Turn &amp; HITL</a> for conversation memory and human oversight.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="03-llama-stack-basics.html" class="query-params-link">Module 03: Llama Stack Basics</a></span>
+  <span class="next"><a href="05-multi-turn-and-hitl.html" class="query-params-link">Module 05: Multi-Turn &amp; HITL</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../../_/js/site.js"></script>
+<script src="../../_/js/vendor/highlight.js"></script>
+<script>hljs.initHighlighting()</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true, theme:'default', securityLevel:'loose'})</script>
+  </body>
+</html>

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Module 10: Evaluations :: NovaCrest Agent Workshop</title>
+    <link rel="canonical" href="https://rrbanda.github.io/agent-workshop/novacrest-agent-workshop/v1.0/10-evaluations.html">
+    <link rel="prev" href="09-safety-shields.html">
+    <link rel="next" href="mortgage-capstone.html">
+    <meta name="generator" content="Antora 2.3.1">
+    <link rel="stylesheet" href="../../_/css/site.css">
+<link rel="icon" href="../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../../_/img/RHDLogo.svg" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://rrbanda.github.io/agent-workshop">NovaCrest Agent Workshop</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="novacrest-agent-workshop" data-version="v1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html" class=" query-params-link">novacrest-agent-workshop</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Welcome</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="00-setup.html">Module 00: Environment Setup</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="01-backend-apis.html">Module 01: Backend APIs</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="02-mcp-servers.html">Module 02: MCP Servers</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="03-llama-stack-basics.html">Module 03: Llama Stack Basics</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="04-agents-with-tools.html">Module 04: Agents with MCP Tools</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="05-multi-turn-and-hitl.html">Module 05: Multi-Turn &amp; HITL</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="08-rag.html">Module 08: RAG</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="09-safety-shields.html">Module 09: Safety Shields</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="10-evaluations.html">Module 10: Evaluations</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="mortgage-capstone.html">Capstone: Mortgage Approval Agent</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">novacrest-agent-workshop</span>
+    <span class="version">v1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">novacrest-agent-workshop</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">v1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">novacrest-agent-workshop</a></li>
+    <li><a href="10-evaluations.html">Module 10: Evaluations</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/rrbanda/agent-workshop/edit/main/documentation/modules/ROOT/pages/10-evaluations.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Module 10: Evaluations</h1>
+<div class="sect1">
+<h2 id="_learning_objectives"><a class="anchor" href="#_learning_objectives"></a>Learning Objectives</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Register evaluation datasets with Llama Stack</p>
+</li>
+<li>
+<p>Define scoring functions (rule-based and LLM-as-judge)</p>
+</li>
+<li>
+<p>Run benchmark evaluation jobs</p>
+</li>
+<li>
+<p>Review and interpret evaluation results</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<strong>Capstone Preview:</strong> In the capstone, you will build a mortgage-specific eval dataset and benchmark to measure your agent&#8217;s accuracy against the lending policy.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="03-llama-stack-basics.html" class="page">Module 03: Llama Stack Basics</a> completed</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_concepts"><a class="anchor" href="#_concepts"></a>Concepts</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Evaluations (evals)</strong> measure an agent&#8217;s quality systematically rather than relying on manual spot-checks. A <strong>dataset</strong> contains question-answer pairs that define what "correct" looks like. A <strong>scoring function</strong> compares the model&#8217;s generated answer against the expected answer&#8201;&#8212;&#8201;rule-based scorers like <code>basic::subset_of</code> check for exact containment, while <strong>LLM-as-judge</strong> uses a separate LLM to assess quality on a scale. A <strong>benchmark</strong> combines a dataset with scoring functions into a repeatable test suite you can run against different models or configurations.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scripts"><a class="anchor" href="#_scripts"></a>Scripts</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Script</th>
+<th class="tableblock halign-left valign-top">What It Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1_list_eval_related_providers.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List eval, dataset, and scoring providers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2_register_dataset_basic_subset_of.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Register a simple Q&amp;A dataset</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2_register_dataset_agent_evals_customer.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Register NovaCrest customer eval dataset</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3_list_datasets.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List all registered datasets</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>4_list_scoring_functions.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List available scoring functions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>4_basic_subset_of_scoring_function.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Test rule-based scoring directly</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5_register_benchmark.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Register a benchmark (dataset + scoring)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>7_execute_eval.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Run an evaluation job</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>8_review_eval_job.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Review eval results</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>9_llm_as_judge.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LLM-as-judge scoring</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_step_by_step"><a class="anchor" href="#_step_by_step"></a>Step-by-Step</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>Working directory:</strong> All commands in this module run from <code>10-evaluations/</code>.<br>
+<strong>Services needed:</strong> Llama Stack server.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_1_register_a_dataset"><a class="anchor" href="#_1_register_a_dataset"></a>1. Register a Dataset</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 2_register_dataset_basic_subset_of.py</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_test_scoring_directly"><a class="anchor" href="#_2_test_scoring_directly"></a>2. Test Scoring Directly</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 4_basic_subset_of_scoring_function.py</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_run_a_full_evaluation"><a class="anchor" href="#_3_run_a_full_evaluation"></a>3. Run a Full Evaluation</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 5_register_benchmark.py
+python 7_execute_eval.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Script 7 will print a job ID when it completes (typically <code>0</code> for the first eval run). Copy it and set it before running script 8:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export LLAMA_STACK_JOB_ID=0
+python 8_review_eval_job.py</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The job ID is printed in the output of script 7 as <code>Eval job started: 0</code>. Use whatever value appears after the colon.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_4_llm_as_judge"><a class="anchor" href="#_4_llm_as_judge"></a>4. LLM-as-Judge</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 9_llm_as_judge.py</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_you_should_see"><a class="anchor" href="#_what_you_should_see"></a>What You Should See</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_register_dataset_script_2"><a class="anchor" href="#_register_dataset_script_2"></a>Register Dataset (script 2)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Connecting to Llama Stack server at: http://localhost:8321
+Registering dataset: basic-subset-of-evals
+Using dataset provider: localfs
+Registered dataset: basic-subset-of-evals</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_scoring_test_script_4"><a class="anchor" href="#_scoring_test_script_4"></a>Scoring Test (script 4)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">=== basic::subset_of ===
+Accuracy: 100.0%
+Correct: 1 / 1
+
+Row scores:
+  Row 1: ✓ (score: 1.0)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The script scores <code>"What is 2 + 2?"</code> with expected answer <code>"4"</code> against generated answer <code>"4"</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_execute_eval_script_7"><a class="anchor" href="#_execute_eval_script_7"></a>Execute Eval (script 7)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Running eval for benchmark: my-basic-quality-benchmark
+Using candidate model: &lt;your-candidate-model&gt;
+Eval job started: 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Copy the job ID from this output for the next step.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_llm_as_judge_script_9"><a class="anchor" href="#_llm_as_judge_script_9"></a>LLM-as-Judge (script 9)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">================================================================================
+EVALUATION RESULTS
+================================================================================
+
+--- Evaluation 1 ---
+Generated Answer: 4
+Score: 1.0
+Judge Feedback:
+The answer is correct and complete...
+
+================================================================================
+Total evaluations: 1
+================================================================================</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_key_takeaways"><a class="anchor" href="#_key_takeaways"></a>Key Takeaways</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Evals measure agent quality systematically</p>
+</li>
+<li>
+<p><code>basic::subset_of</code> is a simple rule-based scorer (expected answer in generated answer)</p>
+</li>
+<li>
+<p>LLM-as-judge uses a separate LLM to evaluate response quality</p>
+</li>
+<li>
+<p>Benchmarks combine a dataset with scoring functions for repeatable evaluation</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_concepts_applied"><a class="anchor" href="#_concepts_applied"></a>Concepts Applied</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>From Module 03</strong>: <code>LlamaStackClient</code> for API access</p>
+</li>
+<li>
+<p><strong>New</strong>: Datasets, scoring functions, benchmarks, evaluation jobs, LLM-as-judge</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_troubleshooting"><a class="anchor" href="#_troubleshooting"></a>Troubleshooting</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Problem</th>
+<th class="tableblock halign-left valign-top">Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Dataset not found"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Run <code>2_register_dataset_basic_subset_of.py</code> first</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Benchmark not found"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Run <code>5_register_benchmark.py</code> before <code>7_execute_eval.py</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Judge model errors</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify <code>JUDGE_MODEL</code> is available on your Llama Stack server</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low eval scores</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Check if the candidate model can handle the query complexity</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_next_module"><a class="anchor" href="#_next_module"></a>Next Module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You have completed the core learning path. Proceed to the capstone: <a href="mortgage-capstone.html" class="page">Mortgage Approval Agent</a>&#8201;&#8212;&#8201;Apply everything you learned to build a complete agent.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="09-safety-shields.html" class="query-params-link">Module 09: Safety Shields</a></span>
+  <span class="next"><a href="mortgage-capstone.html" class="query-params-link">Capstone: Mortgage Approval Agent</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../../_/js/site.js"></script>
+<script src="../../_/js/vendor/highlight.js"></script>
+<script>hljs.initHighlighting()</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true, theme:'default', securityLevel:'loose'})</script>
+  </body>
+</html>
