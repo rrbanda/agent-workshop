@@ -74,7 +74,13 @@
     <a class="nav-link" href="index.html">Welcome</a>
   </li>
   <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="00-setup.html">Module 00: Environment Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="llama-stack-admin.html">Llama Stack Admin Guide</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="01-backend-apis.html">Module 01: Backend APIs</a>
@@ -102,6 +108,9 @@
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="mortgage-capstone.html">Capstone: Mortgage Approval Agent</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="reference.html">Reference</a>
   </li>
 </ul>
   </li>
@@ -250,6 +259,18 @@
 <div class="paragraph">
 <p>The workshop follows a linear path where every module builds toward the capstone.</p>
 </div>
+<div class="mermaid">
+flowchart TD
+    M00["00<br/>Setup"] --> M01["01<br/>Backend APIs"]
+    M01 --> M02["02<br/>MCP Servers"]
+    M02 --> M03["03<br/>Llama Stack Basics"]
+    M03 --> M04["04<br/>Agents with MCP Tools"]
+    M04 --> M05["05<br/>Multi-Turn & HITL"]
+    M05 --> M08["08<br/>RAG"]
+    M08 --> M09["09<br/>Safety Shields"]
+    M09 --> M10["10<br/>Evaluations"]
+    M10 --> CAP["Capstone<br/>Mortgage Approval Agent"]
+</div>
 <div class="sect2">
 <h3 id="_core_path"><a class="anchor" href="#_core_path"></a>Core Path</h3>
 <table class="tableblock frame-all grid-all stretch">
@@ -369,6 +390,7 @@ pip install -r requirements.txt
 # 3. Configure environment
 cp .env.example .env
 # Edit .env -- set LLAMA_STACK_BASE_URL to your Llama Stack server
+# (If running locally: uv run --with llama-stack llama stack run starter)
 
 # 4. Verify Llama Stack connectivity
 source .env

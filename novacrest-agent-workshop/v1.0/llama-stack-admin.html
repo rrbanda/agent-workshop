@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Llama Stack Server Setup (Admin Guide) :: NovaCrest Agent Workshop</title>
+    <link rel="canonical" href="https://rrbanda.github.io/agent-workshop/novacrest-agent-workshop/v1.0/llama-stack-admin.html">
+    <link rel="prev" href="00-setup.html">
+    <link rel="next" href="01-backend-apis.html">
+    <meta name="generator" content="Antora 2.3.1">
+    <link rel="stylesheet" href="../../_/css/site.css">
+<link rel="icon" href="../../_/img/favicon.ico" type="image/x-icon">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
+          src="../../_/img/RHDLogo.svg" height="40px" alt="Red Hat Developer Program"></a>
+      <a class="navbar-item" href="https://rrbanda.github.io/agent-workshop">NovaCrest Agent Workshop</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Books</a>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">CheatSheets</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">CheatSheet A</a>
+            <a class="navbar-item" href="#">CheatSheet B</a>
+            <a class="navbar-item" href="#">CheatSheet C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">Upcoming Events</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Event A</a>
+            <a class="navbar-item" href="#">Event B</a>
+            <a class="navbar-item" href="#">Event C</a>
+          </div>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">More Tutorials</a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="#">Tutorial A</a>
+            <a class="navbar-item" href="#">Tutorial B</a>
+            <a class="navbar-item" href="#">Tutorial C</a>
+          </div>
+        </div>
+        <div class="navbar-item">
+          <span class="control">
+            <a class="button is-primary" href="#">Download</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="novacrest-agent-workshop" data-version="v1.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html" class=" query-params-link">novacrest-agent-workshop</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Welcome</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="00-setup.html">Module 00: Environment Setup</a>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="llama-stack-admin.html">Llama Stack Admin Guide</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="01-backend-apis.html">Module 01: Backend APIs</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="02-mcp-servers.html">Module 02: MCP Servers</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="03-llama-stack-basics.html">Module 03: Llama Stack Basics</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="04-agents-with-tools.html">Module 04: Agents with MCP Tools</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="05-multi-turn-and-hitl.html">Module 05: Multi-Turn &amp; HITL</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="08-rag.html">Module 08: RAG</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="09-safety-shields.html">Module 09: Safety Shields</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="10-evaluations.html">Module 10: Evaluations</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="mortgage-capstone.html">Capstone: Mortgage Approval Agent</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="reference.html">Reference</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">novacrest-agent-workshop</span>
+    <span class="version">v1.0</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">novacrest-agent-workshop</span>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">v1.0</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">novacrest-agent-workshop</a></li>
+    <li><a href="00-setup.html">Module 00: Environment Setup</a></li>
+    <li><a href="llama-stack-admin.html">Llama Stack Admin Guide</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/rrbanda/agent-workshop/edit/main/documentation/modules/ROOT/pages/llama-stack-admin.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Llama Stack Server Setup (Admin Guide)</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Deploy a Llama Stack server with all capabilities the NovaCrest Agent Workshop requires.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>OpenShift cluster with <strong>RHOAI operator</strong> installed (includes the Llama Stack K8s operator)</p>
+</li>
+<li>
+<p>A <strong>MaaS / vLLM inference endpoint</strong> accessible from the cluster (provides models like <code>gpt-oss-120b</code>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deploy_on_openshift_2_commands"><a class="anchor" href="#_deploy_on_openshift_2_commands"></a>Deploy on OpenShift (2 commands)</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_1_edit_the_distribution_yaml"><a class="anchor" href="#_1_edit_the_distribution_yaml"></a>1. Edit the distribution YAML</h3>
+<div class="paragraph">
+<p>Set your MaaS endpoint in <code>llamastack-distribution.yaml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: VLLM_API_URL
+  value: "https://your-maas-endpoint/v1"   # &lt;-- your MaaS URL
+- name: VLLM_API_TOKEN
+  value: "your-api-token"                   # &lt;-- your MaaS token</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_apply_both_files"><a class="anchor" href="#_2_apply_both_files"></a>2. Apply both files</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f 00-setup/llama-stack-config/llamastack-configmap.yaml
+oc apply -f 00-setup/llama-stack-config/llamastack-distribution.yaml</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_wait_for_the_pod"><a class="anchor" href="#_3_wait_for_the_pod"></a>3. Wait for the pod</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pods -w -l llamastack.io/distribution=llamastack-novacrest-workshop</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_4_create_a_route_and_get_the_url"><a class="anchor" href="#_4_create_a_route_and_get_the_url"></a>4. Create a route and get the URL</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc create route edge llamastack --service=llamastack-novacrest-workshop-service --port=8321
+LLAMA_STACK_URL=https://$(oc get route llamastack -o jsonpath='{.spec.host}')
+echo $LLAMA_STACK_URL</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_5_verify"><a class="anchor" href="#_5_verify"></a>5. Verify</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s "$LLAMA_STACK_URL/v1/models" | python3 -m json.tool</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_6_set_the_url_in_env"><a class="anchor" href="#_6_set_the_url_in_env"></a>6. Set the URL in <code>.env</code></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">LLAMA_STACK_BASE_URL=https://llamastack-....apps.your-cluster.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That&#8217;s it. The Llama Stack pod connects to your MaaS endpoint for LLM inference and runs embedding, vector store, agents, safety, eval, and tool runtime inline.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_verify_all_capabilities"><a class="anchor" href="#_verify_all_capabilities"></a>Verify All Capabilities</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>From the repo root, run the readiness check:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 00-setup/verify_llama_stack.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All 6 checks should pass before starting the workshop. See <a href="00-setup.html#_deep_verification_optional" class="page">Deep Verification</a> for sample output.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_alternative_run_locally"><a class="anchor" href="#_alternative_run_locally"></a>Alternative: Run Locally</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you don&#8217;t have OpenShift, you can run Llama Stack locally using the standalone <code>run.yaml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export VLLM_API_URL=https://your-vllm-endpoint/v1
+export VLLM_API_TOKEN=your-token
+pip install llama-stack
+llama stack run 00-setup/llama-stack-config/run.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or use the simplest path with Ollama:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">uv run --with llama-stack llama stack run starter --image-type venv</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then set <code>LLAMA_STACK_BASE_URL=http://localhost:8321</code> in your <code>.env</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_whats_in_this_directory"><a class="anchor" href="#_whats_in_this_directory"></a>What&#8217;s In This Directory</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">File</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>llamastack-configmap.yaml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ConfigMap containing the full <code>run.yaml</code> (apply this first)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>llamastack-distribution.yaml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RHOAI CRD that creates the Llama Stack pod (apply this second)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>run.yaml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Standalone server config for local <code>llama stack run</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_the_server_provides"><a class="anchor" href="#_what_the_server_provides"></a>What the Server Provides</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 42.8571%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Capability</th>
+<th class="tableblock halign-left valign-top">Provider</th>
+<th class="tableblock halign-left valign-top">Workshop Modules</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LLM Inference</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>remote::vllm</code> (via MaaS)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All modules</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Embedding</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inline::sentence-transformers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="08-rag.html" class="page">08-rag</a>, <a href="mortgage-capstone.html" class="page">Capstone</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Vector Store</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inline::milvus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="08-rag.html" class="page">08-rag</a>, <a href="mortgage-capstone.html" class="page">Capstone</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Agents</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inline::meta-reference</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="03-llama-stack-basics.html" class="page">03</a>-<a href="10-evaluations.html" class="page">10</a>, <a href="mortgage-capstone.html" class="page">Capstone</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Safety</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inline::llama-guard</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="09-safety-shields.html" class="page">09-safety-shields</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eval / Scoring</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inline::meta-reference</code>, <code>inline::llm-as-judge</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="10-evaluations.html" class="page">10-evaluations</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tool Runtime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inline::rag-runtime</code>, <code>remote::model-context-protocol</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="04-agents-with-tools.html" class="page">04</a>, <a href="08-rag.html" class="page">08</a>, <a href="mortgage-capstone.html" class="page">Capstone</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Files / Datasets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inline::localfs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="08-rag.html" class="page">08-rag</a>, <a href="10-evaluations.html" class="page">10-evaluations</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_troubleshooting"><a class="anchor" href="#_troubleshooting"></a>Troubleshooting</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Problem</th>
+<th class="tableblock halign-left valign-top">Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pod in CrashLoopBackOff</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Check logs: <code>oc logs -l llamastack.io/distribution=llamastack-novacrest-workshop</code>. Usually a bad <code>VLLM_API_URL</code> or token.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Models list empty</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The vLLM provider auto-discovers models. Verify your MaaS has models: <code>curl -H "Authorization: Bearer $TOKEN" $VLLM_API_URL/models</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Embedding model missing</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>sentence-transformers</code> provider downloads on first use. Pod needs internet access; startup takes 1-2 min.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Route returns 503</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pod still starting. Wait for <code>1/1 Running</code> in <code>oc get pods</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="00-setup.html" class="query-params-link">Module 00: Environment Setup</a></span>
+  <span class="next"><a href="01-backend-apis.html" class="query-params-link">Module 01: Backend APIs</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <a class="rhd-logo" href="https://developers.redhat.com" target="_blank"></div>
+</footer>
+<script src="../../_/js/site.js"></script>
+<script src="../../_/js/vendor/highlight.js"></script>
+<script>hljs.initHighlighting()</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true, theme:'default', securityLevel:'loose'})</script>
+  </body>
+</html>

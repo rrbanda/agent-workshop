@@ -6,7 +6,7 @@
     <title>Module 00: Environment Setup :: NovaCrest Agent Workshop</title>
     <link rel="canonical" href="https://rrbanda.github.io/agent-workshop/novacrest-agent-workshop/v1.0/00-setup.html">
     <link rel="prev" href="index.html">
-    <link rel="next" href="01-backend-apis.html">
+    <link rel="next" href="llama-stack-admin.html">
     <meta name="generator" content="Antora 2.3.1">
     <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="icon" href="../../_/img/favicon.ico" type="image/x-icon">
@@ -75,7 +75,13 @@
     <a class="nav-link" href="index.html">Welcome</a>
   </li>
   <li class="nav-item is-current-page" data-depth="1">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="00-setup.html">Module 00: Environment Setup</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="llama-stack-admin.html">Llama Stack Admin Guide</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="01-backend-apis.html">Module 01: Backend APIs</a>
@@ -103,6 +109,9 @@
   </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="mortgage-capstone.html">Capstone: Mortgage Approval Agent</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="reference.html">Reference</a>
   </li>
 </ul>
   </li>
@@ -236,7 +245,7 @@
 <strong>Remote server</strong> (recommended for this workshop): Set <code>LLAMA_STACK_BASE_URL</code> in your <code>.env</code> to the server URL provided by your instructor or team.<br>
 <strong>Local server</strong>: Run <code>uv run --with llama-stack llama stack run starter</code> from the repo root. See the <a href="https://github.com/llamastack/llama-stack" target="_blank" rel="noopener">Llama Stack docs</a> for full setup instructions.<br>
 <br>
-<strong>For admins deploying a Llama Stack server:</strong> See <code>llama-stack-config/</code> in the <code>00-setup</code> directory for a complete server configuration (<code>run.yaml</code>), an RHOAI OpenShift CRD template, and step-by-step deployment instructions.
+<strong>For admins deploying a Llama Stack server:</strong> See the <a href="llama-stack-admin.html" class="page">Llama Stack Admin Guide</a> for a complete server configuration (<code>run.yaml</code>), an RHOAI OpenShift CRD template, and step-by-step deployment instructions.
 </td>
 </tr>
 </table>
@@ -407,7 +416,7 @@ Result: 6/6 checks passed -- server is ready for the workshop</code></pre>
 </div>
 <nav class="pagination">
   <span class="prev"><a href="index.html" class="query-params-link">Welcome</a></span>
-  <span class="next"><a href="01-backend-apis.html" class="query-params-link">Module 01: Backend APIs</a></span>
+  <span class="next"><a href="llama-stack-admin.html" class="query-params-link">Llama Stack Admin Guide</a></span>
 </nav>
 </article>
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
