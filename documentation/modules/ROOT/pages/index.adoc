@@ -1,0 +1,233 @@
+= NovaCrest Agent Workshop
+include::_attributes.adoc[]
+
+Build production-ready AI agents that run anywhere -- using Llama Stack, MCP, and open-source LLMs.
+
+[.text-center]
+xref:00-setup.adoc[Start the Workshop ->] | {github-repo}[View on GitHub,window=_blank]
+
+'''
+
+== What is this workshop?
+
+A progressive, hands-on workshop where you learn each building block of AI agents -- tools, RAG, multi-turn conversations, safety, and evaluation -- then combine *all of them* into a fully functional *Mortgage Approval Agent* that reasons over real APIs, retrieves lending policy, reviews documents, guards against unsafe inputs, and measures its own accuracy.
+
+Every core module teaches a skill. The capstone uses every one of them.
+
+'''
+
+== Why Llama Stack?
+
+NOTE: *{llama-stack-repo}[Llama Stack,window=_blank]* is an open-source, community-driven platform that standardizes the core building blocks for AI agents. Think of it as *Kubernetes for agents* -- a run-anywhere contract with a plugin architecture.
+
+*Unified API* -- One SDK (`llama-stack-client`) for inference, agents, tools, RAG, safety, and evaluations. No stitching together separate libraries.
+
+*Swap anything* -- Change model providers (Ollama, vLLM, AWS Bedrock), vector databases (ChromaDB, Milvus, PGVector), or runtimes -- without changing your agent code.
+
+*Open standards* -- Built-in support for OpenAI-compatible APIs and the Model Context Protocol (MCP). Existing tools and agents work without rewriting.
+
+*Community-driven* -- While initiated by Meta, Llama Stack has moved to a https://github.com/llamastack[neutral standalone GitHub organization,window=_blank] with contributions from Red Hat, Anthropic, OpenAI, NVIDIA, Groq, AI Alliance, and others.
+
+TIP: _"Llama Stack is less about replacing your favorite agent library, and more about creating the open, run-anywhere contract beneath them."_ -- https://www.redhat.com/en/blog/llama-stack-and-case-open-run-anywhere-contract-agents[Red Hat Engineering Blog,window=_blank]
+
+'''
+
+== What You Will Build
+
+* *Backend REST APIs* -- Spring Boot services for customer, finance, and mortgage data with Swagger UI
+* *MCP Tool Servers* -- LLM-callable tool layers wrapping REST APIs via Model Context Protocol
+* *Single & Multi-Domain Agents* -- Agents that chain tools across multiple data sources autonomously
+* *Multi-Turn Conversational Agents* -- Agents that remember context across sequential exchanges
+* *Human-in-the-Loop Agents* -- Interactive agents with human oversight for high-stakes decisions
+* *RAG-Powered Agents* -- Agents that retrieve and reason over documents using vector stores
+* *Safety-Guarded Agents* -- Content safety shields with Llama Guard for input and output filtering
+* *Evaluation Pipelines* -- Automated scoring, benchmarks, and LLM-as-judge quality measurement
+
+Then, in the *capstone*, you apply everything to a real business problem: building a *Mortgage Approval Agent* that automates NovaCrest's conditional approval workflow.
+
+'''
+
+== Learning Path
+
+The workshop follows a linear path where every module builds toward the capstone.
+
+=== Core Path
+
+[cols="1,3,4,1", options="header"]
+|===
+|#
+|Module
+|What You Learn
+|Duration
+
+|00
+|xref:00-setup.adoc[Environment Setup]
+|Install Python, Java, PostgreSQL; configure Llama Stack
+|30 min
+
+|01
+|xref:01-backend-apis.adoc[Backend APIs]
+|Build and run NovaCrest Customer and Finance REST APIs
+|30 min
+
+|02
+|xref:02-mcp-servers.adoc[MCP Servers]
+|Wrap REST APIs as LLM-callable tools using FastMCP
+|20 min
+
+|03
+|xref:03-llama-stack-basics.adoc[Llama Stack Basics]
+|Create your first agent, streaming responses, tool inspection
+|20 min
+
+|04
+|xref:04-agents-with-tools.adoc[Agents with MCP Tools]
+|Bind tools to agents, single-domain and multi-domain reasoning
+|30 min
+
+|05
+|xref:05-multi-turn-and-hitl.adoc[Multi-Turn & HITL]
+|Conversation memory across turns, human-in-the-loop interaction
+|20 min
+
+|08
+|xref:08-rag.adoc[RAG]
+|Vector stores, hybrid search, `file_search` tool
+|30 min
+
+|09
+|xref:09-safety-shields.adoc[Safety Shields]
+|Register Llama Guard shields, input/output content safety
+|20 min
+
+|10
+|xref:10-evaluations.adoc[Evaluations]
+|Datasets, scoring functions, benchmarks, LLM-as-judge
+|30 min
+|===
+
+=== Capstone
+
+[cols="3,4,1", options="header"]
+|===
+|Module
+|What You Build
+|Duration
+
+|xref:mortgage-capstone.adoc[Mortgage Approval Agent]
+|End-to-end agent combining MCP tools + RAG + multi-turn + HITL + safety shields + evaluation
+|90 min
+|===
+
+'''
+
+== Quick Start
+
+[source,bash]
+----
+# 1. Clone the repo
+git clone https://github.com/rrbanda/agent-workshop.git
+cd agent-workshop
+
+# 2. Set up Python environment
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# 3. Configure environment
+cp .env.example .env
+# Edit .env -- set LLAMA_STACK_BASE_URL to your Llama Stack server
+
+# 4. Verify Llama Stack connectivity
+source .env
+curl $LLAMA_STACK_BASE_URL/v1/models
+
+# 5. Create databases
+createdb novacrest_customer
+createdb novacrest_finance
+createdb novacrest_mortgage    # for the capstone
+
+# 6. Begin the workshop
+# Follow the modules in order, starting with Module 00: Environment Setup
+----
+
+NOTE: *Llama Stack server required.* You need access to a Llama Stack server with an inference model and an embedding model registered. See xref:00-setup.adoc[Module 00] for details.
+
+'''
+
+== Prerequisites
+
+[cols="1,1,2", options="header"]
+|===
+|Tool
+|Version
+|Purpose
+
+|Python
+|3.12+
+|Agent scripts, MCP servers
+
+|Java
+|21+
+|Backend Spring Boot APIs
+
+|Maven
+|3.8+
+|Java build tool
+
+|PostgreSQL
+|15+
+|Database for Customer, Finance, Mortgage APIs
+
+|Llama Stack server
+|Any
+|Provides inference, embedding, and safety models (local or remote)
+|===
+
+'''
+
+== Architecture
+
+[source,text]
+----
+                          ┌──────────────────┐
+                          │   User / Chat UI │
+                          └────────┬─────────┘
+                                   │
+                          ┌────────▼─────────┐
+                          │   Llama Stack    │
+                          │   Agents (Python) │
+                          └────────┬─────────┘
+                                   │
+                    ┌──────────────┼──────────────┐
+                    │              │              │
+             ┌──────▼──────┐ ┌────▼────┐ ┌───────▼───────┐
+             │  Customer   │ │ Finance │ │   Mortgage    │
+             │  MCP Server │ │   MCP   │ │     MCP       │
+             └──────┬──────┘ └────┬────┘ └───────┬───────┘
+                    │              │              │
+             ┌──────▼──────┐ ┌────▼────┐ ┌───────▼───────┐
+             │  Customer   │ │ Finance │ │   Mortgage    │
+             │  REST API   │ │REST API │ │   REST API    │
+             │  (8081)     │ │ (8082)  │ │    (8083)     │
+             └──────┬──────┘ └────┬────┘ └───────┬───────┘
+                    │              │              │
+                    └──────────────┼──────────────┘
+                                   │
+                          ┌────────▼─────────┐
+                          │    PostgreSQL     │
+                          └──────────────────┘
+----
+
+*Tech stack:* Python 3.12 | Java 21 + Spring Boot | PostgreSQL | Llama Stack | FastMCP
+
+'''
+
+== Domain
+
+*NovaCrest* is a fictional financial services company used as the example domain throughout this workshop. It has customers, financial orders/invoices, and a mortgage lending division. All seed data is pre-loaded via SQL scripts when you start the backend APIs.
+
+'''
+
+[.text-center]
+xref:00-setup.adoc[Start with Module 00: Environment Setup ->]

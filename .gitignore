@@ -27,5 +27,6 @@ package-lock.json
 # Llama Stack
 .llama/
 
-# MkDocs
-site/
+# Antora
+gh-pages/
+.cache/

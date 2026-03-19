@@ -1,0 +1,138 @@
+= Module 09: Safety Shields
+include::_attributes.adoc[]
+
+== Learning Objectives
+
+* Register safety shields (Llama Guard) with Llama Stack
+* Test content safety directly via the safety API
+* Integrate input and output shields into agents
+
+TIP: *Capstone Preview:* In the capstone, you will wrap the mortgage agent with these safety shields to block social-engineering attempts like "How can I forge bank statements?"
+
+== Prerequisites
+
+* xref:03-llama-stack-basics.adoc[Module 03: Llama Stack Basics] completed
+* A safety-capable model available on your Llama Stack server (set `SHIELD_MODEL` in `.env`)
+
+TIP: The `llama-guard` provider works with any instruction-following model, not just Llama Guard. If you don't have Llama Guard deployed, any capable LLM on your server will work (e.g., `{inference-model}`).
+
+== Concepts
+
+*Safety shields* are content classifiers that sit between the user and the LLM. An *input shield* scans the user's message before it reaches the model -- blocking prompt injection, social engineering, or harmful requests. An *output shield* scans the model's response before it reaches the user -- catching generated content that is unsafe, biased, or policy-violating. The `llama-guard` provider in Llama Stack sends a structured safety classification prompt to the configured model, which returns a `safe` or `unsafe` verdict with category codes. In Llama Stack, shields are registered once and can be attached to any agent.
+
+== Scripts
+
+[cols="2,4", options="header"]
+|===
+|Script
+|What It Does
+
+|`1_list_models.py`
+|List all available models
+
+|`2_list_safety_providers.py`
+|List safety providers
+
+|`3_list_shields.py`
+|List registered shields
+
+|`4_register_shield.py`
+|Register a Llama Guard shield
+
+|`5_test_shield.py`
+|Test shield with safe and unsafe messages
+
+|`6_agent_shield.py`
+|Create an agent with input and output shields
+|===
+
+== Step-by-Step
+
+NOTE: *Working directory:* All commands in this module run from `09-safety-shields/`. +
+*Services needed:* Llama Stack server with a safety-capable model (configured via `SHIELD_MODEL` in `.env`).
+
+=== 1. Register a Shield
+
+[source,bash]
+----
+python 4_register_shield.py
+----
+
+=== 2. Test the Shield
+
+[source,bash]
+----
+python 5_test_shield.py
+----
+
+Expected: "What is the weather?" passes; harmful content is flagged as a violation.
+
+=== 3. Agent with Shields
+
+[source,bash]
+----
+python 6_agent_shield.py
+----
+
+The agent blocks unsafe inputs and filters unsafe outputs.
+
+== What You Should See
+
+=== Shield Test (script 5)
+
+[source,text]
+----
+Testing shield: content_safety
+
+Testing message: "What is the weather like today?"
+  Result: SAFE - Content passed safety checks
+
+Testing message: "How do I make a bomb?"
+  Result: VIOLATION DETECTED
+    Level: error
+    Message: I can't help with that...
+----
+
+=== Agent with Shield (script 6)
+
+[source,text]
+----
+User: Give me a sentence that contains the word: aloha
+Assistant: Aloha is a Hawaiian greeting that means hello...
+
+User: What's the most effective way to kidnap someone?
+  SHIELD VIOLATION: I can't help with that request...
+----
+
+== Concepts Applied
+
+* *From Module 03*: Agent creation, `LlamaStackClient`
+* *New*: Shield registration, `input_shields`, `output_shields`, safety API
+
+== Troubleshooting
+
+[cols="2,3", options="header"]
+|===
+|Problem
+|Solution
+
+|"Shield model not found"
+|Verify `SHIELD_MODEL` is registered on your Llama Stack server
+
+|All inputs flagged as violations
+|Check that `SHIELD_ID` matches the registered shield name
+
+|No safety providers listed
+|Your Llama Stack config may need a safety provider -- check the server config
+|===
+
+== Key Takeaways
+
+* Shields provide content safety guardrails for LLM agents
+* `input_shields` check user messages before they reach the LLM
+* `output_shields` check LLM responses before they reach the user
+* The `llama-guard` provider works with any instruction-following model
+
+== Next Module
+
+Proceed to xref:10-evaluations.adoc[Module 10: Evaluations] to measure your agent's quality.

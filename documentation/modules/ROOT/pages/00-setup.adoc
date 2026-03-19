@@ -1,0 +1,154 @@
+= Module 00: Environment Setup
+include::_attributes.adoc[]
+
+== Learning Objectives
+
+* Install all required tools (Python, Java, Maven, PostgreSQL)
+* Connect to a Llama Stack server
+* Verify connectivity to all services
+
+== Prerequisites
+
+None -- this is the starting point.
+
+== Concepts
+
+*{llama-stack-repo}[Llama Stack,window=_blank]* is an open-source, community-driven platform that standardizes the building blocks for AI agents. It provides a single unified API for inference, agents, tools, RAG, safety, and evaluations -- instead of stitching together separate libraries, you get one SDK (`llama-stack-client`) that handles the full agent lifecycle. Think of it as the "Kubernetes for agents": a run-anywhere contract with a plugin architecture that lets you swap model providers, vector databases, and runtimes without changing your agent code. In this workshop, Llama Stack is the backbone -- every module from 03 onward uses it.
+
+== Tools Required
+
+[cols="1,1,2,2", options="header"]
+|===
+|Tool
+|Version
+|Purpose
+|Install
+
+|Python
+|3.12+
+|Agent scripts, MCP servers
+|https://python.org[python.org,window=_blank]
+
+|Java
+|21+
+|Backend Spring Boot APIs
+|https://adoptium.net[adoptium.net,window=_blank]
+
+|Maven
+|3.8+
+|Java build tool
+|https://maven.apache.org[maven.apache.org,window=_blank]
+
+|PostgreSQL
+|15+
+|Database for APIs
+|https://postgresql.org[postgresql.org,window=_blank]
+|===
+
+You also need access to a *Llama Stack server* with at least an inference model and an embedding model registered. The server can run locally or on a remote cluster (e.g., OpenShift).
+
+TIP: *Starting a Llama Stack server:* +
+*Remote server* (recommended for this workshop): Set `LLAMA_STACK_BASE_URL` in your `.env` to the server URL provided by your instructor or team. +
+*Local server*: Run `uv run --with llama-stack llama stack run starter` from the repo root. See the {llama-stack-repo}[Llama Stack docs,window=_blank] for full setup instructions. +
+ +
+*For admins deploying a Llama Stack server:* See `llama-stack-config/` in the `00-setup` directory for a complete server configuration (`run.yaml`), an RHOAI OpenShift CRD template, and step-by-step deployment instructions.
+
+NOTE: *Working directory:* All commands in this module run from the *repo root* (`agent-workshop/`).
+
+IMPORTANT: *Multiple terminals:* This workshop requires several services running simultaneously (backend APIs, MCP servers). Use separate terminal tabs or windows for each long-running process. Keep services running across modules.
+
+== Step-by-Step Setup
+
+=== 1. Python Environment
+
+[source,bash]
+----
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+----
+
+=== 2. Environment Variables
+
+[source,bash]
+----
+cp .env.example .env
+# Edit .env -- set LLAMA_STACK_BASE_URL and verify model names match your server
+----
+
+The `.env.example` defaults to `{inference-model}` for inference and `{embedding-model}` for embedding. Update these if your Llama Stack server uses different model identifiers.
+
+=== 3. Verify Llama Stack Server
+
+[source,bash]
+----
+source .env
+curl $LLAMA_STACK_BASE_URL/v1/models
+----
+
+You should see at least an inference model (e.g., `{inference-model}`) and an embedding model (e.g., `{embedding-model}`) in the response.
+
+IMPORTANT: *MCP connectivity:* The Llama Stack server must be able to reach your MCP servers over the network. If your Llama Stack is remote, MCP servers must also be deployed remotely (or exposed via a public URL). MCP servers running on `localhost` are not reachable from a remote Llama Stack.
+
+=== 4. PostgreSQL Databases
+
+Ensure PostgreSQL is running before creating the databases. You can check with `pg_isready`.
+
+[source,bash]
+----
+createdb novacrest_customer
+createdb novacrest_finance
+createdb novacrest_mortgage    # needed for the capstone
+----
+
+== Verification
+
+[source,bash]
+----
+source .env
+# Check Llama Stack
+curl $LLAMA_STACK_BASE_URL/v1/models
+
+# Check Python
+python --version  # Should be 3.12+
+
+# Check Java
+java --version    # Should be 21+
+mvn --version     # Should be 3.8+
+----
+
+=== Deep Verification (Optional)
+
+The basic `curl` check confirms the server is reachable. For a thorough check of all capabilities the workshop uses (chat, embedding, vector stores, safety, tool runtime), run:
+
+[source,bash]
+----
+python 00-setup/verify_llama_stack.py
+----
+
+This tests six capabilities and reports PASS/FAIL for each. All checks should pass before proceeding. Example output:
+
+[source,text]
+----
+Llama Stack Workshop Readiness Check
+Server: https://llamastack.apps.example.com
+========================================================
+[1/6] Models ............. PASS (inference: vllm-inference/gpt-oss-120b; embedding: ...)
+[2/6] Chat ............... PASS (response received, ~5 words)
+[3/6] Embedding .......... PASS (dimension: 768)
+[4/6] Vector Store ....... PASS (create/insert/search/delete)
+[5/6] Safety ............. PASS (llama-guard provider available)
+[6/6] Tool Runtime ....... PASS (rag-runtime + model-context-protocol)
+========================================================
+Result: 6/6 checks passed -- server is ready for the workshop
+----
+
+== Key Takeaways
+
+* All workshop modules share the same `.env` configuration
+* Llama Stack provides a unified API for inference, agents, tools, RAG, safety, and evals
+* The workshop uses NovaCrest (a fictional financial services company) as its example domain
+
+== Next Module
+
+Proceed to xref:01-backend-apis.adoc[Module 01: Backend APIs] to set up the NovaCrest backend services.

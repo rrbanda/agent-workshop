@@ -1,0 +1,124 @@
+= Module 02: MCP Servers
+include::_attributes.adoc[]
+
+== Learning Objectives
+
+* Understand the Model Context Protocol (MCP)
+* Write FastMCP tool wrappers for REST APIs
+* Register MCP servers with Llama Stack
+* Test MCP tools independently
+
+TIP: *Capstone Preview:* In the capstone, a Mortgage MCP server wraps the Mortgage API using the same FastMCP pattern you learn here -- same `@mcp.tool()` decorators, same `httpx` calls, same structure.
+
+== Prerequisites
+
+* xref:01-backend-apis.adoc[Module 01: Backend APIs] running (ports {customer-api-port} and {finance-api-port})
+
+== Concepts
+
+The *Model Context Protocol (MCP)* provides a standard way to expose tools to LLMs. An MCP server wraps existing APIs as tool functions that an LLM can discover and call. FastMCP is a Python library that makes building MCP servers straightforward.
+
+== NovaCrest MCP Tools
+
+=== Customer MCP (port {customer-mcp-port})
+
+[cols="1,2,3", options="header"]
+|===
+|Tool
+|Wraps
+|Description
+
+|`search_customers`
+|`GET /api/customers`
+|Search by company name, contact name, email, or phone
+
+|`get_customer`
+|`GET /api/customers/\{id}`
+|Get a specific customer by ID
+|===
+
+=== Finance MCP (port {finance-mcp-port})
+
+[cols="1,2,3", options="header"]
+|===
+|Tool
+|Wraps
+|Description
+
+|`fetch_order_history`
+|`POST /api/finance/orders/history`
+|Get orders for a customer
+
+|`fetch_invoice_history`
+|`POST /api/finance/invoices/history`
+|Get invoices for a customer
+|===
+
+== Step-by-Step
+
+NOTE: *Working directory:* All commands in this module run from `02-mcp-servers/`. +
+*Services needed:* Customer API ({customer-api-port}), Finance API ({finance-api-port}) from Module 01.
+
+=== 1. Start Customer MCP
+
+In a dedicated terminal:
+
+[source,bash]
+----
+cd customer-mcp
+python customer-api-mcp-server.py
+----
+
+NOTE: The MCP server uses `load_dotenv()` which loads `.env` from the current working directory. Since you run these from `02-mcp-servers/customer-mcp/`, make sure your root `.env` is also accessible. The simplest approach: run from the repo root instead (e.g., `python 02-mcp-servers/customer-mcp/customer-api-mcp-server.py`), or set the env vars `CUSTOMER_API_BASE_URL`, `PORT_FOR_CUSTOMER_MCP`, and `HOST_FOR_CUSTOMER_MCP` in your shell before starting.
+
+=== 2. Start Finance MCP
+
+In a new terminal:
+
+[source,bash]
+----
+cd finance-mcp
+python finance-api-mcp-server.py
+----
+
+=== 3. Register with Llama Stack
+
+IMPORTANT: *Requires:* Llama Stack server running (started in Module 00).
+
+In a new terminal, from the repo root:
+
+[source,bash]
+----
+cd 02-mcp-servers/examples
+python 1_register_customer_mcp.py
+python 1_register_finance_mcp.py
+----
+
+=== 4. Verify Registration
+
+[source,bash]
+----
+python 2_list_tools.py
+----
+
+== Verification
+
+The best way to verify MCP registration is `python 2_list_tools.py` (Step 4 above). You can also check that the MCP servers themselves are responding:
+
+[source,bash,subs="attributes+"]
+----
+# Should return a JSON response (MCP protocol handshake)
+curl -s http://localhost:{customer-mcp-port}/mcp | head -c 200
+curl -s http://localhost:{finance-mcp-port}/mcp | head -c 200
+----
+
+== Key Takeaways
+
+* MCP servers act as a bridge between LLMs and existing APIs
+* The `@mcp.tool()` decorator turns a Python function into an LLM-callable tool
+* Tools are registered with Llama Stack via `client.toolgroups.register()`
+* MCP uses HTTP transport (streamable HTTP) for communication
+
+== Next Module
+
+Proceed to xref:03-llama-stack-basics.adoc[Module 03: Llama Stack Basics] to create your first Llama Stack agent.

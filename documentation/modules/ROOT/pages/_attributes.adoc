@@ -1,0 +1,12 @@
+:inference-model: vllm-inference/gpt-oss-120b
+:embedding-model: sentence-transformers/nomic-ai/nomic-embed-text-v1.5
+:embedding-dimension: 768
+:github-repo: https://github.com/rrbanda/agent-workshop
+:llama-stack-repo: https://github.com/llamastack/llama-stack
+:customer-api-port: 8081
+:finance-api-port: 8082
+:mortgage-api-port: 8083
+:customer-mcp-port: 9001
+:finance-mcp-port: 9002
+:mortgage-mcp-port: 9003
+:llama-stack-port: 8321
