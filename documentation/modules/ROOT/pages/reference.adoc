@@ -1,0 +1,162 @@
+= Reference
+include::_attributes.adoc[]
+
+== Key Concepts
+
+[cols="2,4,2", options="header"]
+|===
+|Concept
+|What It Is
+|Where You Learn It
+
+|*Llama Stack*
+|Open-source, community-driven platform providing a unified API for inference, agents, tools, RAG, safety, and evals -- a run-anywhere contract for AI agents
+|xref:03-llama-stack-basics.adoc[Module 03]
+
+|*MCP* (Model Context Protocol)
+|Open protocol for exposing backend APIs as tools that LLMs can call autonomously
+|xref:02-mcp-servers.adoc[Module 02]
+
+|*FastMCP*
+|Python library for building MCP servers with minimal boilerplate
+|xref:02-mcp-servers.adoc[Module 02]
+
+|*Agent*
+|An LLM with tools, instructions, and session management that can reason and act
+|xref:04-agents-with-tools.adoc[Modules 03-05]
+
+|*RAG*
+|Retrieval-Augmented Generation -- augmenting LLM responses with relevant documents
+|xref:08-rag.adoc[Module 08]
+
+|*Llama Guard*
+|Safety classifier that detects harmful content in inputs and outputs
+|xref:09-safety-shields.adoc[Module 09]
+
+|*LLM-as-Judge*
+|Using a separate LLM to evaluate response quality
+|xref:10-evaluations.adoc[Module 10]
+|===
+
+== Script Numbering
+
+Scripts in the core learning path (Modules 03-05) use a *global numbering scheme* that runs continuously across modules:
+
+[cols="1,2,3", options="header"]
+|===
+|Scripts
+|Module
+|Topic
+
+|`1_*`
+|03-llama-stack-basics
+|Hello world, streaming, tool listing
+
+|`4_*` - `5_*`
+|04-agents-with-tools
+|Single and multi-domain agents
+
+|`6_*` - `7_*`
+|05-multi-turn-and-hitl
+|Multi-turn conversations, HITL
+|===
+
+Other modules (08, 09, 10, mortgage-use-case) use *module-local numbering* starting at `0_` or `1_`.
+
+== Environment Variables
+
+All modules share a single `.env` file at the repo root. See {github-repo}/blob/main/.env.example[.env.example,window=_blank] for the full list.
+
+[cols="2,3,2", options="header"]
+|===
+|Variable
+|Description
+|Default
+
+|`LLAMA_STACK_BASE_URL`
+|Llama Stack server URL
+|`http://localhost:{llama-stack-port}`
+
+|`LLAMA_STACK_API_KEY`
+|API key for Llama Stack (use `fake` if none required)
+|`fake`
+
+|`INFERENCE_MODEL`
+|LLM model identifier
+|`{inference-model}`
+
+|`CUSTOMER_MCP_SERVER_URL`
+|Customer MCP endpoint
+|`http://localhost:{customer-mcp-port}/mcp`
+
+|`FINANCE_MCP_SERVER_URL`
+|Finance MCP endpoint
+|`http://localhost:{finance-mcp-port}/mcp`
+
+|`MORTGAGE_MCP_SERVER_URL`
+|Mortgage MCP endpoint
+|`http://localhost:{mortgage-mcp-port}/mcp`
+|===
+
+== Port Reference
+
+[cols="2,1,2", options="header"]
+|===
+|Service
+|Port
+|Module
+
+|Llama Stack
+|{llama-stack-port}
+|All
+
+|Customer API
+|{customer-api-port}
+|xref:01-backend-apis.adoc[01]
+
+|Finance API
+|{finance-api-port}
+|xref:01-backend-apis.adoc[01]
+
+|Mortgage API
+|{mortgage-api-port}
+|xref:mortgage-capstone.adoc[Capstone]
+
+|Customer MCP
+|{customer-mcp-port}
+|xref:02-mcp-servers.adoc[02]
+
+|Finance MCP
+|{finance-mcp-port}
+|xref:02-mcp-servers.adoc[02]
+
+|Mortgage MCP
+|{mortgage-mcp-port}
+|xref:mortgage-capstone.adoc[Capstone]
+|===
+
+== Troubleshooting
+
+[cols="2,3", options="header"]
+|===
+|Problem
+|Solution
+
+|`Connection refused` on Llama Stack
+|Verify the server is running: `curl http://localhost:{llama-stack-port}/v1/models`
+
+|Empty tool lists
+|Ensure MCP servers are running on their expected ports
+
+|`LLAMA_STACK_BASE_URL not set`
+|Copy `.env.example` to `.env` and configure your values
+
+|Model not found
+|Check `INFERENCE_MODEL` matches a model on your Llama Stack server (`curl $LLAMA_STACK_BASE_URL/v1/models`)
+
+|Database errors
+|Verify PostgreSQL is running and databases exist (`createdb novacrest_customer`)
+
+|Import errors
+|Activate your venv and run `pip install -r requirements.txt`
+|===

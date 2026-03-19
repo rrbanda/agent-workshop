@@ -51,6 +51,21 @@ Then, in the *capstone*, you apply everything to a real business problem: buildi
 
 The workshop follows a linear path where every module builds toward the capstone.
 
+++++
+<div class="mermaid">
+flowchart TD
+    M00["00<br/>Setup"] --> M01["01<br/>Backend APIs"]
+    M01 --> M02["02<br/>MCP Servers"]
+    M02 --> M03["03<br/>Llama Stack Basics"]
+    M03 --> M04["04<br/>Agents with MCP Tools"]
+    M04 --> M05["05<br/>Multi-Turn & HITL"]
+    M05 --> M08["08<br/>RAG"]
+    M08 --> M09["09<br/>Safety Shields"]
+    M09 --> M10["10<br/>Evaluations"]
+    M10 --> CAP["Capstone<br/>Mortgage Approval Agent"]
+</div>
+++++
+
 === Core Path
 
 [cols="1,3,4,1", options="header"]
@@ -137,6 +152,7 @@ pip install -r requirements.txt
 # 3. Configure environment
 cp .env.example .env
 # Edit .env -- set LLAMA_STACK_BASE_URL to your Llama Stack server
+# (If running locally: uv run --with llama-stack llama stack run starter)
 
 # 4. Verify Llama Stack connectivity
 source .env

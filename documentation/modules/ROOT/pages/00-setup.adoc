@@ -51,7 +51,7 @@ TIP: *Starting a Llama Stack server:* +
 *Remote server* (recommended for this workshop): Set `LLAMA_STACK_BASE_URL` in your `.env` to the server URL provided by your instructor or team. +
 *Local server*: Run `uv run --with llama-stack llama stack run starter` from the repo root. See the {llama-stack-repo}[Llama Stack docs,window=_blank] for full setup instructions. +
  +
-*For admins deploying a Llama Stack server:* See `llama-stack-config/` in the `00-setup` directory for a complete server configuration (`run.yaml`), an RHOAI OpenShift CRD template, and step-by-step deployment instructions.
+*For admins deploying a Llama Stack server:* See the xref:llama-stack-admin.adoc[Llama Stack Admin Guide] for a complete server configuration (`run.yaml`), an RHOAI OpenShift CRD template, and step-by-step deployment instructions.
 
 NOTE: *Working directory:* All commands in this module run from the *repo root* (`agent-workshop/`).
 

@@ -1,0 +1,173 @@
+= Llama Stack Server Setup (Admin Guide)
+include::_attributes.adoc[]
+
+Deploy a Llama Stack server with all capabilities the NovaCrest Agent Workshop requires.
+
+== Prerequisites
+
+* OpenShift cluster with *RHOAI operator* installed (includes the Llama Stack K8s operator)
+* A *MaaS / vLLM inference endpoint* accessible from the cluster (provides models like `gpt-oss-120b`)
+
+== Deploy on OpenShift (2 commands)
+
+=== 1. Edit the distribution YAML
+
+Set your MaaS endpoint in `llamastack-distribution.yaml`:
+
+[source,yaml]
+----
+- name: VLLM_API_URL
+  value: "https://your-maas-endpoint/v1"   # <-- your MaaS URL
+- name: VLLM_API_TOKEN
+  value: "your-api-token"                   # <-- your MaaS token
+----
+
+=== 2. Apply both files
+
+[source,bash]
+----
+oc apply -f 00-setup/llama-stack-config/llamastack-configmap.yaml
+oc apply -f 00-setup/llama-stack-config/llamastack-distribution.yaml
+----
+
+=== 3. Wait for the pod
+
+[source,bash]
+----
+oc get pods -w -l llamastack.io/distribution=llamastack-novacrest-workshop
+----
+
+=== 4. Create a route and get the URL
+
+[source,bash]
+----
+oc create route edge llamastack --service=llamastack-novacrest-workshop-service --port=8321
+LLAMA_STACK_URL=https://$(oc get route llamastack -o jsonpath='{.spec.host}')
+echo $LLAMA_STACK_URL
+----
+
+=== 5. Verify
+
+[source,bash]
+----
+curl -s "$LLAMA_STACK_URL/v1/models" | python3 -m json.tool
+----
+
+=== 6. Set the URL in `.env`
+
+[source,text]
+----
+LLAMA_STACK_BASE_URL=https://llamastack-....apps.your-cluster.com
+----
+
+That's it. The Llama Stack pod connects to your MaaS endpoint for LLM inference and runs embedding, vector store, agents, safety, eval, and tool runtime inline.
+
+== Verify All Capabilities
+
+From the repo root, run the readiness check:
+
+[source,bash]
+----
+python 00-setup/verify_llama_stack.py
+----
+
+All 6 checks should pass before starting the workshop. See xref:00-setup.adoc#_deep_verification_optional[Deep Verification] for sample output.
+
+== Alternative: Run Locally
+
+If you don't have OpenShift, you can run Llama Stack locally using the standalone `run.yaml`:
+
+[source,bash]
+----
+export VLLM_API_URL=https://your-vllm-endpoint/v1
+export VLLM_API_TOKEN=your-token
+pip install llama-stack
+llama stack run 00-setup/llama-stack-config/run.yaml
+----
+
+Or use the simplest path with Ollama:
+
+[source,bash]
+----
+uv run --with llama-stack llama stack run starter --image-type venv
+----
+
+Then set `LLAMA_STACK_BASE_URL=http://localhost:{llama-stack-port}` in your `.env`.
+
+== What's In This Directory
+
+[cols="2,4", options="header"]
+|===
+|File
+|Description
+
+|`llamastack-configmap.yaml`
+|ConfigMap containing the full `run.yaml` (apply this first)
+
+|`llamastack-distribution.yaml`
+|RHOAI CRD that creates the Llama Stack pod (apply this second)
+
+|`run.yaml`
+|Standalone server config for local `llama stack run`
+|===
+
+== What the Server Provides
+
+[cols="2,3,2", options="header"]
+|===
+|Capability
+|Provider
+|Workshop Modules
+
+|LLM Inference
+|`remote::vllm` (via MaaS)
+|All modules
+
+|Embedding
+|`inline::sentence-transformers`
+|xref:08-rag.adoc[08-rag], xref:mortgage-capstone.adoc[Capstone]
+
+|Vector Store
+|`inline::milvus`
+|xref:08-rag.adoc[08-rag], xref:mortgage-capstone.adoc[Capstone]
+
+|Agents
+|`inline::meta-reference`
+|xref:03-llama-stack-basics.adoc[03]-xref:10-evaluations.adoc[10], xref:mortgage-capstone.adoc[Capstone]
+
+|Safety
+|`inline::llama-guard`
+|xref:09-safety-shields.adoc[09-safety-shields]
+
+|Eval / Scoring
+|`inline::meta-reference`, `inline::llm-as-judge`
+|xref:10-evaluations.adoc[10-evaluations]
+
+|Tool Runtime
+|`inline::rag-runtime`, `remote::model-context-protocol`
+|xref:04-agents-with-tools.adoc[04], xref:08-rag.adoc[08], xref:mortgage-capstone.adoc[Capstone]
+
+|Files / Datasets
+|`inline::localfs`
+|xref:08-rag.adoc[08-rag], xref:10-evaluations.adoc[10-evaluations]
+|===
+
+== Troubleshooting
+
+[cols="2,4", options="header"]
+|===
+|Problem
+|Solution
+
+|Pod in CrashLoopBackOff
+|Check logs: `oc logs -l llamastack.io/distribution=llamastack-novacrest-workshop`. Usually a bad `VLLM_API_URL` or token.
+
+|Models list empty
+|The vLLM provider auto-discovers models. Verify your MaaS has models: `curl -H "Authorization: Bearer $TOKEN" $VLLM_API_URL/models`
+
+|Embedding model missing
+|The `sentence-transformers` provider downloads on first use. Pod needs internet access; startup takes 1-2 min.
+
+|Route returns 503
+|Pod still starting. Wait for `1/1 Running` in `oc get pods`.
+|===
