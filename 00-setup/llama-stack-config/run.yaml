@@ -1,0 +1,169 @@
+# Llama Stack Server Configuration for NovaCrest Agent Workshop
+#
+# This run.yaml configures all providers the workshop requires:
+#   - Inference (vLLM remote + sentence-transformers for embedding)
+#   - Vector I/O (Milvus for RAG)
+#   - Agents, Safety, Eval, Scoring, Files, Datasets, Tool Runtime
+#
+# Usage:
+#   export VLLM_API_URL=https://your-vllm-endpoint/v1
+#   export VLLM_API_TOKEN=your-token
+#   llama stack run /path/to/run.yaml
+#
+# Environment variables used:
+#   VLLM_API_URL   - vLLM / MaaS inference endpoint (required)
+#   VLLM_API_TOKEN - API token for the vLLM endpoint (required)
+#   VLLM_MAX_TOKENS - Max tokens per response (default: 4096)
+#   TAVILY_SEARCH_API_KEY - Optional, for web search tool
+
+version: "2"
+image_name: novacrest-workshop
+apis:
+  - agents
+  - datasetio
+  - eval
+  - files
+  - inference
+  - safety
+  - scoring
+  - tool_runtime
+  - vector_io
+
+providers:
+  inference:
+    - provider_id: sentence-transformers
+      provider_type: inline::sentence-transformers
+      config: {}
+    - provider_id: vllm-inference
+      provider_type: remote::vllm
+      config:
+        url: ${env.VLLM_API_URL:=http://localhost:8000/v1}
+        api_token: ${env.VLLM_API_TOKEN:=fake}
+        tls_verify: ${env.VLLM_TLS_VERIFY:=false}
+        max_tokens: ${env.VLLM_MAX_TOKENS:=4096}
+
+  vector_io:
+    - provider_id: milvus
+      provider_type: inline::milvus
+      config:
+        db_path: ${env.MILVUS_DB_PATH:=~/.llama/distributions/novacrest-workshop/milvus.db}
+        kvstore:
+          backend: default
+          namespace: "milvus"
+        persistence:
+          backend: default
+          namespace: "milvus_persistence"
+
+  agents:
+    - provider_id: meta-reference
+      provider_type: inline::meta-reference
+      config:
+        persistence:
+          agent_state:
+            backend: default
+            namespace: "agent_state"
+          responses:
+            backend: sql
+            namespace: "agents"
+            table_name: "responses"
+
+  safety:
+    - provider_id: llama-guard
+      provider_type: inline::llama-guard
+      config: {}
+
+  eval:
+    - provider_id: meta-reference
+      provider_type: inline::meta-reference
+      config:
+        kvstore:
+          backend: default
+          namespace: "eval"
+
+  files:
+    - provider_id: meta-reference-files
+      provider_type: inline::localfs
+      config:
+        metadata_store:
+          backend: sql
+          namespace: "files"
+          table_name: "files_metadata"
+        storage_dir: ${env.FILES_STORAGE_DIR:=~/.llama/distributions/novacrest-workshop/files}
+
+  datasetio:
+    - provider_id: localfs
+      provider_type: inline::localfs
+      config:
+        kvstore:
+          backend: default
+          namespace: "localfs"
+
+  scoring:
+    - provider_id: basic
+      provider_type: inline::basic
+      config: {}
+    - provider_id: llm-as-judge
+      provider_type: inline::llm-as-judge
+      config: {}
+
+  tool_runtime:
+    - provider_id: rag-runtime
+      provider_type: inline::rag-runtime
+      config: {}
+    - provider_id: tavily-search
+      provider_type: remote::tavily-search
+      config:
+        api_key: ${env.TAVILY_SEARCH_API_KEY:=}
+        max_results: 3
+    - provider_id: model-context-protocol
+      provider_type: remote::model-context-protocol
+      config: {}
+
+metadata_store:
+  backend: default
+  namespace: "metadata"
+
+storage:
+  backends:
+    default:
+      type: kv_sqlite
+      db_path: ${env.STORAGE_DB_PATH:=~/.llama/distributions/novacrest-workshop/storage.db}
+      namespace: null
+    sql:
+      type: sql_sqlite
+      db_path: ${env.SQL_STORAGE_DB_PATH:=~/.llama/distributions/novacrest-workshop/sql_storage.db}
+  stores:
+    metadata:
+      backend: default
+      namespace: "llama-stack"
+    conversations:
+      backend: sql
+      namespace: "conversations"
+      table_name: "conversations"
+    inference:
+      backend: sql
+      namespace: "inference"
+      table_name: "inference"
+
+models:
+  - provider_id: sentence-transformers
+    model_id: sentence-transformers/nomic-ai/nomic-embed-text-v1.5
+    provider_model_id: nomic-ai/nomic-embed-text-v1.5
+    model_type: embedding
+    metadata:
+      embedding_dimension: 768
+
+shields: []
+vector_dbs: []
+datasets: []
+scoring_fns: []
+benchmarks: []
+
+tool_groups:
+  - toolgroup_id: builtin::rag
+    provider_id: rag-runtime
+  - toolgroup_id: builtin::websearch
+    provider_id: tavily-search
+
+server:
+  port: 8321

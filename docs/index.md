@@ -89,7 +89,7 @@ Then, in the **capstone**, you apply everything to a real business problem: buil
 
 ## Learning Path
 
-The workshop follows a linear core path where every module builds toward the capstone. Complete the core path first, then explore optional modules based on your interests.
+The workshop follows a linear path where every module builds toward the capstone.
 
 ### Core Path
 
@@ -110,15 +110,6 @@ The workshop follows a linear core path where every module builds toward the cap
 | Module | What You Build | Duration |
 |--------|----------------|----------|
 | [Mortgage Approval Agent](mortgage-use-case/README.md) | End-to-end agent combining MCP tools + RAG + multi-turn + HITL + safety shields + evaluation | 90 min |
-
-### Optional Modules
-
-| | Module | What You Learn |
-|---|--------|----------------|
-| 07 | [Composite Agents](07-composite-agents/README.md) | Agent-as-Tool pattern — agents calling other agents |
-| 11 | [Observability](11-observability/README.md) | Langfuse tracing, automated evaluation, user feedback |
-| 12 | [Low-Code](12-low-code/README.md) | Langflow visual agent builder with custom components |
-| 13 | [Deployment](13-deployment/README.md) | Helm charts, Dockerfiles, OpenShift deployment |
 
 ---
 
@@ -165,7 +156,6 @@ createdb novacrest_mortgage    # for the capstone
 | Maven | 3.8+ | Java build tool |
 | PostgreSQL | 15+ | Database for Customer, Finance, Mortgage APIs |
 | Llama Stack server | Any | Provides inference, embedding, and safety models (local or remote) |
-| Docker | Latest | Containerization (optional modules) |
 
 ---
 

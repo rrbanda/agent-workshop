@@ -118,8 +118,4 @@ agent.create_turn(session_id=session_id, messages=[{"role": "user", "content": "
 
 ## Next Module
 
-Continue on the core path:
-- [08-rag](../08-rag/) -- Add retrieval-augmented generation to your agents
-
-Or explore an optional module:
-- [07-composite-agents](../07-composite-agents/) -- Build agent-as-tool architectures
+Proceed to [08-rag](../08-rag/) to add retrieval-augmented generation to your agents.

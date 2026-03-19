@@ -4,11 +4,13 @@ Step 5: Multi-turn mortgage agent session.
 
 Demonstrates conversation memory across multiple turns -- the agent remembers
 context from earlier turns to resolve references like "that application" or
-"remaining conditions." Same pattern as Module 05.
+"remaining conditions." Same pattern as Module 05, now with RAG so the agent
+looks up policy rules (like the 60-day bank statement requirement) from the
+lending policy document.
 
 Turn 1: Check the outstanding conditions for application 1
 Turn 2: What documents have been submitted for that same application?
-Turn 3: A borrower uploaded a new bank statement -- does it meet the 60-day rule?
+Turn 3: A borrower uploaded a new bank statement -- check the policy and advise
 Turn 4: Notify the borrower about remaining missing documents
 
 Prerequisites:
@@ -35,7 +37,17 @@ INFERENCE_MODEL = os.getenv("INFERENCE_MODEL")
 
 client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
 
+# Find the mortgage policy vector store for RAG
+vector_stores = list(client.vector_stores.list())
+matching = [vs for vs in vector_stores if vs.name == "mortgage-lending-policy"]
+if not matching:
+    print("ERROR: Vector store 'mortgage-lending-policy' not found.")
+    print("Please run 1_create_vector_store.py first.")
+    exit(1)
+
+vector_store = max(matching, key=lambda vs: vs.created_at)
 print(f"Model: {INFERENCE_MODEL}")
+print(f"Vector store: {vector_store.id}")
 print("=" * 60)
 
 agent = Agent(
@@ -45,9 +57,17 @@ agent = Agent(
         "You are a mortgage underwriting assistant at NovaCrest Financial Services. "
         "You manage the conditional approval process -- reviewing applications, "
         "checking documents against policy, and communicating with borrowers. "
-        "Use the available tools to access application data and take actions."
+        "Use the function tools to access application data and take actions. "
+        "Use file_search to look up NovaCrest's lending policy for document "
+        "requirements, acceptance criteria, and underwriting rules. "
+        "Keep responses concise -- use short bullet points, not large tables."
     ),
-    tools=ALL_TOOLS,
+    tools=ALL_TOOLS + [
+        {
+            "type": "file_search",
+            "vector_store_ids": [vector_store.id],
+        },
+    ],
 )
 
 session_id = agent.create_session(session_name="multi-turn-mortgage")
@@ -71,7 +91,8 @@ turns = [
     ),
     (
         "The borrower just uploaded a new bank statement dated February 2026. "
-        "Does this meet the 60-day requirement? "
+        "Check the lending policy for bank statement recency requirements. "
+        "Does this new statement meet the policy criteria? "
         "If so, what should we do about the bank statement condition?"
     ),
     (
@@ -84,11 +105,14 @@ for i, turn in enumerate(turns, 1):
     print(f"[Turn {i}] User: {turn}")
     print("-" * 60)
 
-    response = agent.create_turn(
-        messages=[{"role": "user", "content": turn}],
-        session_id=session_id,
-        stream=False,
-    )
-    print_response(response)
+    try:
+        response = agent.create_turn(
+            messages=[{"role": "user", "content": turn}],
+            session_id=session_id,
+            stream=False,
+        )
+        print_response(response)
+    except Exception as e:
+        print(f"[Turn {i} error: {e} -- continuing to next turn]")
 
     print("\n" + "=" * 60)

@@ -152,6 +152,3 @@ Total evaluations: 1
 
 You have completed the core learning path. Proceed to the capstone:
 - [Mortgage Approval Agent](../mortgage-use-case/) -- Apply everything you learned to build a complete agent
-
-Or explore optional modules:
-- [11-observability](../11-observability/) -- Production tracing with Langfuse (standalone module, uses LangGraph)

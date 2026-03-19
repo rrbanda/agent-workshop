@@ -76,7 +76,7 @@ Then, in the **capstone**, you apply everything to a real business problem: buil
 
 ## Learning Path
 
-The workshop follows a linear core path where every module builds toward the capstone. Complete the core path first, then explore optional modules based on your interests.
+The workshop follows a linear path where every module builds toward the capstone.
 
 ```text
 ┌─────────┐   ┌───────────────┐   ┌──────────────┐   ┌────────────────────┐
@@ -94,20 +94,20 @@ The workshop follows a linear core path where every module builds toward the cap
                                                     │ Multi-Turn & HITL     │
                                                     └──────┬────────────────┘
                                                            │
-                              ┌─────────────────┐  ┌──────▼──────┐  ┌─────────────────┐
-                              │    (optional)    │  │ 08          │  │    (optional)    │
-                              │  07 Composite   │  │ RAG         │  │  12 Low-Code     │
-                              │  13 Deployment  │  ├─────────────┤  │                  │
-                              │                 │  │ 09 Safety   │  │                  │
-                              │                 │  ├─────────────┤  │                  │
-                              │                 │  │ 10 Evals    │  │                  │
-                              └─────────────────┘  └──────┬──────┘  └─────────────────┘
-                                                          │
-                                                ┌─────────▼──────────┐
-                                                │ CAPSTONE           │
-                                                │ Mortgage Approval  │
-                                                │ Agent              │
-                                                └────────────────────┘
+                                                    ┌──────▼──────┐
+                                                    │ 08          │
+                                                    │ RAG         │
+                                                    ├─────────────┤
+                                                    │ 09 Safety   │
+                                                    ├─────────────┤
+                                                    │ 10 Evals    │
+                                                    └──────┬──────┘
+                                                           │
+                                                 ┌─────────▼──────────┐
+                                                 │ CAPSTONE           │
+                                                 │ Mortgage Approval  │
+                                                 │ Agent              │
+                                                 └────────────────────┘
 ```
 
 ---
@@ -127,6 +127,7 @@ pip install -r requirements.txt
 # 3. Configure environment
 cp .env.example .env
 # Edit .env -- set LLAMA_STACK_BASE_URL to your Llama Stack server
+# (If running locally: uv run --with llama-stack llama stack run starter)
 
 # 4. Verify Llama Stack connectivity
 source .env
@@ -138,11 +139,11 @@ createdb novacrest_finance
 createdb novacrest_mortgage    # for the capstone
 
 # 6. Begin the workshop
-# Open 00-setup/README.md and follow the modules in order
+# Continue with Module 01 (01-backend-apis/README.md)
 ```
 
 > [!NOTE]
-> **Llama Stack server required.** You need access to a Llama Stack server with an inference model and an embedding model registered. See [00-setup](00-setup/) for details.
+> **Llama Stack server required.** You need access to a Llama Stack server with an inference model and an embedding model registered. For detailed setup instructions (tool versions, verification), see [00-setup](00-setup/).
 
 ---
 
@@ -168,15 +169,6 @@ createdb novacrest_mortgage    # for the capstone
 |--------|----------------|----------|
 | [Mortgage Approval Agent](mortgage-use-case/) | End-to-end agent combining MCP tools + RAG + multi-turn + HITL + safety shields + evaluation for mortgage conditional approval workflow | 90 min |
 
-### Optional Modules
-
-| # | Module | What You Learn |
-|---|--------|----------------|
-| 07 | [Composite Agents](07-composite-agents/) | Agent-as-Tool pattern -- agents calling other agents |
-| 11 | [Observability](11-observability/) | Langfuse tracing and feedback (standalone, uses LangGraph) |
-| 12 | [Low-Code](12-low-code/) | Langflow visual agent builder with custom components |
-| 13 | [Deployment](13-deployment/) | Helm charts, Dockerfiles, OpenShift deployment |
-
 ---
 
 ## Prerequisites
@@ -188,7 +180,6 @@ createdb novacrest_mortgage    # for the capstone
 | Maven | 3.8+ | Java build tool |
 | PostgreSQL | 15+ | Database for Customer, Finance, Mortgage APIs |
 | Llama Stack server | Any | Provides inference, embedding, and safety models (local or remote) |
-| Docker | Latest | Containerization (optional modules) |
 
 ---
 
@@ -231,6 +222,7 @@ All modules share a single `.env` file at the repo root. See [.env.example](.env
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `LLAMA_STACK_BASE_URL` | Llama Stack server URL | `http://localhost:8321` |
+| `LLAMA_STACK_API_KEY` | API key for Llama Stack (use `fake` if none required) | `fake` |
 | `INFERENCE_MODEL` | LLM model identifier | `vllm-inference/gpt-oss-120b` |
 | `CUSTOMER_MCP_SERVER_URL` | Customer MCP endpoint | `http://localhost:9001/mcp` |
 | `FINANCE_MCP_SERVER_URL` | Finance MCP endpoint | `http://localhost:9002/mcp` |

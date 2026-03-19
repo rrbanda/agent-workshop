@@ -1,0 +1,132 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: llama-stack-config
+  labels:
+    llamastack.io/distribution: llamastack-novacrest-workshop
+    opendatahub.io/dashboard: "true"
+data:
+  run.yaml: |
+    version: "2"
+    image_name: rh
+    apis:
+    - agents
+    - datasetio
+    - eval
+    - files
+    - inference
+    - safety
+    - scoring
+    - tool_runtime
+    - vector_io
+    providers:
+      inference:
+      - provider_id: sentence-transformers
+        provider_type: inline::sentence-transformers
+        config: {}
+      - provider_id: vllm-inference
+        provider_type: remote::vllm
+        config:
+          url: ${env.VLLM_API_URL:=http://localhost:8000/v1}
+          api_token: ${env.VLLM_API_TOKEN:=fake}
+          tls_verify: ${env.VLLM_TLS_VERIFY:=false}
+          max_tokens: ${env.VLLM_MAX_TOKENS:=4096}
+      vector_io:
+      - provider_id: milvus
+        provider_type: inline::milvus
+        config:
+          db_path: /opt/app-root/src/.llama/distributions/rh/milvus.db
+          kvstore:
+            type: kv_sqlite
+            db_path: /opt/app-root/src/.llama/distributions/rh/milvus_kvstore.db
+            namespace: "milvus"
+          persistence:
+            type: kv_sqlite
+            db_path: /opt/app-root/src/.llama/distributions/rh/milvus_persistence.db
+            namespace: "milvus_persistence"
+      agents:
+      - provider_id: meta-reference
+        provider_type: inline::meta-reference
+        config:
+          persistence:
+            agent_state:
+              type: kv_sqlite
+              db_path: /opt/app-root/src/.llama/distributions/rh/agent_state.db
+              namespace: "agent_state"
+            responses:
+              type: sql_sqlite
+              db_path: /opt/app-root/src/.llama/distributions/rh/responses.db
+              namespace: "agents"
+              table_name: "responses"
+      eval:
+      - provider_id: meta-reference
+        provider_type: inline::meta-reference
+        config:
+          kvstore:
+            type: kv_sqlite
+            db_path: /opt/app-root/src/.llama/distributions/rh/eval.db
+            namespace: "eval"
+      safety:
+      - provider_id: llama-guard
+        provider_type: inline::llama-guard
+        config: {}
+      files:
+      - provider_id: meta-reference-files
+        provider_type: inline::localfs
+        config:
+          metadata_store:
+            type: sql_sqlite
+            db_path: /opt/app-root/src/.llama/distributions/rh/files_metadata.db
+            namespace: "files"
+            table_name: "files_metadata"
+          storage_dir: /opt/app-root/src/.llama/distributions/rh/files
+      datasetio:
+      - provider_id: localfs
+        provider_type: inline::localfs
+        config:
+          kvstore:
+            type: kv_sqlite
+            db_path: /opt/app-root/src/.llama/distributions/rh/datasets.db
+            namespace: "localfs"
+      scoring:
+      - provider_id: basic
+        provider_type: inline::basic
+        config: {}
+      - provider_id: llm-as-judge
+        provider_type: inline::llm-as-judge
+        config: {}
+      tool_runtime:
+      - provider_id: rag-runtime
+        provider_type: inline::rag-runtime
+        config: {}
+      - provider_id: tavily-search
+        provider_type: remote::tavily-search
+        config:
+          api_key: ${env.TAVILY_SEARCH_API_KEY:=}
+          max_results: 3
+      - provider_id: model-context-protocol
+        provider_type: remote::model-context-protocol
+        config: {}
+    metadata_store:
+      type: kv_sqlite
+      db_path: /opt/app-root/src/.llama/distributions/rh/metadata.db
+      namespace: "metadata"
+    models:
+    - provider_id: sentence-transformers
+      model_id: sentence-transformers/nomic-ai/nomic-embed-text-v1.5
+      provider_model_id: nomic-ai/nomic-embed-text-v1.5
+      model_type: embedding
+      metadata:
+        embedding_dimension: 768
+    shields: []
+    vector_dbs: []
+    datasets: []
+    scoring_fns: []
+    benchmarks: []
+    tool_groups:
+    - toolgroup_id: builtin::rag
+      provider_id: rag-runtime
+    - toolgroup_id: builtin::websearch
+      provider_id: tavily-search
+    server:
+      port: 8321

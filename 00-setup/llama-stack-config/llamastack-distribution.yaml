@@ -1,0 +1,39 @@
+apiVersion: llamastack.io/v1alpha1
+kind: LlamaStackDistribution
+metadata:
+  annotations:
+    openshift.io/display-name: llamastack-novacrest-workshop
+  name: llamastack-novacrest-workshop
+  labels:
+    opendatahub.io/dashboard: "true"
+spec:
+  replicas: 1
+  server:
+    containerSpec:
+      command:
+        - /bin/sh
+        - "-c"
+        - llama stack run /etc/llama-stack/run.yaml
+      env:
+        - name: VLLM_TLS_VERIFY
+          value: "false"
+        - name: VLLM_MAX_TOKENS
+          value: "4096"
+        # ── UPDATE THESE to your MaaS / vLLM endpoint ──
+        - name: VLLM_API_URL
+          value: "https://your-vllm-endpoint/v1"
+        - name: VLLM_API_TOKEN
+          value: "your-api-token"
+      name: llama-stack
+      port: 8321
+      resources:
+        limits:
+          cpu: "2"
+          memory: 12Gi
+        requests:
+          cpu: 250m
+          memory: 500Mi
+    distribution:
+      name: rh-dev
+    userConfig:
+      configMapName: llama-stack-config

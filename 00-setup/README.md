@@ -22,9 +22,15 @@ None -- this is the starting point.
 | Java | 21+ | Backend Spring Boot APIs | https://adoptium.net |
 | Maven | 3.8+ | Java build tool | https://maven.apache.org |
 | PostgreSQL | 15+ | Database for APIs | https://postgresql.org |
-| Docker | Latest | Containerization (Module 13) | https://docker.com |
 
 You also need access to a **Llama Stack server** with at least an inference model and an embedding model registered. The server can run locally or on a remote cluster (e.g., OpenShift).
+
+> [!TIP]
+> **Starting a Llama Stack server:**
+> - **Remote server** (recommended for this workshop): Set `LLAMA_STACK_BASE_URL` in your `.env` to the server URL provided by your instructor or team.
+> - **Local server**: Run `uv run --with llama-stack llama stack run starter` from the repo root. See the [Llama Stack docs](https://github.com/llamastack/llama-stack) for full setup instructions.
+>
+> **For admins deploying a Llama Stack server:** See [llama-stack-config/](./llama-stack-config/) for a complete server configuration (`run.yaml`), an RHOAI OpenShift CRD template, and step-by-step deployment instructions.
 
 > [!NOTE]
 > **Working directory:** All commands in this module run from the **repo root** (`agent-workshop/`).
@@ -65,6 +71,8 @@ You should see at least an inference model (e.g., `vllm-inference/gpt-oss-120b`)
 
 ### 4. PostgreSQL Databases
 
+Ensure PostgreSQL is running before creating the databases. You can check with `pg_isready`.
+
 ```bash
 createdb novacrest_customer
 createdb novacrest_finance
@@ -84,6 +92,30 @@ python --version  # Should be 3.12+
 # Check Java
 java --version    # Should be 21+
 mvn --version     # Should be 3.8+
+```
+
+### Deep Verification (Optional)
+
+The basic `curl` check confirms the server is reachable. For a thorough check of all capabilities the workshop uses (chat, embedding, vector stores, safety, tool runtime), run:
+
+```bash
+python 00-setup/verify_llama_stack.py
+```
+
+This tests six capabilities and reports PASS/FAIL for each. All checks should pass before proceeding. Example output:
+
+```
+Llama Stack Workshop Readiness Check
+Server: https://llamastack.apps.example.com
+========================================================
+[1/6] Models ............. PASS (inference: vllm-inference/gpt-oss-120b; embedding: ...)
+[2/6] Chat ............... PASS (response received, ~5 words)
+[3/6] Embedding .......... PASS (dimension: 768)
+[4/6] Vector Store ....... PASS (create/insert/search/delete)
+[5/6] Safety ............. PASS (llama-guard provider available)
+[6/6] Tool Runtime ....... PASS (rag-runtime + model-context-protocol)
+========================================================
+Result: 6/6 checks passed -- server is ready for the workshop
 ```
 
 ## Key Takeaways

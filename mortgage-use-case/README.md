@@ -6,81 +6,190 @@ You are a developer at NovaCrest Financial Services. The mortgage division has a
 
 You have completed the core modules. Now apply everything you learned -- MCP tools, RAG, multi-turn conversations, human-in-the-loop interaction, safety shields, and evaluation pipelines -- to build this agent from the ground up.
 
-## The Problem
+## The Real-World Mortgage Process
 
-When a mortgage application receives conditional approval, the borrower must provide additional documents (W-2s, bank statements, appraisals, etc.) before final approval. This back-and-forth loop causes the most delays in mortgage processing:
+A mortgage application moves through three phases. The **Conditional Loop** in Phase 2 is where the most delays occur -- and where the AI agent adds the most value.
 
-```text
-Conditional Approval
-        |
-        v
- Identify missing ──────────────────────────────────┐
- documents                                           |
-        |                                            |
-        v                                            |
- Notify borrower                                     |
-        |                                            |
-        v                                            |
- Borrower uploads ───> Review document               |
-                            |                        |
-                     ┌──────┴──────┐                 |
-                     |             |                  |
-                  ACCEPTED      REJECTED              |
-                     |             |                  |
-                     v             v                  |
-              Mark condition    Notify borrower  ─────┘
-              SATISFIED         with reason
-                     |
-                     v
-              All conditions
-              satisfied?
-               |         |
-              YES        NO ──────────────────────────┘
-               |
-               v
-          Full Approval
+```mermaid
+flowchart LR
+    subgraph phase1 [Phase 1: Origination]
+        A[Borrower Inquiry] --> B[Submit Info &\nCredit Consent]
+        B --> C[Initial Credit &\nRisk Assessment]
+        C --> D{Application\nDecision}
+        D -->|Approved| E[Pre-Approval\nLetter]
+        D -->|Denied| Z1[End]
+        E --> F[Borrower Finds\nProperty]
+        F --> G[Submit Full\nApplication]
+    end
+
+    subgraph phase2 [Phase 2: Underwriting]
+        G --> H[Order Appraisal]
+        H --> I[Underwriter Reviews\nIncome / Assets / Credit]
+        I --> J{Conditional\nApproval?}
+        J -->|No| Z2[Denied]
+        J -->|Yes| K[Issue Conditions]
+        K --> L[Borrower Submits\nDocuments]
+        L --> M[Review Documents\nAgainst Policy]
+        M -->|Rejected| K
+        M -->|Accepted| N{All Conditions\nSatisfied?}
+        N -->|No| K
+        N -->|Yes| O[Underwriter\nFinal Decision]
+    end
+
+    subgraph phase3 [Phase 3: Closing]
+        O --> P[Clear to Close]
+        P --> Q[Closing Day\nSigning]
+        Q --> R[Lender Wires\nFunds]
+        R --> S[Loan Recorded]
+    end
+```
+
+## The Conditional Loop -- Where the Agent Lives
+
+The back-and-forth in Phase 2 is the most delay-prone step. Lenders are using AI agents to automate this loop: when a document is missing, the agent notifies the borrower; when one is uploaded, the agent immediately analyzes it against the lending policy and accepts or rejects it -- without waiting for a human underwriter.
+
+```mermaid
+flowchart TD
+    Start[Conditional Approval\nIssued] --> Identify[Identify Missing\nDocuments]
+    Identify --> Notify[Agent Notifies Borrower\nwith Specific Requirements]
+    Notify --> Upload[Borrower Uploads\nDocument]
+    Upload --> Policy[Agent Looks Up\nPolicy Rules via RAG]
+    Policy --> Review[Agent Reviews Document\nAgainst Policy Criteria]
+    Review --> Decision{Accept or\nReject?}
+
+    Decision -->|ACCEPTED| Satisfy[Agent Marks Condition\nSATISFIED]
+    Decision -->|REJECTED| Reason[Agent Notifies Borrower\nwith Specific Reason]
+    Reason --> Upload
+
+    Satisfy --> AllDone{All Conditions\nSatisfied?}
+    AllDone -->|No| Identify
+    AllDone -->|Yes| ClearToClose[Clear to Close]
 ```
 
 ## What the Agent Does
 
-The mortgage agent autonomously:
+The agent's role maps directly to the conditional loop above:
+
+```mermaid
+flowchart LR
+    subgraph inputs [Agent Reads]
+        RAG[Lending Policy\nvia RAG]
+        Tools[Application Data\nvia MCP Tools]
+        Credit[Credit Reports\nvia MCP Tools]
+    end
+
+    subgraph reasoning [Agent Reasons]
+        Compare[Compare Document\nDates vs Policy Rules]
+        Assess[Assess Credit Score\n& DTI vs Thresholds]
+    end
+
+    subgraph actions [Agent Acts]
+        AcceptReject[Accept or Reject\nDocument]
+        UpdateCond[Update Condition\nStatus]
+        SendNotif[Notify Borrower\nof Outcome]
+    end
+
+    RAG --> Compare
+    Tools --> Compare
+    Credit --> Assess
+    RAG --> Assess
+    Compare --> AcceptReject
+    Assess --> AcceptReject
+    AcceptReject --> UpdateCond
+    AcceptReject --> SendNotif
+```
+
+In concrete terms, the mortgage agent autonomously:
 
 1. **Reads lending policy** (via RAG) to know what documents are required and their acceptance criteria
 2. **Checks application status** (via MCP tools) to see what conditions are outstanding
-3. **Reviews documents** against policy rules (e.g., "bank statements must be within 60 days")
-4. **Accepts or rejects** documents with specific reasons
-5. **Updates conditions** when a document satisfies a requirement
-6. **Notifies borrowers** about missing documents or rejected submissions
+3. **Retrieves credit reports** and analyzes scores, DTI, and debt against policy thresholds
+4. **Reviews documents** against policy rules (e.g., "bank statements must be within 60 days")
+5. **Accepts or rejects** documents with specific reasons
+6. **Updates conditions** when a document satisfies a requirement
+7. **Notifies borrowers** about missing documents or rejected submissions
 
 ## Concept Map
 
-Every capstone step exercises skills from a core module. By the time you finish, you will have applied everything you learned:
+Every capstone step exercises skills from a core module and maps to a part of the mortgage process flow:
 
-| Step | Script | Concept | Learned In |
-|------|--------|---------|------------|
-| 1 | `1_create_vector_store.py` | Vector stores, hybrid search | Module 08 |
-| 2 | `2_mortgage_agent_basic.py` | Agent creation, MCP tool binding | Modules 03-04 |
-| 3 | `3_mortgage_agent_with_rag.py` | RAG with file_search | Module 08 |
-| 4 | `4_mortgage_agent_doc_review.py` | Multi-tool orchestration | Module 04 |
-| 5 | `5_mortgage_agent_multi_turn.py` | Multi-turn sessions (4 turns) | Module 05 |
-| 6 | `6_mortgage_agent_hitl.py` | Human-in-the-loop | Module 05 |
-| 7 | `7_mortgage_agent_with_safety.py` | Input/output safety shields | Module 09 |
-| 8 | `8_mortgage_agent_eval.py` | Eval datasets, scoring, benchmarks | Module 10 |
+```mermaid
+flowchart LR
+    subgraph foundation [Foundation]
+        S1["Step 1\nVector Store"]
+        S2["Step 2\nBasic Agent"]
+        S3["Step 3\nAgent + RAG"]
+    end
+
+    subgraph conditional_loop ["Conditional Loop (Steps 4-4c)"]
+        S4["Step 4\nDoc Review"]
+        S4b["Step 4b\nCredit Review"]
+        S4c["Step 4c\nE2E Workflow"]
+    end
+
+    subgraph conversation [Conversation & Safety]
+        S5["Step 5\nMulti-Turn"]
+        S6["Step 6\nHITL"]
+        S7["Step 7\nSafety"]
+        S8["Step 8\nEvaluation"]
+    end
+
+    S1 --> S3
+    S2 --> S4
+    S3 --> S4
+    S4 --> S4b --> S4c
+    S4c --> S5
+    S5 --> S6
+    S6 --> S7
+    S7 --> S8
+```
+
+| Step | Script | Concept | Diagram Phase | Learned In |
+|------|--------|---------|---------------|------------|
+| 1 | `1_create_vector_store.py` | Vector stores, hybrid search | -- (setup) | Module 08 |
+| 2 | `2_mortgage_agent_basic.py` | Agent creation, MCP tool binding | Phase 2: check status | Modules 03-04 |
+| 3 | `3_mortgage_agent_with_rag.py` | RAG with file_search | Phase 2: policy lookup | Module 08 |
+| 4 | `4_mortgage_agent_doc_review.py` | Autonomous document review | Phase 2: review & accept/reject | Module 04 |
+| 4b | `4b_mortgage_agent_credit_review.py` | Credit-based underwriting decision | Phase 2: credit analysis & decision | Module 04 + RAG |
+| 4c | `4c_mortgage_agent_e2e_workflow.py` | End-to-end conditional approval loop | Phase 2: full conditional loop | All modules |
+| 5 | `5_mortgage_agent_multi_turn.py` | Multi-turn sessions with RAG | Phase 2: iterative review | Module 05 + 08 |
+| 6 | `6_mortgage_agent_hitl.py` | Human-in-the-loop | Phase 2: underwriter oversight | Module 05 |
+| 7 | `7_mortgage_agent_with_safety.py` | Input/output safety shields | Cross-cutting | Module 09 |
+| 8 | `8_mortgage_agent_eval.py` | Eval datasets, scoring, benchmarks | Cross-cutting | Module 10 |
 
 ## Architecture
 
-```text
-                    Llama Stack (:8321)
-                         |
-                    Mortgage Agent
-                   /    |        \
-              RAG     Safety      MCP Tools
-   (Lending     Shields      (mortgage-mcp :9003)
-    Policy)   (Llama Guard)         |
-                              Mortgage API (:8083)
-                                    |
-                              PostgreSQL
-                          (novacrest_mortgage)
+```mermaid
+flowchart TD
+    Agent[Mortgage Agent]
+    LS[Llama Stack :8321]
+
+    Agent --> LS
+
+    subgraph capabilities [Agent Capabilities]
+        RAG[RAG\nLending Policy\nVector Store]
+        Safety[Safety Shields\nLlama Guard]
+        MCP[MCP Tools\nmortgage-mcp :9003]
+    end
+
+    LS --> RAG
+    LS --> Safety
+    LS --> MCP
+
+    MCP --> API[Mortgage API :8083]
+    API --> DB[(PostgreSQL\nnovacrest_mortgage)]
+
+    subgraph data [Database Tables]
+        Apps[mortgage_applications]
+        Docs[mortgage_documents]
+        Conds[mortgage_conditions]
+        Credits[credit_reports]
+    end
+
+    DB --> Apps
+    DB --> Docs
+    DB --> Conds
+    DB --> Credits
 ```
 
 ## Prerequisites
@@ -201,18 +310,54 @@ Adds RAG (`file_search`) alongside MCP tools. The agent can now:
 python 4_mortgage_agent_doc_review.py
 ```
 
-The core use case. The agent reviews an uploaded bank statement (dated August 2025) for application APP-001:
+The core use case. The agent autonomously reviews a document for application APP-001:
 
-1. Looks up bank statement acceptance criteria in the lending policy (RAG)
-2. Finds that statements must be within 60 days
-3. Determines August 2025 is too old
-4. Rejects the document with a specific reason
-5. Notifies the borrower to upload a recent statement
+1. Retrieves the document details and application info from the API
+2. Looks up acceptance criteria for that document type in the lending policy (RAG)
+3. Compares the document's dates against the policy rules
+4. Accepts or rejects the document with a specific reason
+5. Notifies the borrower of the outcome
 
-**Concepts applied:** Multi-tool orchestration, RAG-informed decision making, write operations via tools
+The agent discovers the document type, dates, and metadata on its own -- it is not told the answer in the prompt. This demonstrates autonomous reasoning: the agent chains tool calls (API lookup) with RAG (policy search) to make a decision.
+
+**Concepts applied:** Autonomous multi-tool orchestration, RAG-informed decision making, write operations via tools
 
 > [!TIP]
-> **Try it yourself:** The script reviews a bank statement dated August 2025 and rejects it. Open `4_mortgage_agent_doc_review.py` and change the date to February 2026. Does the agent accept it now? The lending policy requires statements within 60 days.
+> **Try it yourself:** Change the query to review document 3 (a pay stub) or document 6 (a W-2 for application 2). Does the agent correctly look up the right acceptance criteria for each document type?
+
+### Step 4b: Credit-Based Underwriting Review
+
+```bash
+python 4b_mortgage_agent_credit_review.py
+```
+
+The agent performs a credit-based underwriting analysis:
+
+1. Retrieves the application details (loan type, amount, DTI ratio)
+2. Pulls credit reports from all bureaus
+3. Looks up policy requirements for that loan type (min credit score, max DTI, down payment)
+4. Compares the applicant's financials against each policy criterion
+5. Provides a structured recommendation (APPROVE, CONDITIONAL APPROVE, or DENY)
+
+The script reviews two applications: APP-001 (Conventional, credit 715, DTI 38.5% -- should pass) and APP-004 (Jumbo, credit 580, DTI 52% -- should fail). This demonstrates the "retrieves credit information, analyzes assets, makes a decision" workflow.
+
+**Concepts applied:** RAG-grounded financial analysis, multi-step autonomous reasoning
+
+### Step 4c: End-to-End Conditional Approval Workflow
+
+```bash
+python 4c_mortgage_agent_e2e_workflow.py
+```
+
+The complete conditional approval loop in a single 3-turn session:
+
+- **Turn 1:** Full status review -- list conditions, documents, and credit assessment against policy requirements
+- **Turn 2:** Review each unreviewed document against the lending policy, accept or reject, update conditions
+- **Turn 3:** Final assessment (clear to close vs remaining items) and borrower notification
+
+This ties together every capability -- tools, RAG, multi-turn memory, and write operations -- into the full workflow shown in the mortgage approval process flow diagram.
+
+**Concepts applied:** All core modules combined in a realistic workflow
 
 ### Step 5: Multi-Turn Conversation
 
@@ -220,14 +365,14 @@ The core use case. The agent reviews an uploaded bank statement (dated August 20
 python 5_mortgage_agent_multi_turn.py
 ```
 
-Four-turn conversation showing session memory:
+Four-turn conversation showing session memory with RAG:
 
 - **Turn 1:** "What are the outstanding conditions for application 1?" -- agent calls the conditions tool
 - **Turn 2:** "What documents have been submitted for that same application?" -- agent uses context from Turn 1
-- **Turn 3:** "The borrower uploaded a new bank statement dated February 2026" -- agent checks policy, determines it meets the 60-day requirement
+- **Turn 3:** "The borrower uploaded a new bank statement dated February 2026" -- agent looks up the policy for bank statement recency requirements and applies the rules
 - **Turn 4:** "Send a notification to the borrower listing remaining missing documents" -- agent remembers the full application context and sends a targeted notification
 
-**Concepts applied:** Multi-turn sessions, conversation memory (from Module 05)
+**Concepts applied:** Multi-turn sessions, conversation memory, RAG (from Modules 05 + 08)
 
 > [!TIP]
 > **Try it yourself:** Add a fifth turn to the script that asks the agent to pull the borrower's credit report. Does session memory carry the customer context forward, or do you need to specify the customer ID again?

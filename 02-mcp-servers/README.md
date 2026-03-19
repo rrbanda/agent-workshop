@@ -67,10 +67,10 @@ python finance-api-mcp-server.py
 > [!IMPORTANT]
 > **Requires:** Llama Stack server running (started in Module 00).
 
-In a new terminal, from the `02-mcp-servers/` directory:
+In a new terminal, from the repo root:
 
 ```bash
-cd examples
+cd 02-mcp-servers/examples
 python 1_register_customer_mcp.py
 python 1_register_finance_mcp.py
 ```

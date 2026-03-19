@@ -5,20 +5,17 @@
 This is a progressive workshop organized into numbered modules:
 
 - `00-setup/`: Environment setup guide
+  - `llama-stack-config/`: Reference Llama Stack server config (run.yaml, RHOAI CRD, admin guide)
+  - `verify_llama_stack.py`: Server readiness check (tests all 6 required capabilities)
 - `01-backend-apis/`: Spring Boot Customer and Finance APIs (Java 21, Maven, PostgreSQL)
 - `02-mcp-servers/`: Python MCP servers wrapping the backend APIs
 - `03-llama-stack-basics/`: Llama Stack hello world, tool listing
 - `04-agents-with-tools/`: Single and multi-domain agents with MCP tools
 - `05-multi-turn-and-hitl/`: Multi-turn conversations, human-in-the-loop
-- `07-composite-agents/`: Agent-as-Tool pattern (agents calling agents)
 - `08-rag/`: RAG with vector stores and hybrid search
 - `09-safety-shields/`: Content safety with Llama Guard
 - `10-evaluations/`: Eval pipelines, scoring, LLM-as-judge
-- `11-observability/`: Langfuse tracing and feedback (standalone, uses LangGraph)
-- `12-low-code/`: Langflow visual agent builder
-- `13-deployment/`: Helm charts, Dockerfiles, OpenShift deployment
 - `mortgage-use-case/`: Capstone -- Mortgage Approval Agent
-- `helpers/`: Llama Stack server scripts, web search demos
 
 ## Build, Test, and Development Commands
 

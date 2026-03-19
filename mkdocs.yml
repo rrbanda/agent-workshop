@@ -56,20 +56,6 @@ nav:
     - Evaluations: 10-evaluations/README.md
   - Capstone:
     - Mortgage Approval Agent: mortgage-use-case/README.md
-  - Optional:
-    - Composite Agents:
-      - Overview: 07-composite-agents/README.md
-      - Customer Agent: 07-composite-agents/customer-agent/README.md
-      - Finance Agent: 07-composite-agents/finance-agent/README.md
-    - Observability:
-      - Overview: 11-observability/README.md
-      - OpenShift Deployment: 11-observability/openshift/README.md
-    - Low-Code:
-      - Overview: 12-low-code/README.md
-      - Flows: 12-low-code/flows/README.md
-    - Deployment:
-      - Overview: 13-deployment/README.md
-      - Helm Charts: 13-deployment/helm/README.md
   - Reference: reference.md
 
 markdown_extensions:
