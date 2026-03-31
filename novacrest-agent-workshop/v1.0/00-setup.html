@@ -325,18 +325,20 @@ python -c "import fastmcp; print('fastmcp OK')"</code></pre>
 <div class="sect2">
 <h3 id="_deployment_scenarios"><a class="anchor" href="#_deployment_scenarios"></a>Deployment Scenarios</h3>
 <div class="paragraph">
-<p>The workshop supports two deployment modes. Choose the one that matches your setup:</p>
+<p>The workshop supports three deployment modes:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 20%;">
-<col style="width: 40%;">
-<col style="width: 40%;">
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5715%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top"></th>
 <th class="tableblock halign-left valign-top">Instructor-Led (Remote)</th>
+<th class="tableblock halign-left valign-top">Self-Deploy (OpenShift)</th>
 <th class="tableblock halign-left valign-top">Self-Paced (Local)</th>
 </tr>
 </thead>
@@ -344,27 +346,32 @@ python -c "import fastmcp; print('fastmcp OK')"</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Llama Stack</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">URL provided by instructor</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:8321" class="bare">http://localhost:8321</a></code> (run locally)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deploy with <code>oc apply</code> (see <a href="llama-stack-admin.html" class="page">Admin Guide</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>uv run --with llama-stack llama stack run starter</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Backend APIs</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Pre-deployed on OpenShift; use route URLs</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mvn spring-boot:run</code> on your machine (Module 01)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pre-deployed; use route URLs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deploy with <code>helm install</code> (see <a href="llama-stack-admin.html" class="page">Admin Guide</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mvn spring-boot:run</code> (Module 01)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MCP Servers</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Pre-deployed on OpenShift; use route URLs</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>python &#8230;&#8203;mcp-server.py</code> on your machine (Module 02)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pre-deployed; use route URLs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>oc apply -f 02-mcp-servers/openshift/</code> (Module 02)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>python &#8230;&#8203;mcp-server.py</code> (Module 02)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>PostgreSQL</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Deployed on the cluster</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">On cluster</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">On cluster (via Helm)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Running locally (<code>pg_isready</code>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>.env</code> setup</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Uncomment the "Remote" lines in <code>.env.example</code>, replace placeholder URLs with those from your instructor</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Use the localhost defaults as-is</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Uncomment "Remote" lines, paste URLs from instructor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Uncomment "Remote" lines, get URLs from <code>oc get route</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use localhost defaults as-is</p></td>
 </tr>
 </tbody>
 </table>
@@ -375,7 +382,7 @@ python -c "import fastmcp; print('fastmcp OK')"</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-<strong>Remote Llama Stack + local MCP does not work.</strong> When Llama Stack runs on a remote cluster, MCP server URLs must be reachable from that cluster. MCP servers on <code>localhost</code> are invisible to a remote Llama Stack. In an instructor-led workshop, both are deployed remotely.
+<strong>Remote Llama Stack + local MCP does not work.</strong> When Llama Stack runs on a remote cluster, MCP server URLs must be reachable from that cluster. MCP servers on <code>localhost</code> are invisible to a remote Llama Stack. Deploy MCP servers on OpenShift using <code>oc apply -f 02-mcp-servers/openshift/</code> (see <a href="02-mcp-servers.html" class="page">Module 02</a>).
 </td>
 </tr>
 </table>

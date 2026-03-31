@@ -161,24 +161,12 @@
 <p>Understand the NovaCrest domain model (Customer and Finance)</p>
 </li>
 <li>
-<p>Run the Spring Boot REST APIs locally</p>
+<p>Deploy or connect to the Spring Boot REST APIs</p>
 </li>
 <li>
-<p>Explore the API endpoints via Swagger UI</p>
+<p>Explore the API endpoints</p>
 </li>
 </ul>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<strong>Instructor-led workshop?</strong> If your instructor has pre-deployed the APIs on OpenShift, skip the "Run" steps below. Use the <code>CUSTOMER_API_BASE_URL</code> and <code>FINANCE_API_BASE_URL</code> URLs provided by your instructor in your <code>.env</code> file and proceed to verification.
-</td>
-</tr>
-</table>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -201,9 +189,6 @@
 <ul>
 <li>
 <p><a href="00-setup.html" class="page">Module 00: Environment Setup</a> completed</p>
-</li>
-<li>
-<p>PostgreSQL running with <code>novacrest_customer</code> and <code>novacrest_finance</code> databases</p>
 </li>
 </ul>
 </div>
@@ -314,20 +299,43 @@
 <div class="sect1">
 <h2 id="_step_by_step"><a class="anchor" href="#_step_by_step"></a>Step-by-Step</h2>
 <div class="sectionbody">
-<div class="admonitionblock note">
+<div class="paragraph">
+<p>Choose the path that matches your deployment:</p>
+</div>
+<div class="sect2">
+<h3 id="_option_a_use_pre_deployed_apis_on_openshift_recommended"><a class="anchor" href="#_option_a_use_pre_deployed_apis_on_openshift_recommended"></a>Option A: Use Pre-Deployed APIs on OpenShift (Recommended)</h3>
+<div class="paragraph">
+<p>If your instructor has deployed the backend APIs on OpenShift (or you deployed them yourself using the Helm chart in <code>site/13-deployment/helm/novacrest-app/</code>), get the route URLs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "CUSTOMER_API_BASE_URL=https://$(oc get route novacrest-customer-service -o jsonpath='{.spec.host}')"
+echo "FINANCE_API_BASE_URL=https://$(oc get route novacrest-finance-service -o jsonpath='{.spec.host}')"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Set these in your <code>.env</code> file and skip to <a href="#_verification">Verification</a>.</p>
+</div>
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<strong>Working directory:</strong> First <code>cd 01-backend-apis/</code> from the repo root. All paths below are relative to that directory.
+<strong>Instructor-led?</strong> Your instructor will provide these URLs. Just paste them into your <code>.env</code>.
 </td>
 </tr>
 </table>
 </div>
+</div>
 <div class="sect2">
-<h3 id="_1_build_and_run_customer_api"><a class="anchor" href="#_1_build_and_run_customer_api"></a>1. Build and Run Customer API</h3>
+<h3 id="_option_b_run_locally"><a class="anchor" href="#_option_b_run_locally"></a>Option B: Run Locally</h3>
+<div class="paragraph">
+<p>Requires PostgreSQL running locally with <code>novacrest_customer</code> and <code>novacrest_finance</code> databases (see <a href="00-setup.html#_4_postgresql_databases" class="page">Module 00 PostgreSQL setup</a>).</p>
+</div>
+<div class="sect3">
+<h4 id="_1_build_and_run_customer_api"><a class="anchor" href="#_1_build_and_run_customer_api"></a>1. Build and Run Customer API</h4>
 <div class="paragraph">
 <p>In a dedicated terminal (from the repo root):</p>
 </div>
@@ -339,8 +347,8 @@ mvn spring-boot:run</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_2_build_and_run_finance_api"><a class="anchor" href="#_2_build_and_run_finance_api"></a>2. Build and Run Finance API</h3>
+<div class="sect3">
+<h4 id="_2_build_and_run_finance_api"><a class="anchor" href="#_2_build_and_run_finance_api"></a>2. Build and Run Finance API</h4>
 <div class="paragraph">
 <p>In a second terminal (from the repo root):</p>
 </div>
@@ -352,8 +360,8 @@ mvn spring-boot:run</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_3_explore_the_apis"><a class="anchor" href="#_3_explore_the_apis"></a>3. Explore the APIs</h3>
+<div class="sect3">
+<h4 id="_3_explore_the_apis"><a class="anchor" href="#_3_explore_the_apis"></a>3. Explore the APIs</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -367,19 +375,28 @@ mvn spring-boot:run</code></pre>
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
 <h2 id="_verification"><a class="anchor" href="#_verification"></a>Verification</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Verify the APIs are reachable using the URLs in your <code>.env</code>:</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Search customers
-curl http://localhost:8081/api/customers?companyName=Around
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">source .env
+
+# Search customers
+curl $CUSTOMER_API_BASE_URL/api/customers?companyName=Around
 
 # Get order history
-curl -X POST http://localhost:8082/api/finance/orders/history \
+curl -X POST $FINANCE_API_BASE_URL/api/finance/orders/history \
   -H "Content-Type: application/json" \
   -d '{"customerId": "AROUT"}'</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>You should see JSON responses with customer and order data.</p>
 </div>
 </div>
 </div>

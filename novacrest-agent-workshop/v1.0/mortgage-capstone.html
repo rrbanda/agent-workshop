@@ -513,18 +513,6 @@ flowchart TD
 <div class="sect1">
 <h2 id="_setup"><a class="anchor" href="#_setup"></a>Setup</h2>
 <div class="sectionbody">
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<strong>Instructor-led workshop?</strong> If your instructor has pre-deployed the Mortgage API and MCP server on OpenShift, skip the database creation, API start, and MCP server start steps below. Use the <code>MORTGAGE_API_BASE_URL</code> and <code>MORTGAGE_MCP_SERVER_URL</code> URLs provided by your instructor in your <code>.env</code> file and proceed directly to "Create the vector store."
-</td>
-</tr>
-</table>
-</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -533,22 +521,58 @@ flowchart TD
 </td>
 <td class="content">
 <strong>Working directory:</strong> All commands in this module run from <code>mortgage-use-case/</code>.<br>
-<strong>Services needed:</strong> Llama Stack server, PostgreSQL.<br>
+<strong>Services needed:</strong> Llama Stack server, Mortgage API, Mortgage MCP server.<br>
 <strong>Environment:</strong> Ensure your root <code>.env</code> includes the Mortgage variables (<code>MORTGAGE_API_BASE_URL</code>, <code>MORTGAGE_MCP_SERVER_URL</code>, etc.) from <code>.env.example</code>.
 </td>
 </tr>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_1_create_the_database"><a class="anchor" href="#_1_create_the_database"></a>1. Create the database</h3>
+<h3 id="_option_a_use_pre_deployed_services_recommended"><a class="anchor" href="#_option_a_use_pre_deployed_services_recommended"></a>Option A: Use Pre-Deployed Services (Recommended)</h3>
+<div class="paragraph">
+<p>If your instructor has deployed the Mortgage API and MCP server on OpenShift (or you deployed them yourself), get the route URLs and set them in your <code>.env</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Get the URLs (or paste what your instructor gives you)
+echo "MORTGAGE_API_BASE_URL=https://$(oc get route mortgage-api-route -o jsonpath='{.spec.host}')"
+echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonpath='{.spec.host}')/mcp"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Skip to <a href="#_walkthrough">Walkthrough</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_option_b_deploy_mortgage_mcp_on_openshift_yourself"><a class="anchor" href="#_option_b_deploy_mortgage_mcp_on_openshift_yourself"></a>Option B: Deploy Mortgage MCP on OpenShift Yourself</h3>
+<div class="paragraph">
+<p>If the Mortgage API is already deployed but the MCP server isn&#8217;t:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f mortgage-use-case/openshift/mortgage-mcp.yaml
+echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonpath='{.spec.host}')/mcp"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Set the URL in your <code>.env</code> and skip to <a href="#_walkthrough">Walkthrough</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_option_c_run_locally"><a class="anchor" href="#_option_c_run_locally"></a>Option C: Run Locally</h3>
+<div class="paragraph">
+<p>Use this only if your Llama Stack also runs locally.</p>
+</div>
+<div class="sect3">
+<h4 id="_1_create_the_database"><a class="anchor" href="#_1_create_the_database"></a>1. Create the database</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">createdb novacrest_mortgage</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_2_start_the_mortgage_api"><a class="anchor" href="#_2_start_the_mortgage_api"></a>2. Start the Mortgage API</h3>
+<div class="sect3">
+<h4 id="_2_start_the_mortgage_api"><a class="anchor" href="#_2_start_the_mortgage_api"></a>2. Start the Mortgage API</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd mortgage-api
@@ -572,8 +596,8 @@ mvn spring-boot:run</code></pre>
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_3_start_the_mortgage_mcp_server"><a class="anchor" href="#_3_start_the_mortgage_mcp_server"></a>3. Start the Mortgage MCP Server</h3>
+<div class="sect3">
+<h4 id="_3_start_the_mortgage_mcp_server"><a class="anchor" href="#_3_start_the_mortgage_mcp_server"></a>3. Start the Mortgage MCP Server</h4>
 <div class="paragraph">
 <p>In a new terminal, from the <code>mortgage-use-case/</code> directory:</p>
 </div>
@@ -600,8 +624,8 @@ python mortgage-api-mcp-server.py</code></pre>
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_4_configure_environment"><a class="anchor" href="#_4_configure_environment"></a>4. Configure environment</h3>
+<div class="sect3">
+<h4 id="_4_configure_environment"><a class="anchor" href="#_4_configure_environment"></a>4. Configure environment</h4>
 <div class="paragraph">
 <p>Ensure your <code>.env</code> file includes:</p>
 </div>
@@ -610,6 +634,7 @@ python mortgage-api-mcp-server.py</code></pre>
 <pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">MORTGAGE_API_BASE_URL=http://localhost:8083
 MORTGAGE_MCP_SERVER_URL=http://localhost:9003/mcp
 PORT_FOR_MORTGAGE_MCP=9003</code></pre>
+</div>
 </div>
 </div>
 </div>
