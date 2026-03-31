@@ -31,6 +31,17 @@ print(f"Model:        {INFERENCE_MODEL}")
 print(f"Customer MCP: {CUSTOMER_MCP_SERVER_URL}")
 print(f"Finance MCP:  {FINANCE_MCP_SERVER_URL}")
 
+from urllib.parse import urlparse
+_ls = urlparse(LLAMA_STACK_BASE_URL)
+for _label, _url in [("CUSTOMER_MCP_SERVER_URL", CUSTOMER_MCP_SERVER_URL), ("FINANCE_MCP_SERVER_URL", FINANCE_MCP_SERVER_URL)]:
+    _mcp = urlparse(_url)
+    if _ls.hostname not in ("localhost", "127.0.0.1") and _mcp.hostname in ("localhost", "127.0.0.1"):
+        print(f"\nERROR: Llama Stack is remote but {_label} is on localhost.")
+        print("The remote Llama Stack server cannot reach localhost on your machine.")
+        print(f"Fix: set {_label} to a remote URL that Llama Stack can reach,")
+        print("     or run Llama Stack locally. See Module 00 'Deployment Scenarios'.")
+        sys.exit(1)
+
 # Initialize client
 client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
 
