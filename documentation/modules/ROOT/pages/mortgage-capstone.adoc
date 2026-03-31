@@ -280,20 +280,47 @@ And have running:
 
 == Setup
 
-TIP: *Instructor-led workshop?* If your instructor has pre-deployed the Mortgage API and MCP server on OpenShift, skip the database creation, API start, and MCP server start steps below. Use the `MORTGAGE_API_BASE_URL` and `MORTGAGE_MCP_SERVER_URL` URLs provided by your instructor in your `.env` file and proceed directly to "Create the vector store."
-
 NOTE: *Working directory:* All commands in this module run from `mortgage-use-case/`. +
-*Services needed:* Llama Stack server, PostgreSQL. +
+*Services needed:* Llama Stack server, Mortgage API, Mortgage MCP server. +
 *Environment:* Ensure your root `.env` includes the Mortgage variables (`MORTGAGE_API_BASE_URL`, `MORTGAGE_MCP_SERVER_URL`, etc.) from `.env.example`.
 
-=== 1. Create the database
+=== Option A: Use Pre-Deployed Services (Recommended)
+
+If your instructor has deployed the Mortgage API and MCP server on OpenShift (or you deployed them yourself), get the route URLs and set them in your `.env`:
+
+[source,bash]
+----
+# Get the URLs (or paste what your instructor gives you)
+echo "MORTGAGE_API_BASE_URL=https://$(oc get route mortgage-api-route -o jsonpath='{.spec.host}')"
+echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonpath='{.spec.host}')/mcp"
+----
+
+Skip to <<_walkthrough>>.
+
+=== Option B: Deploy Mortgage MCP on OpenShift Yourself
+
+If the Mortgage API is already deployed but the MCP server isn't:
+
+[source,bash]
+----
+oc apply -f mortgage-use-case/openshift/mortgage-mcp.yaml
+echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonpath='{.spec.host}')/mcp"
+----
+
+Set the URL in your `.env` and skip to <<_walkthrough>>.
+
+=== Option C: Run Locally
+
+Use this only if your Llama Stack also runs locally.
+
+==== 1. Create the database
 
 [source,bash]
 ----
 createdb novacrest_mortgage
 ----
 
-=== 2. Start the Mortgage API
+==== 2. Start the Mortgage API
 
 [source,bash]
 ----
@@ -306,7 +333,7 @@ The API starts on port {mortgage-api-port} with seed data (4 applications, 12 do
 
 TIP: *Recognize the pattern:* This API follows the same Spring Boot structure you ran in Module 01. Compare `mortgage-api/src/` with `customer-api/src/` -- same entity/repository/service/controller layers, same `data.sql` seed data approach.
 
-=== 3. Start the Mortgage MCP Server
+==== 3. Start the Mortgage MCP Server
 
 In a new terminal, from the `mortgage-use-case/` directory:
 
@@ -321,7 +348,7 @@ The MCP server starts on port {mortgage-mcp-port} with 8 tools.
 
 TIP: *Recognize the pattern:* This MCP server uses the same FastMCP pattern from Module 02. Compare `mortgage-api-mcp-server.py` with `customer-api-mcp-server.py` -- same `@mcp.tool()` decorators wrapping `httpx` REST calls.
 
-=== 4. Configure environment
+==== 4. Configure environment
 
 Ensure your `.env` file includes:
 
@@ -332,6 +359,7 @@ MORTGAGE_MCP_SERVER_URL=http://localhost:9003/mcp
 PORT_FOR_MORTGAGE_MCP=9003
 ----
 
+[[_walkthrough]]
 == Walkthrough
 
 === Step 1: Create the Policy Vector Store

@@ -90,36 +90,42 @@ The `.env.example` defaults to `{inference-model}` for inference and `{embedding
 
 === Deployment Scenarios
 
-The workshop supports two deployment modes. Choose the one that matches your setup:
+The workshop supports three deployment modes:
 
-[cols="1,2,2", options="header"]
+[cols="1,2,2,2", options="header"]
 |===
 |
 |Instructor-Led (Remote)
+|Self-Deploy (OpenShift)
 |Self-Paced (Local)
 
 |*Llama Stack*
 |URL provided by instructor
-|`http://localhost:{llama-stack-port}` (run locally)
+|Deploy with `oc apply` (see xref:llama-stack-admin.adoc[Admin Guide])
+|`uv run --with llama-stack llama stack run starter`
 
 |*Backend APIs*
-|Pre-deployed on OpenShift; use route URLs
-|`mvn spring-boot:run` on your machine (Module 01)
+|Pre-deployed; use route URLs
+|Deploy with `helm install` (see xref:llama-stack-admin.adoc[Admin Guide])
+|`mvn spring-boot:run` (Module 01)
 
 |*MCP Servers*
-|Pre-deployed on OpenShift; use route URLs
-|`python ...mcp-server.py` on your machine (Module 02)
+|Pre-deployed; use route URLs
+|`oc apply -f 02-mcp-servers/openshift/` (Module 02)
+|`python ...mcp-server.py` (Module 02)
 
 |*PostgreSQL*
-|Deployed on the cluster
+|On cluster
+|On cluster (via Helm)
 |Running locally (`pg_isready`)
 
 |*`.env` setup*
-|Uncomment the "Remote" lines in `.env.example`, replace placeholder URLs with those from your instructor
-|Use the localhost defaults as-is
+|Uncomment "Remote" lines, paste URLs from instructor
+|Uncomment "Remote" lines, get URLs from `oc get route`
+|Use localhost defaults as-is
 |===
 
-IMPORTANT: *Remote Llama Stack + local MCP does not work.* When Llama Stack runs on a remote cluster, MCP server URLs must be reachable from that cluster. MCP servers on `localhost` are invisible to a remote Llama Stack. In an instructor-led workshop, both are deployed remotely.
+IMPORTANT: *Remote Llama Stack + local MCP does not work.* When Llama Stack runs on a remote cluster, MCP server URLs must be reachable from that cluster. MCP servers on `localhost` are invisible to a remote Llama Stack. Deploy MCP servers on OpenShift using `oc apply -f 02-mcp-servers/openshift/` (see xref:02-mcp-servers.adoc[Module 02]).
 
 === 3. Verify Llama Stack Server
 

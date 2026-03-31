@@ -4,17 +4,14 @@ include::_attributes.adoc[]
 == Learning Objectives
 
 * Understand the NovaCrest domain model (Customer and Finance)
-* Run the Spring Boot REST APIs locally
-* Explore the API endpoints via Swagger UI
-
-TIP: *Instructor-led workshop?* If your instructor has pre-deployed the APIs on OpenShift, skip the "Run" steps below. Use the `CUSTOMER_API_BASE_URL` and `FINANCE_API_BASE_URL` URLs provided by your instructor in your `.env` file and proceed to verification.
+* Deploy or connect to the Spring Boot REST APIs
+* Explore the API endpoints
 
 TIP: *Capstone Preview:* In the capstone, you will work with a Mortgage API that follows this same Spring Boot pattern -- same entity/repository/controller structure, same Swagger UI, same seed data approach.
 
 == Prerequisites
 
 * xref:00-setup.adoc[Module 00: Environment Setup] completed
-* PostgreSQL running with `novacrest_customer` and `novacrest_finance` databases
 
 == Concepts
 
@@ -82,9 +79,27 @@ Four entities: Order, Invoice, Dispute, Receipt -- all linked by customerId.
 
 == Step-by-Step
 
-NOTE: *Working directory:* First `cd 01-backend-apis/` from the repo root. All paths below are relative to that directory.
+Choose the path that matches your deployment:
 
-=== 1. Build and Run Customer API
+=== Option A: Use Pre-Deployed APIs on OpenShift (Recommended)
+
+If your instructor has deployed the backend APIs on OpenShift (or you deployed them yourself using the Helm chart in `site/13-deployment/helm/novacrest-app/`), get the route URLs:
+
+[source,bash]
+----
+echo "CUSTOMER_API_BASE_URL=https://$(oc get route novacrest-customer-service -o jsonpath='{.spec.host}')"
+echo "FINANCE_API_BASE_URL=https://$(oc get route novacrest-finance-service -o jsonpath='{.spec.host}')"
+----
+
+Set these in your `.env` file and skip to <<_verification>>.
+
+TIP: *Instructor-led?* Your instructor will provide these URLs. Just paste them into your `.env`.
+
+=== Option B: Run Locally
+
+Requires PostgreSQL running locally with `novacrest_customer` and `novacrest_finance` databases (see xref:00-setup.adoc#_4_postgresql_databases[Module 00 PostgreSQL setup]).
+
+==== 1. Build and Run Customer API
 
 In a dedicated terminal (from the repo root):
 
@@ -95,7 +110,7 @@ mvn clean package -DskipTests
 mvn spring-boot:run
 ----
 
-=== 2. Build and Run Finance API
+==== 2. Build and Run Finance API
 
 In a second terminal (from the repo root):
 
@@ -106,23 +121,30 @@ mvn clean package -DskipTests
 mvn spring-boot:run
 ----
 
-=== 3. Explore the APIs
+==== 3. Explore the APIs
 
 * Customer Swagger: http://localhost:{customer-api-port}/swagger-ui.html
 * Finance Swagger: http://localhost:{finance-api-port}/swagger-ui.html
 
+[[_verification]]
 == Verification
 
-[source,bash,subs="attributes+"]
+Verify the APIs are reachable using the URLs in your `.env`:
+
+[source,bash]
 ----
+source .env
+
 # Search customers
-curl http://localhost:{customer-api-port}/api/customers?companyName=Around
+curl $CUSTOMER_API_BASE_URL/api/customers?companyName=Around
 
 # Get order history
-curl -X POST http://localhost:{finance-api-port}/api/finance/orders/history \
+curl -X POST $FINANCE_API_BASE_URL/api/finance/orders/history \
   -H "Content-Type: application/json" \
   -d '{"customerId": "AROUT"}'
 ----
+
+You should see JSON responses with customer and order data.
 
 == Key Takeaways
 

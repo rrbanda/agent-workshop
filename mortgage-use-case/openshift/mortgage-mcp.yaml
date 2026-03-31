@@ -1,0 +1,74 @@
+# Mortgage MCP Server - OpenShift Deployment
+# Deploys the Mortgage MCP server with a Service and Route.
+# Prerequisites: Mortgage API must be deployed (novacrest-mortgage-service on port 8083).
+#
+# Usage:
+#   oc apply -f mortgage-use-case/openshift/mortgage-mcp.yaml
+#   oc get route mcp-mortgage-route -o jsonpath='https://{.spec.host}/mcp'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mortgage-mcp
+  labels:
+    app: mortgage-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mortgage-mcp
+  template:
+    metadata:
+      labels:
+        app: mortgage-mcp
+    spec:
+      containers:
+      - name: mcp-server
+        image: quay.io/novacrest/mcp-server-mortgage:1.0.0
+        imagePullPolicy: Always
+        env:
+        - name: MORTGAGE_API_BASE_URL
+          value: "http://novacrest-mortgage-service:8083"
+        ports:
+        - containerPort: 9003
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 100m
+          limits:
+            memory: 256Mi
+            cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-mortgage-service
+  labels:
+    app: mortgage-mcp
+spec:
+  type: ClusterIP
+  selector:
+    app: mortgage-mcp
+  ports:
+  - port: 9003
+    targetPort: 9003
+    protocol: TCP
+    name: http
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: mcp-mortgage-route
+  labels:
+    app: mortgage-mcp
+spec:
+  to:
+    kind: Service
+    name: mcp-mortgage-service
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

@@ -1,0 +1,74 @@
+# Finance MCP Server - OpenShift Deployment
+# Deploys the Finance MCP server with a Service and Route.
+# Prerequisites: Finance API must be deployed (novacrest-finance-service on port 8082).
+#
+# Usage:
+#   oc apply -f 02-mcp-servers/openshift/finance-mcp.yaml
+#   oc get route mcp-finance-route -o jsonpath='https://{.spec.host}/mcp'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finance-mcp
+  labels:
+    app: finance-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finance-mcp
+  template:
+    metadata:
+      labels:
+        app: finance-mcp
+    spec:
+      containers:
+      - name: mcp-server
+        image: quay.io/novacrest/mcp-server-finance:1.2.0
+        imagePullPolicy: Always
+        env:
+        - name: FINANCE_API_BASE_URL
+          value: "http://novacrest-finance-service:8082"
+        ports:
+        - containerPort: 9002
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 100m
+          limits:
+            memory: 256Mi
+            cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-finance-service
+  labels:
+    app: finance-mcp
+spec:
+  type: ClusterIP
+  selector:
+    app: finance-mcp
+  ports:
+  - port: 9002
+    targetPort: 9002
+    protocol: TCP
+    name: http
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: mcp-finance-route
+  labels:
+    app: finance-mcp
+spec:
+  to:
+    kind: Service
+    name: mcp-finance-service
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
