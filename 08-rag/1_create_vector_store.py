@@ -25,7 +25,10 @@ logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 load_dotenv()
 
 # Get configuration from environment
-LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
+LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL")
+if not LLAMA_STACK_BASE_URL:
+    logger.error("LLAMA_STACK_BASE_URL not set. Copy .env.example to .env and configure it.")
+    sys.exit(1)
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL")
 EMBEDDING_DIMENSION = os.getenv("EMBEDDING_DIMENSION")
 

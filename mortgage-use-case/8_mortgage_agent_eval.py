@@ -27,7 +27,10 @@ logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 
 load_dotenv()
 
-LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
+LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL")
+if not LLAMA_STACK_BASE_URL:
+    print("Error: LLAMA_STACK_BASE_URL not set. Copy .env.example to .env and configure it.")
+    sys.exit(1)
 CANDIDATE_MODEL = os.getenv("CANDIDATE_MODEL") or os.getenv("INFERENCE_MODEL")
 
 DATASET_ID = "mortgage-policy-evals"
@@ -95,25 +98,45 @@ except BadRequestError as e:
 print("\n3. Running evaluation...")
 print(f"   Candidate model: {CANDIDATE_MODEL}")
 
-job = client.alpha.eval.run_eval(
-    benchmark_id=BENCHMARK_ID,
-    benchmark_config={
-        "eval_candidate": {
-            "type": "model",
-            "model": CANDIDATE_MODEL,
-            "sampling_params": {
-                "strategy": {"type": "greedy"},
-                "max_tokens": 128,
-            },
-        },
-        "scoring_params": {
-            SCORING_FN: {
-                "type": "basic",
-                "aggregation_functions": ["accuracy"],
-            },
+import time
+
+MAX_RETRIES = 3
+RETRY_DELAY = 10
+
+benchmark_config = {
+    "eval_candidate": {
+        "type": "model",
+        "model": CANDIDATE_MODEL,
+        "sampling_params": {
+            "strategy": {"type": "greedy"},
+            "max_tokens": 256,
         },
     },
-)
+    "scoring_params": {
+        SCORING_FN: {
+            "type": "basic",
+            "aggregation_functions": ["accuracy"],
+        },
+    },
+}
+
+job = None
+for attempt in range(1, MAX_RETRIES + 1):
+    try:
+        job = client.alpha.eval.run_eval(
+            benchmark_id=BENCHMARK_ID,
+            benchmark_config=benchmark_config,
+        )
+        break
+    except Exception as e:
+        if attempt < MAX_RETRIES:
+            print(f"   Attempt {attempt} failed ({e}), retrying in {RETRY_DELAY}s...")
+            time.sleep(RETRY_DELAY)
+        else:
+            print(f"   All {MAX_RETRIES} attempts failed. Last error: {e}")
+            print("   This usually means the inference backend is rate-limiting requests.")
+            print("   Wait a minute and try again, or reduce the dataset size.")
+            sys.exit(1)
 
 job_id = getattr(job, "job_id", None)
 print(f"   Job started: {job_id}")
@@ -137,8 +160,8 @@ correct = 0
 total = len(generations)
 
 for i, gen in enumerate(generations):
-    query = gen.get("input_query", "N/A")
-    expected = gen.get("expected_answer", "N/A")
+    query = rows[i]["input_query"] if i < len(rows) else "N/A"
+    expected = rows[i]["expected_answer"] if i < len(rows) else "N/A"
     generated = gen.get("generated_answer", "N/A")
 
     if isinstance(generated, str) and len(generated) > 120:

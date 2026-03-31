@@ -7,6 +7,8 @@ include::_attributes.adoc[]
 * Run the Spring Boot REST APIs locally
 * Explore the API endpoints via Swagger UI
 
+TIP: *Instructor-led workshop?* If your instructor has pre-deployed the APIs on OpenShift, skip the "Run" steps below. Use the `CUSTOMER_API_BASE_URL` and `FINANCE_API_BASE_URL` URLs provided by your instructor in your `.env` file and proceed to verification.
+
 TIP: *Capstone Preview:* In the capstone, you will work with a Mortgage API that follows this same Spring Boot pattern -- same entity/repository/controller structure, same Swagger UI, same seed data approach.
 
 == Prerequisites
@@ -80,26 +82,26 @@ Four entities: Order, Invoice, Dispute, Receipt -- all linked by customerId.
 
 == Step-by-Step
 
-NOTE: *Working directory:* All commands in this module run from `01-backend-apis/`.
+NOTE: *Working directory:* First `cd 01-backend-apis/` from the repo root. All paths below are relative to that directory.
 
 === 1. Build and Run Customer API
 
-In a dedicated terminal:
+In a dedicated terminal (from the repo root):
 
 [source,bash]
 ----
-cd customer-api
+cd 01-backend-apis/customer-api
 mvn clean package -DskipTests
 mvn spring-boot:run
 ----
 
 === 2. Build and Run Finance API
 
-In a second terminal:
+In a second terminal (from the repo root):
 
 [source,bash]
 ----
-cd finance-api
+cd 01-backend-apis/finance-api
 mvn clean package -DskipTests
 mvn spring-boot:run
 ----

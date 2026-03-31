@@ -68,6 +68,16 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ----
 
+IMPORTANT: *Do not skip `pip install`.* The root `requirements.txt` installs all Python dependencies for the entire workshop, including `llama-stack-client`, `fastmcp`, `httpx`, and `python-dotenv`. If you skip this step, later modules will fail with `ModuleNotFoundError`.
+
+Verify the key packages are installed:
+
+[source,bash]
+----
+python -c "import llama_stack_client; print('llama-stack-client', llama_stack_client.__version__)"
+python -c "import fastmcp; print('fastmcp OK')"
+----
+
 === 2. Environment Variables
 
 [source,bash]
@@ -77,6 +87,39 @@ cp .env.example .env
 ----
 
 The `.env.example` defaults to `{inference-model}` for inference and `{embedding-model}` for embedding. Update these if your Llama Stack server uses different model identifiers.
+
+=== Deployment Scenarios
+
+The workshop supports two deployment modes. Choose the one that matches your setup:
+
+[cols="1,2,2", options="header"]
+|===
+|
+|Instructor-Led (Remote)
+|Self-Paced (Local)
+
+|*Llama Stack*
+|URL provided by instructor
+|`http://localhost:{llama-stack-port}` (run locally)
+
+|*Backend APIs*
+|Pre-deployed on OpenShift; use route URLs
+|`mvn spring-boot:run` on your machine (Module 01)
+
+|*MCP Servers*
+|Pre-deployed on OpenShift; use route URLs
+|`python ...mcp-server.py` on your machine (Module 02)
+
+|*PostgreSQL*
+|Deployed on the cluster
+|Running locally (`pg_isready`)
+
+|*`.env` setup*
+|Uncomment the "Remote" lines in `.env.example`, replace placeholder URLs with those from your instructor
+|Use the localhost defaults as-is
+|===
+
+IMPORTANT: *Remote Llama Stack + local MCP does not work.* When Llama Stack runs on a remote cluster, MCP server URLs must be reachable from that cluster. MCP servers on `localhost` are invisible to a remote Llama Stack. In an instructor-led workshop, both are deployed remotely.
 
 === 3. Verify Llama Stack Server
 
@@ -93,6 +136,27 @@ IMPORTANT: *MCP connectivity:* The Llama Stack server must be able to reach your
 === 4. PostgreSQL Databases
 
 Ensure PostgreSQL is running before creating the databases. You can check with `pg_isready`.
+
+The backend APIs connect as user `postgres` with password `postgres`. On *macOS* this usually works out of the box. On *Linux* (Fedora, RHEL, Ubuntu), you may need to configure PostgreSQL first:
+
+[source,bash]
+----
+# Linux only: set the postgres user password (the Spring Boot APIs expect 'postgres'/'postgres')
+sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
+----
+
+If you get authentication errors when starting the APIs (Module 01), check your `pg_hba.conf` (typically at `/var/lib/pgsql/data/pg_hba.conf` on Fedora or `/etc/postgresql/*/main/pg_hba.conf` on Ubuntu). Ensure local connections use `md5` or `trust`:
+
+[source,text]
+----
+# TYPE  DATABASE  USER  ADDRESS      METHOD
+local   all       all                md5
+host    all       all   127.0.0.1/32 md5
+----
+
+After editing, restart PostgreSQL: `sudo systemctl restart postgresql`.
+
+Now create the databases:
 
 [source,bash]
 ----

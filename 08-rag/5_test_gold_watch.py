@@ -1,6 +1,7 @@
 """Test RAG agent with gold watch retirement query against HR benefits vector store."""
 
 import os
+import sys
 import logging
 from dotenv import load_dotenv
 from llama_stack_client import LlamaStackClient, Agent, AgentEventLogger
@@ -13,7 +14,10 @@ logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 load_dotenv()
 
 # Get configuration from environment
-LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
+LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL")
+if not LLAMA_STACK_BASE_URL:
+    print("Error: LLAMA_STACK_BASE_URL not set. Copy .env.example to .env and configure it.")
+    sys.exit(1)
 INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "vllm-inference/gpt-oss-120b")
 
 # Initialize client

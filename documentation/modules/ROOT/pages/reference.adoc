@@ -65,7 +65,11 @@ Other modules (08, 09, 10, mortgage-use-case) use *module-local numbering* start
 
 == Environment Variables
 
-All modules share a single `.env` file at the repo root. See {github-repo}/blob/main/.env.example[.env.example,window=_blank] for the full list.
+All modules share a single `.env` file at the repo root. Copy `.env.example` to `.env` and update values for your deployment scenario. See {github-repo}/blob/main/.env.example[.env.example,window=_blank] for the full annotated template.
+
+TIP: In an *instructor-led workshop*, your instructor provides the remote URLs for Llama Stack, APIs, and MCP servers. Uncomment the "Remote" lines in `.env.example` and replace the placeholder URLs.
+
+=== Core Variables (All Modules)
 
 [cols="2,3,2", options="header"]
 |===
@@ -84,6 +88,32 @@ All modules share a single `.env` file at the repo root. See {github-repo}/blob/
 |`INFERENCE_MODEL`
 |LLM model identifier
 |`{inference-model}`
+|===
+
+=== Backend APIs (Modules 01-02)
+
+[cols="2,3,2", options="header"]
+|===
+|Variable
+|Description
+|Default
+
+|`CUSTOMER_API_BASE_URL`
+|Customer REST API base URL
+|`http://localhost:{customer-api-port}`
+
+|`FINANCE_API_BASE_URL`
+|Finance REST API base URL
+|`http://localhost:{finance-api-port}`
+|===
+
+=== MCP Servers (Modules 02-05)
+
+[cols="2,3,2", options="header"]
+|===
+|Variable
+|Description
+|Default
 
 |`CUSTOMER_MCP_SERVER_URL`
 |Customer MCP endpoint
@@ -94,8 +124,72 @@ All modules share a single `.env` file at the repo root. See {github-repo}/blob/
 |`http://localhost:{finance-mcp-port}/mcp`
 
 |`MORTGAGE_MCP_SERVER_URL`
-|Mortgage MCP endpoint
+|Mortgage MCP endpoint (capstone)
 |`http://localhost:{mortgage-mcp-port}/mcp`
+|===
+
+=== RAG (Module 08)
+
+[cols="2,3,2", options="header"]
+|===
+|Variable
+|Description
+|Default
+
+|`EMBEDDING_MODEL`
+|Embedding model identifier
+|`{embedding-model}`
+
+|`EMBEDDING_DIMENSION`
+|Embedding vector dimension
+|`{embedding-dimension}`
+|===
+
+=== Safety Shields (Module 09)
+
+[cols="2,3,2", options="header"]
+|===
+|Variable
+|Description
+|Default
+
+|`SHIELD_MODEL`
+|Model used by the Llama Guard safety provider
+|`{inference-model}`
+
+|`SHIELD_ID`
+|Shield identifier registered on Llama Stack
+|`content_safety`
+|===
+
+=== Evaluations (Module 10, Capstone)
+
+[cols="2,3,2", options="header"]
+|===
+|Variable
+|Description
+|Default
+
+|`JUDGE_MODEL`
+|Model used as an LLM-as-Judge evaluator
+|`{inference-model}`
+
+|`CANDIDATE_MODEL`
+|Model being evaluated
+|`{inference-model}`
+|===
+
+=== Capstone (Mortgage Use Case)
+
+[cols="2,3,2", options="header"]
+|===
+|Variable
+|Description
+|Default
+
+|`MORTGAGE_API_BASE_URL`
+|Mortgage REST API base URL
+|`http://localhost:{mortgage-api-port}`
 |===
 
 == Port Reference
@@ -142,17 +236,26 @@ All modules share a single `.env` file at the repo root. See {github-repo}/blob/
 |Problem
 |Solution
 
-|`Connection refused` on Llama Stack
-|Verify the server is running: `curl http://localhost:{llama-stack-port}/v1/models`
+|`RuntimeError: No response available`
+|Your Llama Stack is remote but MCP servers are on `localhost`. Remote Llama Stack cannot reach your local machine. Deploy MCP remotely or run Llama Stack locally. See xref:00-setup.adoc#_deployment_scenarios[Deployment Scenarios].
 
-|Empty tool lists
-|Ensure MCP servers are running on their expected ports
+|`Connection refused` on Llama Stack
+|Verify the server is running: `curl $LLAMA_STACK_BASE_URL/v1/models`
 
 |`LLAMA_STACK_BASE_URL not set`
-|Copy `.env.example` to `.env` and configure your values
+|Copy `.env.example` to `.env` and set `LLAMA_STACK_BASE_URL` to your server URL (local or remote)
+
+|Empty tool lists
+|Ensure MCP servers are running on their expected ports. If Llama Stack is remote, MCP servers must also be deployed remotely -- `localhost` MCP URLs are not reachable from a remote server.
+
+|MCP tools fail with remote Llama Stack
+|MCP server URLs must be reachable *from the Llama Stack server*, not just from your laptop. Deploy MCP servers on the same cluster or expose them via public routes.
 
 |Model not found
 |Check `INFERENCE_MODEL` matches a model on your Llama Stack server (`curl $LLAMA_STACK_BASE_URL/v1/models`)
+
+|`429 Too Many Requests` or rate limiting
+|The MaaS inference backend has rate limits. Wait 30-60 seconds and retry. For eval scripts, the built-in retry logic handles this automatically.
 
 |Database errors
 |Verify PostgreSQL is running and databases exist (`createdb novacrest_customer`)

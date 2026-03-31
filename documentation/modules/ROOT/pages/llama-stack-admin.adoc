@@ -12,14 +12,14 @@ Deploy a Llama Stack server with all capabilities the NovaCrest Agent Workshop r
 
 === 1. Edit the distribution YAML
 
-Set your MaaS endpoint in `llamastack-distribution.yaml`:
+Set your MaaS token in `llamastack-distribution.yaml` (the MaaS URL is pre-configured):
 
 [source,yaml]
 ----
 - name: VLLM_API_URL
-  value: "https://your-maas-endpoint/v1"   # <-- your MaaS URL
+  value: "https://litellm-prod.apps.maas.redhatworkshops.io/v1"
 - name: VLLM_API_TOKEN
-  value: "your-api-token"                   # <-- your MaaS token
+  value: "your-api-token"   # <-- set your MaaS API key here
 ----
 
 === 2. Apply both files
@@ -151,6 +151,55 @@ Then set `LLAMA_STACK_BASE_URL=http://localhost:{llama-stack-port}` in your `.en
 |`inline::localfs`
 |xref:08-rag.adoc[08-rag], xref:10-evaluations.adoc[10-evaluations]
 |===
+
+== Deploy Backend Services (Instructor-Led Workshop)
+
+For an instructor-led workshop, you also need to deploy the NovaCrest backend APIs, PostgreSQL databases, and MCP servers so that participants use remote services instead of running them locally.
+
+Helm charts are provided in `site/13-deployment/helm/`:
+
+=== Backend APIs + PostgreSQL
+
+[source,bash]
+----
+helm install novacrest-app site/13-deployment/helm/novacrest-app/
+----
+
+This deploys:
+
+* *Customer API* -- Spring Boot app with PostgreSQL (`novacrest_customer` database)
+* *Finance API* -- Spring Boot app with PostgreSQL (`novacrest_finance` database)
+* OpenShift Routes for external access
+
+=== MCP Servers
+
+[source,bash]
+----
+helm install novacrest-mcp site/13-deployment/helm/novacrest-mcp/
+----
+
+This deploys:
+
+* *Customer MCP* -- wraps the Customer API (connects via internal cluster DNS `http://novacrest-customer-service:8081`)
+* *Finance MCP* -- wraps the Finance API (connects via internal cluster DNS `http://novacrest-finance-service:8082`)
+* OpenShift Routes for external access
+
+NOTE: The Helm values wire MCP servers to backend APIs using *in-cluster service names*, so MCP-to-API traffic stays inside the cluster. Only the MCP routes are exposed externally.
+
+=== Collect URLs for Participants
+
+After all services are deployed, gather the route URLs to share with workshop participants:
+
+[source,bash]
+----
+echo "LLAMA_STACK_BASE_URL=https://$(oc get route llamastack -o jsonpath='{.spec.host}')"
+echo "CUSTOMER_API_BASE_URL=https://$(oc get route novacrest-customer-service -o jsonpath='{.spec.host}')"
+echo "FINANCE_API_BASE_URL=https://$(oc get route novacrest-finance-service -o jsonpath='{.spec.host}')"
+echo "CUSTOMER_MCP_SERVER_URL=https://$(oc get route mcp-customer-route -o jsonpath='{.spec.host}')/mcp"
+echo "FINANCE_MCP_SERVER_URL=https://$(oc get route mcp-finance-route -o jsonpath='{.spec.host}')/mcp"
+----
+
+Participants paste these values into their `.env` file (uncomment the "Remote" lines in `.env.example` and replace the placeholders).
 
 == Troubleshooting
 

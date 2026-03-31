@@ -280,6 +280,8 @@ And have running:
 
 == Setup
 
+TIP: *Instructor-led workshop?* If your instructor has pre-deployed the Mortgage API and MCP server on OpenShift, skip the database creation, API start, and MCP server start steps below. Use the `MORTGAGE_API_BASE_URL` and `MORTGAGE_MCP_SERVER_URL` URLs provided by your instructor in your `.env` file and proceed directly to "Create the vector store."
+
 NOTE: *Working directory:* All commands in this module run from `mortgage-use-case/`. +
 *Services needed:* Llama Stack server, PostgreSQL. +
 *Environment:* Ensure your root `.env` includes the Mortgage variables (`MORTGAGE_API_BASE_URL`, `MORTGAGE_MCP_SERVER_URL`, etc.) from `.env.example`.

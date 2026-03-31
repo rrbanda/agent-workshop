@@ -30,7 +30,10 @@ def main():
     DATASET_ID = "what-model-are-you-eval"
     SCORING_FN_ID = "what-model-scoring-fn"
     BENCHMARK_ID = "what-model-benchmark"
-    LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
+    LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL")
+    if not LLAMA_STACK_BASE_URL:
+        logger.error("LLAMA_STACK_BASE_URL not set. Copy .env.example to .env and configure it.")
+        sys.exit(1)
     JUDGE_MODEL = os.getenv("JUDGE_MODEL")
     CANDIDATE_MODEL = os.getenv("CANDIDATE_MODEL")
 

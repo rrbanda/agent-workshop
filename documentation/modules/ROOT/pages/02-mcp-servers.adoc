@@ -8,6 +8,8 @@ include::_attributes.adoc[]
 * Register MCP servers with Llama Stack
 * Test MCP tools independently
 
+TIP: *Instructor-led workshop?* If your instructor has pre-deployed MCP servers on OpenShift, skip the "Start" steps below. Use the `CUSTOMER_MCP_SERVER_URL` and `FINANCE_MCP_SERVER_URL` route URLs provided by your instructor in your `.env` file and proceed to verification. MCP server URLs must be reachable from the Llama Stack server.
+
 TIP: *Capstone Preview:* In the capstone, a Mortgage MCP server wraps the Mortgage API using the same FastMCP pattern you learn here -- same `@mcp.tool()` decorators, same `httpx` calls, same structure.
 
 == Prerequisites
@@ -56,61 +58,59 @@ The *Model Context Protocol (MCP)* provides a standard way to expose tools to LL
 
 == Step-by-Step
 
-NOTE: *Working directory:* All commands in this module run from `02-mcp-servers/`. +
-*Services needed:* Customer API ({customer-api-port}), Finance API ({finance-api-port}) from Module 01.
+NOTE: *Services needed:* Customer API ({customer-api-port}), Finance API ({finance-api-port}) from Module 01. +
+*Python venv:* Make sure your venv is activated (`source .venv/bin/activate`).
 
 === 1. Start Customer MCP
 
-In a dedicated terminal:
+In a dedicated terminal, from the *repo root*:
 
 [source,bash]
 ----
-cd customer-mcp
-python customer-api-mcp-server.py
+python 02-mcp-servers/customer-mcp/customer-api-mcp-server.py
 ----
 
-NOTE: The MCP server uses `load_dotenv()` which loads `.env` from the current working directory. Since you run these from `02-mcp-servers/customer-mcp/`, make sure your root `.env` is also accessible. The simplest approach: run from the repo root instead (e.g., `python 02-mcp-servers/customer-mcp/customer-api-mcp-server.py`), or set the env vars `CUSTOMER_API_BASE_URL`, `PORT_FOR_CUSTOMER_MCP`, and `HOST_FOR_CUSTOMER_MCP` in your shell before starting.
+TIP: Running from the repo root ensures `load_dotenv()` finds your `.env` file. If you `cd` into the subdirectory instead, the MCP server may not pick up your environment variables.
 
 === 2. Start Finance MCP
 
-In a new terminal:
+In a new terminal, from the *repo root*:
 
 [source,bash]
 ----
-cd finance-mcp
-python finance-api-mcp-server.py
+python 02-mcp-servers/finance-mcp/finance-api-mcp-server.py
 ----
 
 === 3. Register with Llama Stack
 
 IMPORTANT: *Requires:* Llama Stack server running (started in Module 00).
 
-In a new terminal, from the repo root:
+In a new terminal, from the *repo root*:
 
 [source,bash]
 ----
-cd 02-mcp-servers/examples
-python 1_register_customer_mcp.py
-python 1_register_finance_mcp.py
+python 02-mcp-servers/examples/1_register_customer_mcp.py
+python 02-mcp-servers/examples/1_register_finance_mcp.py
 ----
 
 === 4. Verify Registration
 
 [source,bash]
 ----
-python 2_list_tools.py
+python 02-mcp-servers/examples/2_list_tools.py
 ----
 
 == Verification
 
-The best way to verify MCP registration is `python 2_list_tools.py` (Step 4 above). You can also check that the MCP servers themselves are responding:
+The best way to verify MCP registration is `python 02-mcp-servers/examples/2_list_tools.py` (Step 4 above). You can also check that the MCP servers themselves are responding:
 
 [source,bash,subs="attributes+"]
 ----
-# Should return a JSON response (MCP protocol handshake)
 curl -s http://localhost:{customer-mcp-port}/mcp | head -c 200
 curl -s http://localhost:{finance-mcp-port}/mcp | head -c 200
 ----
+
+NOTE: *Expected output:* You will see a JSON-RPC error like `{"jsonrpc":"2.0","id":"server-error","error":{"code":-32600,...}}`. This is *normal* -- MCP uses streamable HTTP transport, not plain GET. The error proves the server is running and responding. A `Connection refused` error would mean the server is not running.
 
 == Key Takeaways
 

@@ -74,9 +74,9 @@ The agent chains tools: email -> `search_customers` -> customer ID -> `fetch_ord
 
 [source,text]
 ----
-Base URL: http://localhost:8321
-Model: vllm-inference/gpt-oss-120b
-Customer MCP: http://localhost:9001/mcp
+Base URL:     <your LLAMA_STACK_BASE_URL>
+Model:        vllm-inference/gpt-oss-120b
+Customer MCP: <your CUSTOMER_MCP_SERVER_URL>
 The customer with email thomashardy@example.com is Thomas Hardy,
 contact for Around the Horn (customer ID: AROUT)...
 ----
@@ -87,10 +87,10 @@ The agent calls `search_customers` behind the scenes. Only the final text respon
 
 [source,text]
 ----
-Base URL: http://localhost:8321
-Model: vllm-inference/gpt-oss-120b
-Customer MCP: http://localhost:9001/mcp
-Finance MCP: http://localhost:9002/mcp
+Base URL:     <your LLAMA_STACK_BASE_URL>
+Model:        vllm-inference/gpt-oss-120b
+Customer MCP: <your CUSTOMER_MCP_SERVER_URL>
+Finance MCP:  <your FINANCE_MCP_SERVER_URL>
 The customer with email thomashardy@example.com is Thomas Hardy from
 Around the Horn (AROUT). Their orders include order #10355...
 ----
@@ -136,6 +136,9 @@ agent = Agent(client, model=MODEL, instructions="...", tools=mcp_tools)
 |Problem
 |Solution
 
+|`RuntimeError: No response available`
+|*Most common cause:* Your Llama Stack is remote but your MCP servers are on `localhost`. A remote Llama Stack cannot reach `localhost` on your machine. Either deploy MCP servers remotely (instructor-led) or run Llama Stack locally. Check Module 00's "Deployment Scenarios" section.
+
 |Empty tool list
 |Verify MCP servers are running on ports {customer-mcp-port}/{finance-mcp-port}
 
@@ -145,6 +148,8 @@ agent = Agent(client, model=MODEL, instructions="...", tools=mcp_tools)
 |Agent doesn't call tools
 |Ensure `INFERENCE_MODEL` supports tool calling (check your Llama Stack server's available models)
 |===
+
+IMPORTANT: *Remote Llama Stack + local MCP does not work.* If your Llama Stack runs on OpenShift (remote) and your MCP servers run on `localhost`, the Llama Stack server cannot reach them. You will get `RuntimeError: No response available` with no further explanation. See xref:00-setup.adoc#_deployment_scenarios[Deployment Scenarios] for the correct configuration.
 
 == Next Module
 

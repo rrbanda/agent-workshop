@@ -127,7 +127,8 @@ pip install -r requirements.txt
 # 3. Configure environment
 cp .env.example .env
 # Edit .env -- set LLAMA_STACK_BASE_URL to your Llama Stack server
-# (If running locally: uv run --with llama-stack llama stack run starter)
+# Instructor-led workshop? Uncomment the "Remote" lines and use URLs from your instructor
+# Self-paced / local? Use the localhost defaults, or: uv run --with llama-stack llama stack run starter
 
 # 4. Verify Llama Stack connectivity
 source .env
@@ -246,11 +247,13 @@ All modules share a single `.env` file at the repo root. See [.env.example](.env
 
 | Problem | Solution |
 |---------|----------|
-| `Connection refused` on Llama Stack | Verify the server is running: `curl http://localhost:8321/v1/models` |
-| Empty tool lists | Ensure MCP servers are running on their expected ports |
-| `LLAMA_STACK_BASE_URL not set` | Copy `.env.example` to `.env` and configure your values |
+| `RuntimeError: No response available` | Your Llama Stack is remote but MCP servers are on `localhost`. Remote Llama Stack cannot reach your local machine. Deploy MCP remotely or run Llama Stack locally. |
+| `Connection refused` on Llama Stack | Verify the server is running: `curl $LLAMA_STACK_BASE_URL/v1/models` |
+| Empty tool lists | Ensure MCP servers are running on their expected ports. If Llama Stack is remote, MCP must also be remote. |
+| `LLAMA_STACK_BASE_URL not set` | Copy `.env.example` to `.env` and set `LLAMA_STACK_BASE_URL` to your server URL (local or remote) |
 | Model not found | Check `INFERENCE_MODEL` matches a model on your Llama Stack server (`curl $LLAMA_STACK_BASE_URL/v1/models`) |
-| Database errors | Verify PostgreSQL is running and databases exist (`createdb novacrest_customer`) |
+| `429 Too Many Requests` / rate limiting | MaaS backend has rate limits. Wait 30-60 seconds and retry. |
+| Database errors (Linux) | Set postgres password: `sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"` and check `pg_hba.conf` |
 | Import errors | Activate your venv and run `pip install -r requirements.txt` |
 
 ---

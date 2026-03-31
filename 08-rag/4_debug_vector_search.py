@@ -1,6 +1,7 @@
 """Debug vector store search by running test queries and inspecting raw results."""
 
 import os
+import sys
 import logging
 from dotenv import load_dotenv
 from llama_stack_client import LlamaStackClient
@@ -11,7 +12,10 @@ logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 
 load_dotenv()
 
-LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
+LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL")
+if not LLAMA_STACK_BASE_URL:
+    print("Error: LLAMA_STACK_BASE_URL not set. Copy .env.example to .env and configure it.")
+    sys.exit(1)
 client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
 
 # Get the latest hybrid vector store
