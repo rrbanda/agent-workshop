@@ -297,9 +297,9 @@
 <h3 id="_customer_agent_script_4"><a class="anchor" href="#_customer_agent_script_4"></a>Customer Agent (script 4)</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Base URL: http://localhost:8321
-Model: vllm-inference/gpt-oss-120b
-Customer MCP: http://localhost:9001/mcp
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Base URL:     &lt;your LLAMA_STACK_BASE_URL&gt;
+Model:        vllm-inference/gpt-oss-120b
+Customer MCP: &lt;your CUSTOMER_MCP_SERVER_URL&gt;
 The customer with email thomashardy@example.com is Thomas Hardy,
 contact for Around the Horn (customer ID: AROUT)...</code></pre>
 </div>
@@ -312,10 +312,10 @@ contact for Around the Horn (customer ID: AROUT)...</code></pre>
 <h3 id="_multi_domain_agent_script_5"><a class="anchor" href="#_multi_domain_agent_script_5"></a>Multi-Domain Agent (script 5)</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Base URL: http://localhost:8321
-Model: vllm-inference/gpt-oss-120b
-Customer MCP: http://localhost:9001/mcp
-Finance MCP: http://localhost:9002/mcp
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Base URL:     &lt;your LLAMA_STACK_BASE_URL&gt;
+Model:        vllm-inference/gpt-oss-120b
+Customer MCP: &lt;your CUSTOMER_MCP_SERVER_URL&gt;
+Finance MCP:  &lt;your FINANCE_MCP_SERVER_URL&gt;
 The customer with email thomashardy@example.com is Thomas Hardy from
 Around the Horn (AROUT). Their orders include order #10355...</code></pre>
 </div>
@@ -401,6 +401,10 @@ agent = Agent(client, model=MODEL, instructions="...", tools=mcp_tools)</code></
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RuntimeError: No response available</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Most common cause:</strong> Your Llama Stack is remote but your MCP servers are on <code>localhost</code>. A remote Llama Stack cannot reach <code>localhost</code> on your machine. Either deploy MCP servers remotely (instructor-led) or run Llama Stack locally. Check Module 00&#8217;s "Deployment Scenarios" section.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Empty tool list</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Verify MCP servers are running on ports 9001/9002</p></td>
 </tr>
@@ -414,6 +418,18 @@ agent = Agent(client, model=MODEL, instructions="...", tools=mcp_tools)</code></
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<strong>Remote Llama Stack + local MCP does not work.</strong> If your Llama Stack runs on OpenShift (remote) and your MCP servers run on <code>localhost</code>, the Llama Stack server cannot reach them. You will get <code>RuntimeError: No response available</code> with no further explanation. See <a href="00-setup.html#_deployment_scenarios" class="page">Deployment Scenarios</a> for the correct configuration.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">

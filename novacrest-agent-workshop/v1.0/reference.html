@@ -253,8 +253,22 @@
 <h2 id="_environment_variables"><a class="anchor" href="#_environment_variables"></a>Environment Variables</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>All modules share a single <code>.env</code> file at the repo root. See <a href="https://github.com/rrbanda/agent-workshop/blob/main/.env.example" target="_blank" rel="noopener">.env.example</a> for the full list.</p>
+<p>All modules share a single <code>.env</code> file at the repo root. Copy <code>.env.example</code> to <code>.env</code> and update values for your deployment scenario. See <a href="https://github.com/rrbanda/agent-workshop/blob/main/.env.example" target="_blank" rel="noopener">.env.example</a> for the full annotated template.</p>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+In an <strong>instructor-led workshop</strong>, your instructor provides the remote URLs for Llama Stack, APIs, and MCP servers. Uncomment the "Remote" lines in <code>.env.example</code> and replace the placeholder URLs.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_core_variables_all_modules"><a class="anchor" href="#_core_variables_all_modules"></a>Core Variables (All Modules)</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 28.5714%;">
@@ -284,6 +298,54 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">LLM model identifier</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>vllm-inference/gpt-oss-120b</code></p></td>
 </tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_backend_apis_modules_01_02"><a class="anchor" href="#_backend_apis_modules_01_02"></a>Backend APIs (Modules 01-02)</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 42.8571%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CUSTOMER_API_BASE_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Customer REST API base URL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:8081" class="bare">http://localhost:8081</a></code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FINANCE_API_BASE_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Finance REST API base URL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:8082" class="bare">http://localhost:8082</a></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_mcp_servers_modules_02_05"><a class="anchor" href="#_mcp_servers_modules_02_05"></a>MCP Servers (Modules 02-05)</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 42.8571%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CUSTOMER_MCP_SERVER_URL</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Customer MCP endpoint</p></td>
@@ -296,11 +358,123 @@
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MORTGAGE_MCP_SERVER_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mortgage MCP endpoint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mortgage MCP endpoint (capstone)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:9003/mcp" class="bare">http://localhost:9003/mcp</a></code></p></td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="sect2">
+<h3 id="_rag_module_08"><a class="anchor" href="#_rag_module_08"></a>RAG (Module 08)</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 42.8571%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EMBEDDING_MODEL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Embedding model identifier</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sentence-transformers/nomic-ai/nomic-embed-text-v1.5</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EMBEDDING_DIMENSION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Embedding vector dimension</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>768</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_safety_shields_module_09"><a class="anchor" href="#_safety_shields_module_09"></a>Safety Shields (Module 09)</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 42.8571%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SHIELD_MODEL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Model used by the Llama Guard safety provider</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vllm-inference/gpt-oss-120b</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SHIELD_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shield identifier registered on Llama Stack</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content_safety</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_evaluations_module_10_capstone"><a class="anchor" href="#_evaluations_module_10_capstone"></a>Evaluations (Module 10, Capstone)</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 42.8571%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JUDGE_MODEL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Model used as an LLM-as-Judge evaluator</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vllm-inference/gpt-oss-120b</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CANDIDATE_MODEL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Model being evaluated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vllm-inference/gpt-oss-120b</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_capstone_mortgage_use_case"><a class="anchor" href="#_capstone_mortgage_use_case"></a>Capstone (Mortgage Use Case)</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 42.8571%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Variable</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MORTGAGE_API_BASE_URL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mortgage REST API base URL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:8083" class="bare">http://localhost:8083</a></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -375,20 +549,32 @@
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Connection refused</code> on Llama Stack</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Verify the server is running: <code>curl <a href="http://localhost:8321/v1/models" class="bare">http://localhost:8321/v1/models</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RuntimeError: No response available</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Your Llama Stack is remote but MCP servers are on <code>localhost</code>. Remote Llama Stack cannot reach your local machine. Deploy MCP remotely or run Llama Stack locally. See <a href="00-setup.html#_deployment_scenarios" class="page">Deployment Scenarios</a>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Empty tool lists</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ensure MCP servers are running on their expected ports</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Connection refused</code> on Llama Stack</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify the server is running: <code>curl $LLAMA_STACK_BASE_URL/v1/models</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LLAMA_STACK_BASE_URL not set</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Copy <code>.env.example</code> to <code>.env</code> and configure your values</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Copy <code>.env.example</code> to <code>.env</code> and set <code>LLAMA_STACK_BASE_URL</code> to your server URL (local or remote)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Empty tool lists</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ensure MCP servers are running on their expected ports. If Llama Stack is remote, MCP servers must also be deployed remotely&#8201;&#8212;&#8201;<code>localhost</code> MCP URLs are not reachable from a remote server.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MCP tools fail with remote Llama Stack</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MCP server URLs must be reachable <strong>from the Llama Stack server</strong>, not just from your laptop. Deploy MCP servers on the same cluster or expose them via public routes.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Model not found</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Check <code>INFERENCE_MODEL</code> matches a model on your Llama Stack server (<code>curl $LLAMA_STACK_BASE_URL/v1/models</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>429 Too Many Requests</code> or rate limiting</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The MaaS inference backend has rate limits. Wait 30-60 seconds and retry. For eval scripts, the built-in retry logic handles this automatically.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Database errors</p></td>

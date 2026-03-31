@@ -175,6 +175,18 @@
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
+<strong>Instructor-led workshop?</strong> If your instructor has pre-deployed the APIs on OpenShift, skip the "Run" steps below. Use the <code>CUSTOMER_API_BASE_URL</code> and <code>FINANCE_API_BASE_URL</code> URLs provided by your instructor in your <code>.env</code> file and proceed to verification.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
 <strong>Capstone Preview:</strong> In the capstone, you will work with a Mortgage API that follows this same Spring Boot pattern&#8201;&#8212;&#8201;same entity/repository/controller structure, same Swagger UI, same seed data approach.
 </td>
 </tr>
@@ -309,7 +321,7 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<strong>Working directory:</strong> All commands in this module run from <code>01-backend-apis/</code>.
+<strong>Working directory:</strong> First <code>cd 01-backend-apis/</code> from the repo root. All paths below are relative to that directory.
 </td>
 </tr>
 </table>
@@ -317,11 +329,11 @@
 <div class="sect2">
 <h3 id="_1_build_and_run_customer_api"><a class="anchor" href="#_1_build_and_run_customer_api"></a>1. Build and Run Customer API</h3>
 <div class="paragraph">
-<p>In a dedicated terminal:</p>
+<p>In a dedicated terminal (from the repo root):</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd customer-api
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd 01-backend-apis/customer-api
 mvn clean package -DskipTests
 mvn spring-boot:run</code></pre>
 </div>
@@ -330,11 +342,11 @@ mvn spring-boot:run</code></pre>
 <div class="sect2">
 <h3 id="_2_build_and_run_finance_api"><a class="anchor" href="#_2_build_and_run_finance_api"></a>2. Build and Run Finance API</h3>
 <div class="paragraph">
-<p>In a second terminal:</p>
+<p>In a second terminal (from the repo root):</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd finance-api
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd 01-backend-apis/finance-api
 mvn clean package -DskipTests
 mvn spring-boot:run</code></pre>
 </div>

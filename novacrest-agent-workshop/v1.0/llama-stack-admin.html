@@ -181,14 +181,14 @@
 <div class="sect2">
 <h3 id="_1_edit_the_distribution_yaml"><a class="anchor" href="#_1_edit_the_distribution_yaml"></a>1. Edit the distribution YAML</h3>
 <div class="paragraph">
-<p>Set your MaaS endpoint in <code>llamastack-distribution.yaml</code>:</p>
+<p>Set your MaaS token in <code>llamastack-distribution.yaml</code> (the MaaS URL is pre-configured):</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: VLLM_API_URL
-  value: "https://your-maas-endpoint/v1"   # &lt;-- your MaaS URL
+  value: "https://litellm-prod.apps.maas.redhatworkshops.io/v1"
 - name: VLLM_API_TOKEN
-  value: "your-api-token"                   # &lt;-- your MaaS token</code></pre>
+  value: "your-api-token"   # &lt;-- set your MaaS API key here</code></pre>
 </div>
 </div>
 </div>
@@ -373,6 +373,95 @@ llama stack run 00-setup/llama-stack-config/run.yaml</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deploy_backend_services_instructor_led_workshop"><a class="anchor" href="#_deploy_backend_services_instructor_led_workshop"></a>Deploy Backend Services (Instructor-Led Workshop)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For an instructor-led workshop, you also need to deploy the NovaCrest backend APIs, PostgreSQL databases, and MCP servers so that participants use remote services instead of running them locally.</p>
+</div>
+<div class="paragraph">
+<p>Helm charts are provided in <code>site/13-deployment/helm/</code>:</p>
+</div>
+<div class="sect2">
+<h3 id="_backend_apis_postgresql"><a class="anchor" href="#_backend_apis_postgresql"></a>Backend APIs + PostgreSQL</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm install novacrest-app site/13-deployment/helm/novacrest-app/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This deploys:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Customer API</strong>&#8201;&#8212;&#8201;Spring Boot app with PostgreSQL (<code>novacrest_customer</code> database)</p>
+</li>
+<li>
+<p><strong>Finance API</strong>&#8201;&#8212;&#8201;Spring Boot app with PostgreSQL (<code>novacrest_finance</code> database)</p>
+</li>
+<li>
+<p>OpenShift Routes for external access</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mcp_servers"><a class="anchor" href="#_mcp_servers"></a>MCP Servers</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm install novacrest-mcp site/13-deployment/helm/novacrest-mcp/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This deploys:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Customer MCP</strong>&#8201;&#8212;&#8201;wraps the Customer API (connects via internal cluster DNS <code><a href="http://novacrest-customer-service:8081" class="bare">http://novacrest-customer-service:8081</a></code>)</p>
+</li>
+<li>
+<p><strong>Finance MCP</strong>&#8201;&#8212;&#8201;wraps the Finance API (connects via internal cluster DNS <code><a href="http://novacrest-finance-service:8082" class="bare">http://novacrest-finance-service:8082</a></code>)</p>
+</li>
+<li>
+<p>OpenShift Routes for external access</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The Helm values wire MCP servers to backend APIs using <strong>in-cluster service names</strong>, so MCP-to-API traffic stays inside the cluster. Only the MCP routes are exposed externally.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_collect_urls_for_participants"><a class="anchor" href="#_collect_urls_for_participants"></a>Collect URLs for Participants</h3>
+<div class="paragraph">
+<p>After all services are deployed, gather the route URLs to share with workshop participants:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "LLAMA_STACK_BASE_URL=https://$(oc get route llamastack -o jsonpath='{.spec.host}')"
+echo "CUSTOMER_API_BASE_URL=https://$(oc get route novacrest-customer-service -o jsonpath='{.spec.host}')"
+echo "FINANCE_API_BASE_URL=https://$(oc get route novacrest-finance-service -o jsonpath='{.spec.host}')"
+echo "CUSTOMER_MCP_SERVER_URL=https://$(oc get route mcp-customer-route -o jsonpath='{.spec.host}')/mcp"
+echo "FINANCE_MCP_SERVER_URL=https://$(oc get route mcp-finance-route -o jsonpath='{.spec.host}')/mcp"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Participants paste these values into their <code>.env</code> file (uncomment the "Remote" lines in <code>.env.example</code> and replace the placeholders).</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">

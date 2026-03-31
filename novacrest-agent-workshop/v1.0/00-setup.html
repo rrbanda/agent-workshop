@@ -288,6 +288,27 @@ source .venv/bin/activate
 pip install -r requirements.txt</code></pre>
 </div>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<strong>Do not skip <code>pip install</code>.</strong> The root <code>requirements.txt</code> installs all Python dependencies for the entire workshop, including <code>llama-stack-client</code>, <code>fastmcp</code>, <code>httpx</code>, and <code>python-dotenv</code>. If you skip this step, later modules will fail with <code>ModuleNotFoundError</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Verify the key packages are installed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python -c "import llama_stack_client; print('llama-stack-client', llama_stack_client.__version__)"
+python -c "import fastmcp; print('fastmcp OK')"</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_2_environment_variables"><a class="anchor" href="#_2_environment_variables"></a>2. Environment Variables</h3>
@@ -299,6 +320,65 @@ pip install -r requirements.txt</code></pre>
 </div>
 <div class="paragraph">
 <p>The <code>.env.example</code> defaults to <code>vllm-inference/gpt-oss-120b</code> for inference and <code>sentence-transformers/nomic-ai/nomic-embed-text-v1.5</code> for embedding. Update these if your Llama Stack server uses different model identifiers.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deployment_scenarios"><a class="anchor" href="#_deployment_scenarios"></a>Deployment Scenarios</h3>
+<div class="paragraph">
+<p>The workshop supports two deployment modes. Choose the one that matches your setup:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-left valign-top">Instructor-Led (Remote)</th>
+<th class="tableblock halign-left valign-top">Self-Paced (Local)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Llama Stack</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL provided by instructor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:8321" class="bare">http://localhost:8321</a></code> (run locally)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Backend APIs</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pre-deployed on OpenShift; use route URLs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mvn spring-boot:run</code> on your machine (Module 01)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MCP Servers</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pre-deployed on OpenShift; use route URLs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>python &#8230;&#8203;mcp-server.py</code> on your machine (Module 02)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>PostgreSQL</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deployed on the cluster</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Running locally (<code>pg_isready</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>.env</code> setup</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Uncomment the "Remote" lines in <code>.env.example</code>, replace placeholder URLs with those from your instructor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use the localhost defaults as-is</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<strong>Remote Llama Stack + local MCP does not work.</strong> When Llama Stack runs on a remote cluster, MCP server URLs must be reachable from that cluster. MCP servers on <code>localhost</code> are invisible to a remote Llama Stack. In an instructor-led workshop, both are deployed remotely.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -329,6 +409,31 @@ curl $LLAMA_STACK_BASE_URL/v1/models</code></pre>
 <h3 id="_4_postgresql_databases"><a class="anchor" href="#_4_postgresql_databases"></a>4. PostgreSQL Databases</h3>
 <div class="paragraph">
 <p>Ensure PostgreSQL is running before creating the databases. You can check with <code>pg_isready</code>.</p>
+</div>
+<div class="paragraph">
+<p>The backend APIs connect as user <code>postgres</code> with password <code>postgres</code>. On <strong>macOS</strong> this usually works out of the box. On <strong>Linux</strong> (Fedora, RHEL, Ubuntu), you may need to configure PostgreSQL first:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Linux only: set the postgres user password (the Spring Boot APIs expect 'postgres'/'postgres')
+sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you get authentication errors when starting the APIs (Module 01), check your <code>pg_hba.conf</code> (typically at <code>/var/lib/pgsql/data/pg_hba.conf</code> on Fedora or <code>/etc/postgresql/*/main/pg_hba.conf</code> on Ubuntu). Ensure local connections use <code>md5</code> or <code>trust</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text"># TYPE  DATABASE  USER  ADDRESS      METHOD
+local   all       all                md5
+host    all       all   127.0.0.1/32 md5</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After editing, restart PostgreSQL: <code>sudo systemctl restart postgresql</code>.</p>
+</div>
+<div class="paragraph">
+<p>Now create the databases:</p>
 </div>
 <div class="listingblock">
 <div class="content">
