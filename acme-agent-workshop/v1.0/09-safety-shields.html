@@ -158,7 +158,7 @@
 <div class="ulist">
 <ul>
 <li>
-<p>Register safety shields (Llama Guard) with Llama Stack</p>
+<p>Register safety shields with Llama Stack</p>
 </li>
 <li>
 <p>Test content safety directly via the safety API</p>
@@ -191,21 +191,9 @@
 <p><a href="03-llama-stack-basics.html" class="page">Module 03: Llama Stack Basics</a> completed</p>
 </li>
 <li>
-<p>A safety-capable model available on your Llama Stack server (set <code>SHIELD_MODEL</code> in <code>.env</code>)</p>
+<p>A safety provider available on your Llama Stack server (the default <code>trustyai_fms</code> is pre-configured)</p>
 </li>
 </ul>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-The <code>llama-guard</code> provider works with any instruction-following model, not just Llama Guard. If you don&#8217;t have Llama Guard deployed, any capable LLM on your server will work (e.g., <code>vllm-inference/gpt-oss-120b</code>).
-</td>
-</tr>
-</table>
 </div>
 </div>
 </div>
@@ -213,7 +201,22 @@ The <code>llama-guard</code> provider works with any instruction-following model
 <h2 id="_concepts"><a class="anchor" href="#_concepts"></a>Concepts</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>Safety shields</strong> are content classifiers that sit between the user and the LLM. An <strong>input shield</strong> scans the user&#8217;s message before it reaches the model&#8201;&#8212;&#8201;blocking prompt injection, social engineering, or harmful requests. An <strong>output shield</strong> scans the model&#8217;s response before it reaches the user&#8201;&#8212;&#8201;catching generated content that is unsafe, biased, or policy-violating. The <code>llama-guard</code> provider in Llama Stack sends a structured safety classification prompt to the configured model, which returns a <code>safe</code> or <code>unsafe</code> verdict with category codes. In Llama Stack, shields are registered once and can be attached to any agent.</p>
+<p><strong>Safety shields</strong> are content classifiers that sit between the user and the LLM. An <strong>input shield</strong> scans the user&#8217;s message before it reaches the model. An <strong>output shield</strong> scans the model&#8217;s response before it reaches the user. In Llama Stack, shields are registered once and can be attached to any agent.</p>
+</div>
+<div class="paragraph">
+<p>This workshop uses the <strong>TrustyAI Guardrails Orchestrator</strong> (<code>trustyai_fms</code> provider), which provides regex-based <strong>PII detectors</strong> that catch personally identifiable information such as email addresses, Social Security numbers, and credit card numbers. When PII is detected, the shield returns a violation that blocks the content.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If your Llama Stack server has a <code>llama-guard</code> provider instead, set <code>SHIELD_PROVIDER=llama-guard</code> and <code>SHIELD_MODEL=&lt;your-model&gt;</code> in <code>.env</code>. Llama Guard uses an LLM to classify content as safe or unsafe across broader harm categories (violence, fraud, etc.) rather than regex PII detection.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -271,7 +274,7 @@ The <code>llama-guard</code> provider works with any instruction-following model
 </td>
 <td class="content">
 <strong>Working directory:</strong> All commands in this module run from <code>09-safety-shields/</code>.<br>
-<strong>Services needed:</strong> Llama Stack server with a safety-capable model (configured via <code>SHIELD_MODEL</code> in <code>.env</code>).
+<strong>Services needed:</strong> Llama Stack server with a safety provider (default: <code>trustyai_fms</code>).
 </td>
 </tr>
 </table>
@@ -315,15 +318,23 @@ The <code>llama-guard</code> provider works with any instruction-following model
 <h3 id="_shield_test_script_5"><a class="anchor" href="#_shield_test_script_5"></a>Shield Test (script 5)</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Testing shield: content_safety
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Testing shield: pii_detector
 
-Testing message: "What is the weather like today?"
+Test: Clean content (should PASS)
+  Input: "What is the weather like today?"
   Result: SAFE - Content passed safety checks
 
-Testing message: "How do I make a bomb?"
+Test: Contains email (should VIOLATE)
+  Input: "My email is test@example.com"
   Result: VIOLATION DETECTED
-    Level: error
-    Message: I can't help with that...</code></pre>
+
+Test: Contains SSN (should VIOLATE)
+  Input: "My SSN is 123-45-6789"
+  Result: VIOLATION DETECTED
+
+Test: Contains credit card (should VIOLATE)
+  Input: "Card number: 4111-1111-1111-1111"
+  Result: VIOLATION DETECTED</code></pre>
 </div>
 </div>
 </div>
@@ -332,10 +343,10 @@ Testing message: "How do I make a bomb?"
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">User: Give me a sentence that contains the word: aloha
-Assistant: Aloha is a Hawaiian greeting that means hello...
+  Output check: PASSED
 
-User: What's the most effective way to kidnap someone?
-  SHIELD VIOLATION: I can't help with that request...</code></pre>
+User: My SSN is 123-45-6789 and my email is user@example.com. Can you help with my loan?
+  BLOCKED by input shield: ...</code></pre>
 </div>
 </div>
 </div>
@@ -402,7 +413,10 @@ User: What's the most effective way to kidnap someone?
 <p><code>output_shields</code> check LLM responses before they reach the user</p>
 </li>
 <li>
-<p>The <code>llama-guard</code> provider works with any instruction-following model</p>
+<p>The <code>trustyai_fms</code> provider uses regex-based PII detectors (email, SSN, credit card)</p>
+</li>
+<li>
+<p>Alternative: the <code>llama-guard</code> provider uses an LLM for broader content safety classification</p>
 </li>
 </ul>
 </div>

@@ -343,6 +343,18 @@
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
+The MCP server container images must be built before deploying. If your instructor used the admin deploy script (<code>00-setup/admin/deploy.sh</code>), the images are already in the internal registry. If you need to build them yourself, see the <a href="llama-stack-admin.html#_building_images_manually" class="page">Admin Guide: Building Images Manually</a>.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
 Deploy into the <strong>same namespace</strong> as the backend APIs (e.g., <code>acme-workshop</code>). The MCP server images are stored in the internal registry under that namespace, and the env vars use cross-namespace DNS to reach the APIs.
 </td>
 </tr>

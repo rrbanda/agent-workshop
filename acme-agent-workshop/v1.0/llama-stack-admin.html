@@ -381,55 +381,68 @@ llama stack run 00-setup/llama-stack-config/run.yaml</code></pre>
 <div class="paragraph">
 <p>For an instructor-led workshop, you also need to deploy the ACME backend APIs, PostgreSQL databases, and MCP servers so that participants use remote services instead of running them locally.</p>
 </div>
-<div class="paragraph">
-<p>Helm charts are provided in <code>site/13-deployment/helm/</code>:</p>
-</div>
 <div class="sect2">
-<h3 id="_backend_apis_postgresql"><a class="anchor" href="#_backend_apis_postgresql"></a>Backend APIs + PostgreSQL</h3>
+<h3 id="_option_a_automated_deploy_script_recommended"><a class="anchor" href="#_option_a_automated_deploy_script_recommended"></a>Option A: Automated Deploy Script (Recommended)</h3>
+<div class="paragraph">
+<p>A single script builds all container images using OpenShift Binary Builds (no external registry needed) and deploys everything:</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm install acme-app site/13-deployment/helm/acme-app/</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd agent-workshop
+bash 00-setup/admin/deploy.sh acme-workshop</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This deploys:</p>
+<p>This will:</p>
 </div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Build 6 container images via <code>oc new-build --binary</code>:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Customer API</strong>&#8201;&#8212;&#8201;Spring Boot app with PostgreSQL (<code>acme_customer</code> database)</p>
+<p>3 Java Spring Boot APIs (Customer, Finance, Mortgage)</p>
 </li>
 <li>
-<p><strong>Finance API</strong>&#8201;&#8212;&#8201;Spring Boot app with PostgreSQL (<code>acme_finance</code> database)</p>
-</li>
-<li>
-<p>OpenShift Routes for external access</p>
+<p>3 Python MCP servers (Customer, Finance, Mortgage)</p>
 </li>
 </ul>
+</div>
+</li>
+<li>
+<p>Deploy 3 PostgreSQL instances</p>
+</li>
+<li>
+<p>Deploy all 6 services with OpenShift Routes</p>
+</li>
+<li>
+<p>Print the <code>.env</code> block with all URLs ready for participants</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The full process takes approximately 15-20 minutes (Java builds take 2-4 minutes each).</p>
+</div>
+<div class="paragraph">
+<p>To tear down all resources later:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">bash 00-setup/admin/teardown.sh acme-workshop</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_mcp_servers"><a class="anchor" href="#_mcp_servers"></a>MCP Servers</h3>
+<h3 id="_option_b_helm_charts"><a class="anchor" href="#_option_b_helm_charts"></a>Option B: Helm Charts</h3>
+<div class="paragraph">
+<p>Helm charts are also available in <code>site/13-deployment/helm/</code>. Images must be built first (see step 1 from Option A or build manually with <code>oc new-build</code>).</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm install acme-mcp site/13-deployment/helm/acme-mcp/</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm install acme-app site/13-deployment/helm/acme-app/
+helm install acme-mcp site/13-deployment/helm/acme-mcp/</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>This deploys:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Customer MCP</strong>&#8201;&#8212;&#8201;wraps the Customer API (connects via internal cluster DNS <code><a href="http://acme-customer-service:8081" class="bare">http://acme-customer-service:8081</a></code>)</p>
-</li>
-<li>
-<p><strong>Finance MCP</strong>&#8201;&#8212;&#8201;wraps the Finance API (connects via internal cluster DNS <code><a href="http://acme-finance-service:8082" class="bare">http://acme-finance-service:8082</a></code>)</p>
-</li>
-<li>
-<p>OpenShift Routes for external access</p>
-</li>
-</ul>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -438,24 +451,56 @@ llama stack run 00-setup/llama-stack-config/run.yaml</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The Helm values wire MCP servers to backend APIs using <strong>in-cluster service names</strong>, so MCP-to-API traffic stays inside the cluster. Only the MCP routes are exposed externally.
+The Helm charts currently cover Customer and Finance only. For the full workshop including the Mortgage capstone, use the deploy script (Option A) or deploy the mortgage services separately using <code>mortgage-use-case/openshift/mortgage-mcp.yaml</code>.
 </td>
 </tr>
 </table>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_collect_urls_for_participants"><a class="anchor" href="#_collect_urls_for_participants"></a>Collect URLs for Participants</h3>
+<h3 id="_building_images_manually"><a class="anchor" href="#_building_images_manually"></a>Building Images Manually</h3>
 <div class="paragraph">
-<p>After all services are deployed, gather the route URLs to share with workshop participants:</p>
+<p>If you need to build images individually (for example, to update a single service):</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "LLAMA_STACK_BASE_URL=https://$(oc get route llamastack -o jsonpath='{.spec.host}')"
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># MCP server example (Python)
+oc new-build --binary --strategy=docker --name=customer-mcp -n acme-workshop
+oc start-build customer-mcp --from-dir=02-mcp-servers/customer-mcp/ --follow -n acme-workshop
+
+# API example (Java -- uses multi-stage Dockerfile under deployment/)
+oc new-build --binary --strategy=docker --name=customer-api -n acme-workshop
+oc start-build customer-api --from-dir=01-backend-apis/customer-api/ --follow -n acme-workshop</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each service has a <code>Dockerfile</code> in its directory:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>APIs: <code>01-backend-apis/&lt;name&gt;/deployment/Dockerfile</code> and <code>mortgage-use-case/mortgage-api/deployment/Dockerfile</code></p>
+</li>
+<li>
+<p>MCP servers: <code>02-mcp-servers/&lt;name&gt;/Dockerfile</code> and <code>mortgage-use-case/mortgage-mcp/Dockerfile</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_collect_urls_for_participants"><a class="anchor" href="#_collect_urls_for_participants"></a>Collect URLs for Participants</h3>
+<div class="paragraph">
+<p>After all services are deployed (via deploy script, Helm, or manual), gather the route URLs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "LLAMA_STACK_BASE_URL=https://$(oc get route llamastack -n llamastack -o jsonpath='{.spec.host}')"
 echo "CUSTOMER_API_BASE_URL=https://$(oc get route acme-customer-service -o jsonpath='{.spec.host}')"
 echo "FINANCE_API_BASE_URL=https://$(oc get route acme-finance-service -o jsonpath='{.spec.host}')"
+echo "MORTGAGE_API_BASE_URL=https://$(oc get route mortgage-api-route -o jsonpath='{.spec.host}')"
 echo "CUSTOMER_MCP_SERVER_URL=https://$(oc get route mcp-customer-route -o jsonpath='{.spec.host}')/mcp"
-echo "FINANCE_MCP_SERVER_URL=https://$(oc get route mcp-finance-route -o jsonpath='{.spec.host}')/mcp"</code></pre>
+echo "FINANCE_MCP_SERVER_URL=https://$(oc get route mcp-finance-route -o jsonpath='{.spec.host}')/mcp"
+echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonpath='{.spec.host}')/mcp"</code></pre>
 </div>
 </div>
 <div class="paragraph">
