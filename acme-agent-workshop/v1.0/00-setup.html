@@ -158,7 +158,7 @@
 <div class="ulist">
 <ul>
 <li>
-<p>Install all required tools (Python, Java, Maven, PostgreSQL)</p>
+<p>Set up your Python environment and install dependencies</p>
 </li>
 <li>
 <p>Connect to a Llama Stack server</p>
@@ -208,29 +208,41 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Python</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">3.12+</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Agent scripts, MCP servers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Agent scripts (required for all participants)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://python.org" target="_blank" rel="noopener">python.org</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Java</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">21+</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Backend Spring Boot APIs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Backend Spring Boot APIs <em>(local-only)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://adoptium.net" target="_blank" rel="noopener">adoptium.net</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Maven</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">3.8+</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Java build tool</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java build tool <em>(local-only)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://maven.apache.org" target="_blank" rel="noopener">maven.apache.org</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">15+</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database for APIs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database for APIs <em>(local-only)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://postgresql.org" target="_blank" rel="noopener">postgresql.org</a></p></td>
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>Instructor-led / Remote workshops:</strong> You only need <strong>Python 3.12+</strong>. Java, Maven, and PostgreSQL are only required if you plan to run the backend APIs locally (Self-Paced mode). All backend services and MCP servers are pre-deployed on OpenShift.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>You also need access to a <strong>Llama Stack server</strong> with at least an inference model and an embedding model registered. The server can run locally or on a remote cluster (e.g., OpenShift).</p>
 </div>
@@ -258,18 +270,6 @@
 </td>
 <td class="content">
 <strong>Working directory:</strong> All commands in this module run from the <strong>repo root</strong> (<code>agent-workshop/</code>).
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<strong>Multiple terminals:</strong> This workshop requires several services running simultaneously (backend APIs, MCP servers). Use separate terminal tabs or windows for each long-running process. Keep services running across modules.
 </td>
 </tr>
 </table>
@@ -413,7 +413,19 @@ curl $LLAMA_STACK_BASE_URL/v1/models</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_4_postgresql_databases"><a class="anchor" href="#_4_postgresql_databases"></a>4. PostgreSQL Databases</h3>
+<h3 id="_4_postgresql_databases_local_only"><a class="anchor" href="#_4_postgresql_databases_local_only"></a>4. PostgreSQL Databases (Local-Only)</h3>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<strong>Skip this step if you are using pre-deployed APIs on OpenShift</strong> (instructor-led or self-deploy). PostgreSQL runs on the cluster and is already configured. This section is only for self-paced local development.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Ensure PostgreSQL is running before creating the databases. You can check with <code>pg_isready</code>.</p>
 </div>
@@ -462,11 +474,17 @@ createdb acme_mortgage    # needed for the capstone</code></pre>
 curl $LLAMA_STACK_BASE_URL/v1/models
 
 # Check Python
-python --version  # Should be 3.12+
-
-# Check Java
-java --version    # Should be 21+
-mvn --version     # Should be 3.8+</code></pre>
+python --version  # Should be 3.12+</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If running backend APIs locally (Self-Paced mode), also verify:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">java --version    # Should be 21+
+mvn --version     # Should be 3.8+
+pg_isready        # PostgreSQL is running</code></pre>
 </div>
 </div>
 <div class="sect2">
