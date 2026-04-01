@@ -8,7 +8,7 @@ import os
 import sys
 
 from dotenv import load_dotenv
-from llama_stack_client import LlamaStackClient, NotFoundError
+from llama_stack_client import LlamaStackClient, BadRequestError, NotFoundError
 
 # Configure logging
 logging.basicConfig(
@@ -47,8 +47,16 @@ def main():
         client.alpha.benchmarks.register(
             benchmark_id="my-basic-quality-benchmark",
             dataset_id="basic-subset-of-evals",
-            scoring_functions=["basic::subset_of"]
+            scoring_functions=["basic::subset_of"],
+            provider_id="meta-reference",
         )
+        logger.info("Benchmark registered successfully")
+    except BadRequestError as exc:
+        if "already exists" in str(exc):
+            logger.info("Benchmark 'my-basic-quality-benchmark' already exists, skipping registration")
+        else:
+            logger.error(f"Failed to register benchmark: {exc}")
+            sys.exit(1)
     except NotFoundError as exc:
         logger.error(f"Failed to register benchmark: {exc}")
         logger.error("Benchmark API not found. Enable the eval API in your Llama Stack run.yaml and restart.")
@@ -56,8 +64,6 @@ def main():
     except Exception as exc:
         logger.error(f"Failed to register benchmark: {exc}")
         sys.exit(1)
-
-    logger.info("Benchmark registered successfully")
 
 
 if __name__ == "__main__":

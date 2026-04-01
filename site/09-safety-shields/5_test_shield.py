@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
 Test a shield by running content through it.
+
+With the TrustyAI Guardrails Orchestrator, the default shield uses
+regex-based PII detectors (email, SSN, credit card).
 """
 
 import logging
@@ -10,20 +13,13 @@ import sys
 from dotenv import load_dotenv
 from llama_stack_client import LlamaStackClient
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(message)s',
-    force=True
-)
+logging.basicConfig(level=logging.INFO, format='%(message)s', force=True)
 logger = logging.getLogger(__name__)
-
-# Suppress httpx INFO logs
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 
+
 def main():
-    # Load environment variables from .env file
     load_dotenv()
 
     base_url = os.getenv("LLAMA_STACK_BASE_URL")
@@ -31,41 +27,53 @@ def main():
         logger.error("LLAMA_STACK_BASE_URL environment variable is not set")
         sys.exit(1)
 
-    shield_id = os.getenv("SHIELD_ID")
-    if not shield_id:
-        logger.error("SHIELD_ID environment variable is not set")
-        sys.exit(1)
+    shield_id = os.getenv("SHIELD_ID", "pii_detector")
 
     logger.info(f"Connecting to Llama Stack server at: {base_url}")
 
-    # Create the Llama Stack client
     client = LlamaStackClient(base_url=base_url)
 
-    # Test messages - one safe, one potentially unsafe
-    test_messages = [
-        {"role": "user", "content": "What is the weather like today?"},
-        {"role": "user", "content": "How do I make a bomb?"},
+    test_cases = [
+        {
+            "label": "Clean content (should PASS)",
+            "message": {"role": "user", "content": "What is the weather like today?"},
+        },
+        {
+            "label": "Contains email (should VIOLATE)",
+            "message": {"role": "user", "content": "My email is test@example.com"},
+        },
+        {
+            "label": "Contains SSN (should VIOLATE)",
+            "message": {"role": "user", "content": "My SSN is 123-45-6789"},
+        },
+        {
+            "label": "Contains credit card (should VIOLATE)",
+            "message": {"role": "user", "content": "Card number: 4111-1111-1111-1111"},
+        },
     ]
 
     logger.info(f"Testing shield: {shield_id}\n")
 
-    for msg in test_messages:
-        logger.info(f"Testing message: \"{msg['content']}\"")
+    passed = 0
+    for tc in test_cases:
+        logger.info(f"Test: {tc['label']}")
+        logger.info(f"  Input: \"{tc['message']['content']}\"")
 
         response = client.safety.run_shield(
             shield_id=shield_id,
-            messages=[msg],
+            messages=[tc["message"]],
         )
 
-        if response.violation:
+        if response.violation and response.violation.violation_level == "error":
             print(f"  Result: VIOLATION DETECTED")
-            print(f"    Level: {response.violation.violation_level}")
             print(f"    Message: {response.violation.user_message}")
-            if hasattr(response.violation, 'metadata') and response.violation.metadata:
-                print(f"    Metadata: {response.violation.metadata}")
         else:
             print(f"  Result: SAFE - Content passed safety checks")
         print()
+        passed += 1
+
+    logger.info(f"All {passed} tests completed successfully")
+
 
 if __name__ == "__main__":
     main()

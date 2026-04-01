@@ -28,7 +28,10 @@ load_dotenv()
 sys.path.insert(0, os.path.dirname(__file__))
 from mortgage_client_tools import ALL_TOOLS
 
-LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
+LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL")
+if not LLAMA_STACK_BASE_URL:
+    print("Error: LLAMA_STACK_BASE_URL not set. Copy .env.example to .env and configure it.")
+    sys.exit(1)
 INFERENCE_MODEL = os.getenv("INFERENCE_MODEL")
 
 client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
@@ -74,14 +77,14 @@ agent = Agent(
 session_id = agent.create_session(session_name="doc-review")
 
 # Scenario: Review the uploaded bank statement (DOC-002) for application 1.
-# This document is dated August 2025 — the policy requires statements within 60 days.
+# The agent should discover the document type, dates, and status from the API,
+# then look up the lending policy for acceptance criteria, and reason autonomously.
 query = (
-    "Review document 2 (DOC-002) for mortgage application 1. "
-    "It is a bank statement uploaded on February 18, 2026. "
-    "The statement is dated August 2025. "
-    "Check the lending policy for bank statement acceptance criteria, "
-    "then accept or reject the document accordingly. "
-    "If you reject it, notify the borrower (customer AROUT) with the reason."
+    "Review document 2 for mortgage application 1. "
+    "First, retrieve the document details and the application info. "
+    "Then check the lending policy for the acceptance criteria for that document type. "
+    "Based on the policy rules and the document's dates, accept or reject it. "
+    "If you reject it, notify the borrower with the specific reason."
 )
 
 print(f"Query: {query}")

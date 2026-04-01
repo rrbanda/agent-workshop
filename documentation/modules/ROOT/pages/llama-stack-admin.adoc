@@ -156,47 +156,79 @@ Then set `LLAMA_STACK_BASE_URL=http://localhost:{llama-stack-port}` in your `.en
 
 For an instructor-led workshop, you also need to deploy the ACME backend APIs, PostgreSQL databases, and MCP servers so that participants use remote services instead of running them locally.
 
-Helm charts are provided in `site/13-deployment/helm/`:
+=== Option A: Automated Deploy Script (Recommended)
 
-=== Backend APIs + PostgreSQL
+A single script builds all container images using OpenShift Binary Builds (no external registry needed) and deploys everything:
+
+[source,bash]
+----
+cd agent-workshop
+bash 00-setup/admin/deploy.sh acme-workshop
+----
+
+This will:
+
+. Build 6 container images via `oc new-build --binary`:
+  * 3 Java Spring Boot APIs (Customer, Finance, Mortgage)
+  * 3 Python MCP servers (Customer, Finance, Mortgage)
+. Deploy 3 PostgreSQL instances
+. Deploy all 6 services with OpenShift Routes
+. Print the `.env` block with all URLs ready for participants
+
+The full process takes approximately 15-20 minutes (Java builds take 2-4 minutes each).
+
+To tear down all resources later:
+
+[source,bash]
+----
+bash 00-setup/admin/teardown.sh acme-workshop
+----
+
+=== Option B: Helm Charts
+
+Helm charts are also available in `site/13-deployment/helm/`. Images must be built first (see step 1 from Option A or build manually with `oc new-build`).
 
 [source,bash]
 ----
 helm install acme-app site/13-deployment/helm/acme-app/
-----
-
-This deploys:
-
-* *Customer API* -- Spring Boot app with PostgreSQL (`acme_customer` database)
-* *Finance API* -- Spring Boot app with PostgreSQL (`acme_finance` database)
-* OpenShift Routes for external access
-
-=== MCP Servers
-
-[source,bash]
-----
 helm install acme-mcp site/13-deployment/helm/acme-mcp/
 ----
 
-This deploys:
+NOTE: The Helm charts currently cover Customer and Finance only. For the full workshop including the Mortgage capstone, use the deploy script (Option A) or deploy the mortgage services separately using `mortgage-use-case/openshift/mortgage-mcp.yaml`.
 
-* *Customer MCP* -- wraps the Customer API (connects via internal cluster DNS `http://acme-customer-service:8081`)
-* *Finance MCP* -- wraps the Finance API (connects via internal cluster DNS `http://acme-finance-service:8082`)
-* OpenShift Routes for external access
+=== Building Images Manually
 
-NOTE: The Helm values wire MCP servers to backend APIs using *in-cluster service names*, so MCP-to-API traffic stays inside the cluster. Only the MCP routes are exposed externally.
-
-=== Collect URLs for Participants
-
-After all services are deployed, gather the route URLs to share with workshop participants:
+If you need to build images individually (for example, to update a single service):
 
 [source,bash]
 ----
-echo "LLAMA_STACK_BASE_URL=https://$(oc get route llamastack -o jsonpath='{.spec.host}')"
+# MCP server example (Python)
+oc new-build --binary --strategy=docker --name=customer-mcp -n acme-workshop
+oc start-build customer-mcp --from-dir=02-mcp-servers/customer-mcp/ --follow -n acme-workshop
+
+# API example (Java -- uses multi-stage Dockerfile under deployment/)
+oc new-build --binary --strategy=docker --name=customer-api -n acme-workshop
+oc start-build customer-api --from-dir=01-backend-apis/customer-api/ --follow -n acme-workshop
+----
+
+Each service has a `Dockerfile` in its directory:
+
+* APIs: `01-backend-apis/<name>/deployment/Dockerfile` and `mortgage-use-case/mortgage-api/deployment/Dockerfile`
+* MCP servers: `02-mcp-servers/<name>/Dockerfile` and `mortgage-use-case/mortgage-mcp/Dockerfile`
+
+=== Collect URLs for Participants
+
+After all services are deployed (via deploy script, Helm, or manual), gather the route URLs:
+
+[source,bash]
+----
+echo "LLAMA_STACK_BASE_URL=https://$(oc get route llamastack -n llamastack -o jsonpath='{.spec.host}')"
 echo "CUSTOMER_API_BASE_URL=https://$(oc get route acme-customer-service -o jsonpath='{.spec.host}')"
 echo "FINANCE_API_BASE_URL=https://$(oc get route acme-finance-service -o jsonpath='{.spec.host}')"
+echo "MORTGAGE_API_BASE_URL=https://$(oc get route mortgage-api-route -o jsonpath='{.spec.host}')"
 echo "CUSTOMER_MCP_SERVER_URL=https://$(oc get route mcp-customer-route -o jsonpath='{.spec.host}')/mcp"
 echo "FINANCE_MCP_SERVER_URL=https://$(oc get route mcp-finance-route -o jsonpath='{.spec.host}')/mcp"
+echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonpath='{.spec.host}')/mcp"
 ----
 
 Participants paste these values into their `.env` file (uncomment the "Remote" lines in `.env.example` and replace the placeholders).

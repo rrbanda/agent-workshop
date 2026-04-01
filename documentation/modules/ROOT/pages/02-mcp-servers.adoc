@@ -79,6 +79,8 @@ This is the recommended path when your Llama Stack runs on OpenShift. The MCP se
 
 NOTE: *If your instructor has already deployed MCP servers*, skip to <<_3_update_env>> and use the route URLs your instructor provided.
 
+IMPORTANT: The MCP server container images must be built before deploying. If your instructor used the admin deploy script (`00-setup/admin/deploy.sh`), the images are already in the internal registry. If you need to build them yourself, see the xref:llama-stack-admin.adoc#_building_images_manually[Admin Guide: Building Images Manually].
+
 IMPORTANT: Deploy into the *same namespace* as the backend APIs (e.g., `acme-workshop`). The MCP server images are stored in the internal registry under that namespace, and the env vars use cross-namespace DNS to reach the APIs.
 
 [source,bash]

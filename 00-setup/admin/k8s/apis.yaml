@@ -1,0 +1,210 @@
+# ACME Backend APIs: Customer, Finance, Mortgage
+# Images are built via oc new-build and stored in the internal registry.
+# The NAMESPACE placeholder is replaced at deploy time by deploy.sh.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-api
+  labels:
+    app: customer-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer-api
+  template:
+    metadata:
+      labels:
+        app: customer-api
+    spec:
+      containers:
+      - name: customer-api
+        image: image-registry.openshift-image-registry.svc:5000/NAMESPACE/customer-api:latest
+        imagePullPolicy: Always
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:postgresql://postgres-cust:5432/acme_customer"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "postgres"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "postgres"
+        - name: SERVER_PORT
+          value: "8081"
+        ports:
+        - containerPort: 8081
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 250m
+          limits:
+            memory: 512Mi
+            cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: acme-customer-service
+  labels:
+    app: customer-api
+spec:
+  selector:
+    app: customer-api
+  ports:
+  - port: 8081
+    targetPort: 8081
+    name: http
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: acme-customer-service
+  labels:
+    app: customer-api
+spec:
+  to:
+    kind: Service
+    name: acme-customer-service
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finance-api
+  labels:
+    app: finance-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finance-api
+  template:
+    metadata:
+      labels:
+        app: finance-api
+    spec:
+      containers:
+      - name: finance-api
+        image: image-registry.openshift-image-registry.svc:5000/NAMESPACE/finance-api:latest
+        imagePullPolicy: Always
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:postgresql://postgres-fin:5432/acme_finance"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "postgres"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "postgres"
+        - name: SERVER_PORT
+          value: "8082"
+        ports:
+        - containerPort: 8082
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 250m
+          limits:
+            memory: 512Mi
+            cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: acme-finance-service
+  labels:
+    app: finance-api
+spec:
+  selector:
+    app: finance-api
+  ports:
+  - port: 8082
+    targetPort: 8082
+    name: http
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: acme-finance-service
+  labels:
+    app: finance-api
+spec:
+  to:
+    kind: Service
+    name: acme-finance-service
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mortgage-api
+  labels:
+    app: mortgage-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mortgage-api
+  template:
+    metadata:
+      labels:
+        app: mortgage-api
+    spec:
+      containers:
+      - name: mortgage-api
+        image: image-registry.openshift-image-registry.svc:5000/NAMESPACE/mortgage-api:latest
+        imagePullPolicy: Always
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:postgresql://postgres-mort:5432/acme_mortgage"
+        - name: SPRING_DATASOURCE_USERNAME
+          value: "postgres"
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: "postgres"
+        - name: SERVER_PORT
+          value: "8083"
+        ports:
+        - containerPort: 8083
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 250m
+          limits:
+            memory: 512Mi
+            cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: acme-mortgage-service
+  labels:
+    app: mortgage-api
+spec:
+  selector:
+    app: mortgage-api
+  ports:
+  - port: 8083
+    targetPort: 8083
+    name: http
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: mortgage-api-route
+  labels:
+    app: mortgage-api
+spec:
+  to:
+    kind: Service
+    name: acme-mortgage-service
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

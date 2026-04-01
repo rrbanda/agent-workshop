@@ -1,0 +1,149 @@
+# PostgreSQL instances for ACME Workshop
+# Three separate databases: customer, finance, mortgage
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-cust
+  labels:
+    app: postgres-cust
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-cust
+  template:
+    metadata:
+      labels:
+        app: postgres-cust
+    spec:
+      containers:
+      - name: postgresql
+        image: registry.redhat.io/rhel9/postgresql-15:latest
+        env:
+        - name: POSTGRESQL_USER
+          value: acme
+        - name: POSTGRESQL_PASSWORD
+          value: acme
+        - name: POSTGRESQL_ADMIN_PASSWORD
+          value: postgres
+        - name: POSTGRESQL_DATABASE
+          value: acme_customer
+        ports:
+        - containerPort: 5432
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 250m
+          limits:
+            memory: 512Mi
+            cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-cust
+spec:
+  selector:
+    app: postgres-cust
+  ports:
+  - port: 5432
+    targetPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-fin
+  labels:
+    app: postgres-fin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-fin
+  template:
+    metadata:
+      labels:
+        app: postgres-fin
+    spec:
+      containers:
+      - name: postgresql
+        image: registry.redhat.io/rhel9/postgresql-15:latest
+        env:
+        - name: POSTGRESQL_USER
+          value: acme
+        - name: POSTGRESQL_PASSWORD
+          value: acme
+        - name: POSTGRESQL_ADMIN_PASSWORD
+          value: postgres
+        - name: POSTGRESQL_DATABASE
+          value: acme_finance
+        ports:
+        - containerPort: 5432
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 250m
+          limits:
+            memory: 512Mi
+            cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-fin
+spec:
+  selector:
+    app: postgres-fin
+  ports:
+  - port: 5432
+    targetPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-mort
+  labels:
+    app: postgres-mort
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-mort
+  template:
+    metadata:
+      labels:
+        app: postgres-mort
+    spec:
+      containers:
+      - name: postgresql
+        image: registry.redhat.io/rhel9/postgresql-15:latest
+        env:
+        - name: POSTGRESQL_USER
+          value: acme
+        - name: POSTGRESQL_PASSWORD
+          value: acme
+        - name: POSTGRESQL_ADMIN_PASSWORD
+          value: postgres
+        - name: POSTGRESQL_DATABASE
+          value: acme_mortgage
+        ports:
+        - containerPort: 5432
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 250m
+          limits:
+            memory: 512Mi
+            cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-mort
+spec:
+  selector:
+    app: postgres-mort
+  ports:
+  - port: 5432
+    targetPort: 5432

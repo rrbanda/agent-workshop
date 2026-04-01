@@ -1,0 +1,207 @@
+# ACME MCP Servers: Customer, Finance, Mortgage
+# Images are built via oc new-build and stored in the internal registry.
+# The NAMESPACE placeholder is replaced at deploy time by deploy.sh.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-mcp
+  labels:
+    app: customer-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer-mcp
+  template:
+    metadata:
+      labels:
+        app: customer-mcp
+    spec:
+      containers:
+      - name: customer-mcp
+        image: image-registry.openshift-image-registry.svc:5000/NAMESPACE/customer-mcp:latest
+        imagePullPolicy: Always
+        env:
+        - name: CUSTOMER_API_BASE_URL
+          value: "http://acme-customer-service:8081"
+        - name: PORT_FOR_CUSTOMER_MCP
+          value: "9001"
+        - name: HOST_FOR_CUSTOMER_MCP
+          value: "0.0.0.0"
+        ports:
+        - containerPort: 9001
+          name: http
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 100m
+          limits:
+            memory: 256Mi
+            cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-customer-service
+  labels:
+    app: customer-mcp
+spec:
+  selector:
+    app: customer-mcp
+  ports:
+  - port: 9001
+    targetPort: 9001
+    name: http
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: mcp-customer-route
+  labels:
+    app: customer-mcp
+spec:
+  to:
+    kind: Service
+    name: mcp-customer-service
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finance-mcp
+  labels:
+    app: finance-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finance-mcp
+  template:
+    metadata:
+      labels:
+        app: finance-mcp
+    spec:
+      containers:
+      - name: finance-mcp
+        image: image-registry.openshift-image-registry.svc:5000/NAMESPACE/finance-mcp:latest
+        imagePullPolicy: Always
+        env:
+        - name: FINANCE_API_BASE_URL
+          value: "http://acme-finance-service:8082"
+        - name: PORT_FOR_FINANCE_MCP
+          value: "9002"
+        - name: HOST_FOR_FINANCE_MCP
+          value: "0.0.0.0"
+        ports:
+        - containerPort: 9002
+          name: http
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 100m
+          limits:
+            memory: 256Mi
+            cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-finance-service
+  labels:
+    app: finance-mcp
+spec:
+  selector:
+    app: finance-mcp
+  ports:
+  - port: 9002
+    targetPort: 9002
+    name: http
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: mcp-finance-route
+  labels:
+    app: finance-mcp
+spec:
+  to:
+    kind: Service
+    name: mcp-finance-service
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mortgage-mcp
+  labels:
+    app: mortgage-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mortgage-mcp
+  template:
+    metadata:
+      labels:
+        app: mortgage-mcp
+    spec:
+      containers:
+      - name: mortgage-mcp
+        image: image-registry.openshift-image-registry.svc:5000/NAMESPACE/mortgage-mcp:latest
+        imagePullPolicy: Always
+        env:
+        - name: MORTGAGE_API_BASE_URL
+          value: "http://acme-mortgage-service:8083"
+        - name: PORT_FOR_MORTGAGE_MCP
+          value: "9003"
+        - name: HOST_FOR_MORTGAGE_MCP
+          value: "0.0.0.0"
+        ports:
+        - containerPort: 9003
+          name: http
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 100m
+          limits:
+            memory: 256Mi
+            cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-mortgage-service
+  labels:
+    app: mortgage-mcp
+spec:
+  selector:
+    app: mortgage-mcp
+  ports:
+  - port: 9003
+    targetPort: 9003
+    name: http
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: mcp-mortgage-route
+  labels:
+    app: mortgage-mcp
+spec:
+  to:
+    kind: Service
+    name: mcp-mortgage-service
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

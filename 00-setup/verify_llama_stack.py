@@ -18,10 +18,14 @@ Usage:
 Reads LLAMA_STACK_BASE_URL, INFERENCE_MODEL, and EMBEDDING_MODEL from .env.
 """
 
+import logging
 import os
 import sys
 
 from dotenv import find_dotenv, load_dotenv
+
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 
 load_dotenv(find_dotenv())
 

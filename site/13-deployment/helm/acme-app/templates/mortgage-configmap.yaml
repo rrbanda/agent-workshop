@@ -1,0 +1,15 @@
+{{- if .Values.mortgage.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: acme-mortgage-config
+  labels:
+    app: {{ .Values.mortgage.name }}
+data:
+  database.url: {{ .Values.mortgage.database.url | quote }}
+  database.username: {{ .Values.mortgage.database.username | quote }}
+  application.properties: |
+    spring.jpa.hibernate.ddl-auto={{ .Values.mortgage.jpa.hibernate.ddlAuto }}
+    spring.jpa.show-sql={{ .Values.mortgage.jpa.showSql }}
+    logging.level.com.mortgage={{ .Values.mortgage.logging.level }}
+{{- end }}

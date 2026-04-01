@@ -1,6 +1,12 @@
 # Mortgage MCP Server - OpenShift Deployment
 # Deploys the Mortgage MCP server with a Service and Route.
-# Prerequisites: Mortgage API must be deployed (acme-mortgage-service on port 8083).
+# Prerequisites:
+#   1. Mortgage API must be deployed (acme-mortgage-service on port 8083)
+#   2. Image must be built first. Use the admin deploy script:
+#        00-setup/admin/deploy.sh <namespace>
+#      Or build manually:
+#        oc new-build --binary --strategy=docker --name=mortgage-mcp
+#        oc start-build mortgage-mcp --from-dir=mortgage-use-case/mortgage-mcp/ --follow
 #
 # Usage:
 #   oc apply -f mortgage-use-case/openshift/mortgage-mcp.yaml
@@ -24,11 +30,15 @@ spec:
     spec:
       containers:
       - name: mcp-server
-        image: quay.io/acme/mcp-server-mortgage:1.0.0
+        image: image-registry.openshift-image-registry.svc:5000/acme-workshop/mortgage-mcp:latest
         imagePullPolicy: Always
         env:
         - name: MORTGAGE_API_BASE_URL
           value: "http://acme-mortgage-service:8083"
+        - name: PORT_FOR_MORTGAGE_MCP
+          value: "9003"
+        - name: HOST_FOR_MORTGAGE_MCP
+          value: "0.0.0.0"
         ports:
         - containerPort: 9003
           name: http

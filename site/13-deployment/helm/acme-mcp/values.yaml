@@ -3,8 +3,8 @@ customer:
   name: mcp-customer
   replicas: 1
   image:
-    repository: quay.io/acme/mcp-server-customer
-    tag: 1.0.0
+    repository: image-registry.openshift-image-registry.svc:5000/acme-workshop/customer-mcp
+    tag: latest
     pullPolicy: Always
   service:
     name: mcp-customer-service
@@ -31,8 +31,8 @@ finance:
   name: mcp-finance
   replicas: 1
   image:
-    repository: quay.io/acme/mcp-server-finance
-    tag: 1.2.0
+    repository: image-registry.openshift-image-registry.svc:5000/acme-workshop/finance-mcp
+    tag: latest
     pullPolicy: Always
   service:
     name: mcp-finance-service
@@ -46,6 +46,34 @@ finance:
       insecureEdgeTerminationPolicy: Redirect
   env:
     financeApiBaseUrl: http://acme-finance-service:8082
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 256Mi
+      cpu: 500m
+
+mortgage:
+  enabled: true
+  name: mcp-mortgage
+  replicas: 1
+  image:
+    repository: image-registry.openshift-image-registry.svc:5000/acme-workshop/mortgage-mcp
+    tag: latest
+    pullPolicy: Always
+  service:
+    name: mcp-mortgage-service
+    port: 9003
+    targetPort: 9003
+  route:
+    enabled: true
+    name: mcp-mortgage-route
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
+  env:
+    mortgageApiBaseUrl: http://acme-mortgage-service:8083
   resources:
     requests:
       memory: 128Mi

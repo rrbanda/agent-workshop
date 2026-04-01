@@ -1,6 +1,12 @@
 # Customer MCP Server - OpenShift Deployment
 # Deploys the Customer MCP server with a Service and Route.
-# Prerequisites: Customer API must be deployed (acme-customer-service on port 8081).
+# Prerequisites:
+#   1. Customer API must be deployed (acme-customer-service on port 8081)
+#   2. Image must be built first. Use the admin deploy script:
+#        00-setup/admin/deploy.sh <namespace>
+#      Or build manually:
+#        oc new-build --binary --strategy=docker --name=customer-mcp
+#        oc start-build customer-mcp --from-dir=02-mcp-servers/customer-mcp/ --follow
 #
 # Usage:
 #   oc apply -f 02-mcp-servers/openshift/customer-mcp.yaml
@@ -24,11 +30,15 @@ spec:
     spec:
       containers:
       - name: mcp-server
-        image: quay.io/acme/mcp-server-customer:1.0.0
+        image: image-registry.openshift-image-registry.svc:5000/acme-workshop/customer-mcp:latest
         imagePullPolicy: Always
         env:
         - name: CUSTOMER_API_BASE_URL
           value: "http://acme-customer-service:8081"
+        - name: PORT_FOR_CUSTOMER_MCP
+          value: "9001"
+        - name: HOST_FOR_CUSTOMER_MCP
+          value: "0.0.0.0"
         ports:
         - containerPort: 9001
           name: http

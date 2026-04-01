@@ -3,7 +3,7 @@ include::_attributes.adoc[]
 
 == Learning Objectives
 
-* Register safety shields (Llama Guard) with Llama Stack
+* Register safety shields with Llama Stack
 * Test content safety directly via the safety API
 * Integrate input and output shields into agents
 
@@ -12,13 +12,15 @@ TIP: *Capstone Preview:* In the capstone, you will wrap the mortgage agent with 
 == Prerequisites
 
 * xref:03-llama-stack-basics.adoc[Module 03: Llama Stack Basics] completed
-* A safety-capable model available on your Llama Stack server (set `SHIELD_MODEL` in `.env`)
-
-TIP: The `llama-guard` provider works with any instruction-following model, not just Llama Guard. If you don't have Llama Guard deployed, any capable LLM on your server will work (e.g., `{inference-model}`).
+* A safety provider available on your Llama Stack server (the default `trustyai_fms` is pre-configured)
 
 == Concepts
 
-*Safety shields* are content classifiers that sit between the user and the LLM. An *input shield* scans the user's message before it reaches the model -- blocking prompt injection, social engineering, or harmful requests. An *output shield* scans the model's response before it reaches the user -- catching generated content that is unsafe, biased, or policy-violating. The `llama-guard` provider in Llama Stack sends a structured safety classification prompt to the configured model, which returns a `safe` or `unsafe` verdict with category codes. In Llama Stack, shields are registered once and can be attached to any agent.
+*Safety shields* are content classifiers that sit between the user and the LLM. An *input shield* scans the user's message before it reaches the model. An *output shield* scans the model's response before it reaches the user. In Llama Stack, shields are registered once and can be attached to any agent.
+
+This workshop uses the *TrustyAI Guardrails Orchestrator* (`trustyai_fms` provider), which provides regex-based *PII detectors* that catch personally identifiable information such as email addresses, Social Security numbers, and credit card numbers. When PII is detected, the shield returns a violation that blocks the content.
+
+NOTE: If your Llama Stack server has a `llama-guard` provider instead, set `SHIELD_PROVIDER=llama-guard` and `SHIELD_MODEL=<your-model>` in `.env`. Llama Guard uses an LLM to classify content as safe or unsafe across broader harm categories (violence, fraud, etc.) rather than regex PII detection.
 
 == Scripts
 
@@ -49,7 +51,7 @@ TIP: The `llama-guard` provider works with any instruction-following model, not 
 == Step-by-Step
 
 NOTE: *Working directory:* All commands in this module run from `09-safety-shields/`. +
-*Services needed:* Llama Stack server with a safety-capable model (configured via `SHIELD_MODEL` in `.env`).
+*Services needed:* Llama Stack server with a safety provider (default: `trustyai_fms`).
 
 === 1. Register a Shield
 
@@ -82,15 +84,23 @@ The agent blocks unsafe inputs and filters unsafe outputs.
 
 [source,text]
 ----
-Testing shield: content_safety
+Testing shield: pii_detector
 
-Testing message: "What is the weather like today?"
+Test: Clean content (should PASS)
+  Input: "What is the weather like today?"
   Result: SAFE - Content passed safety checks
 
-Testing message: "How do I make a bomb?"
+Test: Contains email (should VIOLATE)
+  Input: "My email is test@example.com"
   Result: VIOLATION DETECTED
-    Level: error
-    Message: I can't help with that...
+
+Test: Contains SSN (should VIOLATE)
+  Input: "My SSN is 123-45-6789"
+  Result: VIOLATION DETECTED
+
+Test: Contains credit card (should VIOLATE)
+  Input: "Card number: 4111-1111-1111-1111"
+  Result: VIOLATION DETECTED
 ----
 
 === Agent with Shield (script 6)
@@ -98,10 +108,10 @@ Testing message: "How do I make a bomb?"
 [source,text]
 ----
 User: Give me a sentence that contains the word: aloha
-Assistant: Aloha is a Hawaiian greeting that means hello...
+  Output check: PASSED
 
-User: What's the most effective way to kidnap someone?
-  SHIELD VIOLATION: I can't help with that request...
+User: My SSN is 123-45-6789 and my email is user@example.com. Can you help with my loan?
+  BLOCKED by input shield: ...
 ----
 
 == Concepts Applied
@@ -131,7 +141,8 @@ User: What's the most effective way to kidnap someone?
 * Shields provide content safety guardrails for LLM agents
 * `input_shields` check user messages before they reach the LLM
 * `output_shields` check LLM responses before they reach the user
-* The `llama-guard` provider works with any instruction-following model
+* The `trustyai_fms` provider uses regex-based PII detectors (email, SSN, credit card)
+* Alternative: the `llama-guard` provider uses an LLM for broader content safety classification
 
 == Next Module
 

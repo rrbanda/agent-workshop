@@ -1,0 +1,48 @@
+{{- if .Values.postgresql.mortgage.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.postgresql.mortgage.name }}
+  labels:
+    app: {{ .Values.postgresql.mortgage.name }}
+spec:
+  replicas: {{ .Values.postgresql.mortgage.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.postgresql.mortgage.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.postgresql.mortgage.name }}
+    spec:
+      containers:
+        - name: postgresql
+          image: {{ .Values.postgresql.mortgage.image.repository }}
+          imagePullPolicy: {{ .Values.postgresql.mortgage.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.postgresql.mortgage.service.port }}
+              protocol: TCP
+              name: postgres-mort
+          env:
+            - name: POSTGRESQL_USER
+              value: {{ .Values.postgresql.mortgage.env.user | quote }}
+            - name: POSTGRESQL_PASSWORD
+              value: {{ .Values.postgresql.mortgage.env.password | quote }}
+            - name: POSTGRESQL_ADMIN_PASSWORD
+              value: {{ .Values.postgresql.mortgage.env.adminPassword | quote }}
+            - name: POSTGRESQL_DATABASE
+              value: {{ .Values.postgresql.mortgage.env.database | quote }}
+          volumeMounts:
+            - name: postgres-mortgage-data
+              mountPath: /var/lib/postgresql/data
+          resources:
+            requests:
+              memory: {{ .Values.postgresql.mortgage.resources.requests.memory }}
+              cpu: {{ .Values.postgresql.mortgage.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.postgresql.mortgage.resources.limits.memory }}
+              cpu: {{ .Values.postgresql.mortgage.resources.limits.cpu }}
+      volumes:
+        - name: postgres-mortgage-data
+          emptyDir: {}
+{{- end }}

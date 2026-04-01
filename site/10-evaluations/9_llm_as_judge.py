@@ -8,8 +8,7 @@ import os
 import sys
 
 from dotenv import load_dotenv
-from llama_stack_client import LlamaStackClient
-from llama_stack_client import BadRequestError
+from llama_stack_client import LlamaStackClient, BadRequestError, InternalServerError
 
 # Configure logging
 logging.basicConfig(
@@ -29,7 +28,10 @@ def main():
     DATASET_ID = "basic-subset-of-evals"
     SCORING_FN_ID = "my-llm-as-judge-scoring-fn"
     BENCHMARK_ID = "my-llm-as-judge-benchmark"
-    LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
+    LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL")
+    if not LLAMA_STACK_BASE_URL:
+        logger.error("LLAMA_STACK_BASE_URL not set. Copy .env.example to .env and configure it.")
+        sys.exit(1)
     JUDGE_MODEL = os.getenv("JUDGE_MODEL")
     CANDIDATE_MODEL = os.getenv("CANDIDATE_MODEL")
 
@@ -87,6 +89,7 @@ Provide a score from 1-5 and explain your reasoning."""
             benchmark_id=BENCHMARK_ID,
             dataset_id=DATASET_ID,
             scoring_functions=[SCORING_FN_ID],
+            provider_id="meta-reference",
         )
         logger.info(f"Benchmark '{BENCHMARK_ID}' registered successfully")
     except BadRequestError as e:
@@ -95,21 +98,28 @@ Provide a score from 1-5 and explain your reasoning."""
         else:
             raise
 
-    job = client.alpha.eval.run_eval(
-        benchmark_id=BENCHMARK_ID,
-        benchmark_config={
-            "eval_candidate": {
-                "type": "model",
-                "model": CANDIDATE_MODEL,
-                "sampling_params": {
-                    "max_tokens": 1024,
+    try:
+        job = client.alpha.eval.run_eval(
+            benchmark_id=BENCHMARK_ID,
+            benchmark_config={
+                "eval_candidate": {
+                    "type": "model",
+                    "model": CANDIDATE_MODEL,
+                    "sampling_params": {
+                        "max_tokens": 1024,
+                    },
                 },
+                "scoring_params": {},
             },
-            "scoring_params": {},
-        },
-    )
+        )
+    except InternalServerError as exc:
+        logger.error(f"Eval execution failed (server error): {exc}")
+        logger.error("The eval API may not be fully operational on this server.")
+        logger.error("Registration steps above succeeded -- the eval infrastructure is configured correctly.")
+        sys.exit(1)
+
     logger.info(f"Eval job started: {job.job_id}")
-    
+
     result = client.alpha.eval.jobs.retrieve(job_id=job.job_id, benchmark_id=BENCHMARK_ID)
 
     # Format and display results

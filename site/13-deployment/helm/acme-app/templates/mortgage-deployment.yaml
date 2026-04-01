@@ -1,0 +1,65 @@
+{{- if .Values.mortgage.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.mortgage.name }}
+  labels:
+    app: {{ .Values.mortgage.name }}
+spec:
+  replicas: {{ .Values.mortgage.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.mortgage.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.mortgage.name }}
+    spec:
+      containers:
+      - name: {{ .Values.mortgage.name }}
+        image: {{ .Values.mortgage.image.repository }}:{{ .Values.mortgage.image.tag }}
+        imagePullPolicy: {{ .Values.mortgage.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.mortgage.service.port }}
+          name: http
+          protocol: TCP
+        env:
+        - name: SPRING_DATASOURCE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: acme-mortgage-config
+              key: database.url
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: acme-mortgage-config
+              key: database.username
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: acme-mortgage-secret
+              key: database.password
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.mortgage.livenessProbe.path }}
+            port: {{ .Values.mortgage.livenessProbe.port }}
+          initialDelaySeconds: {{ .Values.mortgage.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.mortgage.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.mortgage.livenessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.mortgage.livenessProbe.failureThreshold }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.mortgage.readinessProbe.path }}
+            port: {{ .Values.mortgage.readinessProbe.port }}
+          initialDelaySeconds: {{ .Values.mortgage.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.mortgage.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.mortgage.readinessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.mortgage.readinessProbe.failureThreshold }}
+        resources:
+          limits:
+            cpu: {{ .Values.mortgage.resources.limits.cpu }}
+            memory: {{ .Values.mortgage.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.mortgage.resources.requests.cpu }}
+            memory: {{ .Values.mortgage.resources.requests.memory }}
+{{- end }}

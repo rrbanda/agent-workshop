@@ -18,7 +18,7 @@ LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL")
 if not LLAMA_STACK_BASE_URL:
     print("Error: LLAMA_STACK_BASE_URL not set. Copy .env.example to .env and configure it.")
     sys.exit(1)
-INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "vllm/qwen3-14b")
+INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "vllm-inference/gpt-oss-120b")
 
 print(f"Base URL: {LLAMA_STACK_BASE_URL}")
 print(f"Model:    {INFERENCE_MODEL}")

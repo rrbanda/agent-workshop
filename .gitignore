@@ -1,6 +1,10 @@
 # Environment
 .env
+.env.backup
+.env.save-e2e
+.env.tmp
 .venv/
+.venv-test/
 venv/
 __pycache__/
 *.pyc
