@@ -319,7 +319,7 @@ python -c "import fastmcp; print('fastmcp OK')"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>.env.example</code> defaults to <code>vllm-inference/gpt-oss-120b</code> for inference and <code>sentence-transformers/nomic-ai/nomic-embed-text-v1.5</code> for embedding. Update these if your Llama Stack server uses different model identifiers.</p>
+<p>The <code>.env.example</code> defaults to <code>vllm-inference/gpt-oss-120b</code> for inference and <code>vllm-embedding/nomic-embed-text-v1-5</code> for embedding. Update these if your Llama Stack server uses different model identifiers.</p>
 </div>
 </div>
 <div class="sect2">
@@ -397,7 +397,7 @@ curl $LLAMA_STACK_BASE_URL/v1/models</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You should see at least an inference model (e.g., <code>vllm-inference/gpt-oss-120b</code>) and an embedding model (e.g., <code>sentence-transformers/nomic-ai/nomic-embed-text-v1.5</code>) in the response.</p>
+<p>You should see at least an inference model (e.g., <code>vllm-inference/gpt-oss-120b</code>) and an embedding model (e.g., <code>vllm-embedding/nomic-embed-text-v1-5</code>) in the response.</p>
 </div>
 <div class="admonitionblock important">
 <table>

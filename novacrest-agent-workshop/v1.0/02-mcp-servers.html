@@ -336,6 +336,23 @@
 </tr>
 </table>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Deploy into the <strong>same namespace</strong> as the backend APIs (e.g., <code>novacrest-workshop</code>). The MCP server images are stored in the internal registry under that namespace, and the env vars use cross-namespace DNS to reach the APIs.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc project novacrest-workshop</code></pre>
+</div>
+</div>
 <div class="sect3">
 <h4 id="_1_deploy_customer_mcp"><a class="anchor" href="#_1_deploy_customer_mcp"></a>1. Deploy Customer MCP</h4>
 <div class="listingblock">

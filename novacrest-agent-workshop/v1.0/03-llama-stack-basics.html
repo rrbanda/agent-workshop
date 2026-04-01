@@ -316,7 +316,7 @@ Scripts 2 and 3 list MCP tools that must be registered with Llama Stack first. I
 <h3 id="_hello_world_script_1non_streaming"><a class="anchor" href="#_hello_world_script_1non_streaming"></a>Hello World (script 1&#8201;&#8212;&#8201;non-streaming)</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Base URL: http://localhost:8321
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Base URL: &lt;your LLAMA_STACK_BASE_URL&gt;
 Model: vllm-inference/gpt-oss-120b
 An AI agent is a software system that perceives its environment...</code></pre>
 </div>
@@ -334,11 +334,11 @@ Registered Toolgroups
 ==================================================
 Toolgroup ID:  customer_mcp
 Provider ID:   ...
-MCP Endpoint:  http://localhost:9001/mcp
+MCP Endpoint:  &lt;your CUSTOMER_MCP_SERVER_URL&gt;
 --------------------------------------------------
 Toolgroup ID:  finance_mcp
 Provider ID:   ...
-MCP Endpoint:  http://localhost:9002/mcp
+MCP Endpoint:  &lt;your FINANCE_MCP_SERVER_URL&gt;
 --------------------------------------------------
 Total toolgroups: 2
 ==================================================</code></pre>
@@ -352,7 +352,7 @@ Total toolgroups: 2
 <pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">==================================================
 Customer MCP Server Tools
 ==================================================
-MCP Server URL: http://localhost:9001/mcp
+MCP Server URL: &lt;your CUSTOMER_MCP_SERVER_URL&gt;
 Tool Name:    search_customers
 Description:  Search for customers by name, email, or company
 Parameters:

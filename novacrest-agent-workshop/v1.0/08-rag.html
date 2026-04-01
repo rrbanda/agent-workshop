@@ -194,7 +194,7 @@
 <p><a href="03-llama-stack-basics.html" class="page">Module 03: Llama Stack Basics</a> completed</p>
 </li>
 <li>
-<p>Llama Stack server running with an embedding model available (e.g., <code>sentence-transformers/nomic-ai/nomic-embed-text-v1.5</code>)</p>
+<p>Llama Stack server running with an embedding model available (e.g., <code>vllm-embedding/nomic-embed-text-v1-5</code>)</p>
 </li>
 <li>
 <p><code>EMBEDDING_MODEL</code> and <code>EMBEDDING_DIMENSION</code> set in your <code>.env</code> (see <code>.env.example</code>)</p>
@@ -286,7 +286,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>Confirm your embedding model (e.g., <code>sentence-transformers/nomic-ai/nomic-embed-text-v1.5</code>) appears in the list. If it does not, check that your Llama Stack server has an embedding provider configured.</p>
+<p>Confirm your embedding model (e.g., <code>vllm-embedding/nomic-embed-text-v1-5</code>) appears in the list. If it does not, check that your Llama Stack server has an embedding provider configured.</p>
 </div>
 </div>
 <div class="sect2">
@@ -327,7 +327,7 @@ python 6_test_unique_terms.py</code></pre>
 <h3 id="_create_vector_store_script_1"><a class="anchor" href="#_create_vector_store_script_1"></a>Create Vector Store (script 1)</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">LLAMA_STACK_BASE_URL: http://localhost:8321
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">LLAMA_STACK_BASE_URL: &lt;your LLAMA_STACK_BASE_URL&gt;
 EMBEDDING_MODEL: &lt;your-embedding-model&gt;
 EMBEDDING_DIMENSION: 768
 --------------------------------------------------------------------------------
