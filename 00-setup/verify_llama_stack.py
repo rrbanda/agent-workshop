@@ -29,7 +29,14 @@ logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 
 load_dotenv(find_dotenv())
 
-LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321")
+LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL")
+if not LLAMA_STACK_BASE_URL:
+    print(
+        f"{FAIL}: LLAMA_STACK_BASE_URL is not set.\n"
+        "Set it in your .env file or export it before running this script.\n"
+        "Example: export LLAMA_STACK_BASE_URL=https://llamastack.apps.example.com"
+    )
+    sys.exit(1)
 LLAMA_STACK_API_KEY = os.getenv("LLAMA_STACK_API_KEY", "fake")
 INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "vllm-inference/gpt-oss-120b")
 EMBEDDING_MODEL = os.getenv(

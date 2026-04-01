@@ -43,12 +43,15 @@ def main():
 
     logger.info("Registering benchmark: my-basic-quality-benchmark")
 
+    benchmark_provider = provider_id or "meta-reference"
+    logger.info(f"Using provider_id: {benchmark_provider}")
+
     try:
         client.alpha.benchmarks.register(
             benchmark_id="my-basic-quality-benchmark",
             dataset_id="basic-subset-of-evals",
             scoring_functions=["basic::subset_of"],
-            provider_id="meta-reference",
+            provider_id=benchmark_provider,
         )
         logger.info("Benchmark registered successfully")
     except BadRequestError as exc:

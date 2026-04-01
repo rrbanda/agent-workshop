@@ -3,7 +3,7 @@ include::_attributes.adoc[]
 
 == Learning Objectives
 
-* Install all required tools (Python, Java, Maven, PostgreSQL)
+* Set up your Python environment and install dependencies
 * Connect to a Llama Stack server
 * Verify connectivity to all services
 
@@ -26,24 +26,26 @@ None -- this is the starting point.
 
 |Python
 |3.12+
-|Agent scripts, MCP servers
+|Agent scripts (required for all participants)
 |https://python.org[python.org,window=_blank]
 
 |Java
 |21+
-|Backend Spring Boot APIs
+|Backend Spring Boot APIs _(local-only)_
 |https://adoptium.net[adoptium.net,window=_blank]
 
 |Maven
 |3.8+
-|Java build tool
+|Java build tool _(local-only)_
 |https://maven.apache.org[maven.apache.org,window=_blank]
 
 |PostgreSQL
 |15+
-|Database for APIs
+|Database for APIs _(local-only)_
 |https://postgresql.org[postgresql.org,window=_blank]
 |===
+
+NOTE: *Instructor-led / Remote workshops:* You only need *Python 3.12+*. Java, Maven, and PostgreSQL are only required if you plan to run the backend APIs locally (Self-Paced mode). All backend services and MCP servers are pre-deployed on OpenShift.
 
 You also need access to a *Llama Stack server* with at least an inference model and an embedding model registered. The server can run locally or on a remote cluster (e.g., OpenShift).
 
@@ -54,8 +56,6 @@ TIP: *Starting a Llama Stack server:* +
 *For admins deploying a Llama Stack server:* See the xref:llama-stack-admin.adoc[Llama Stack Admin Guide] for a complete server configuration (`run.yaml`), an RHOAI OpenShift CRD template, and step-by-step deployment instructions.
 
 NOTE: *Working directory:* All commands in this module run from the *repo root* (`agent-workshop/`).
-
-IMPORTANT: *Multiple terminals:* This workshop requires several services running simultaneously (backend APIs, MCP servers). Use separate terminal tabs or windows for each long-running process. Keep services running across modules.
 
 == Step-by-Step Setup
 
@@ -139,7 +139,9 @@ You should see at least an inference model (e.g., `{inference-model}`) and an em
 
 IMPORTANT: *MCP connectivity:* The Llama Stack server must be able to reach your MCP servers over the network. If your Llama Stack is remote, MCP servers must also be deployed remotely (or exposed via a public URL). MCP servers running on `localhost` are not reachable from a remote Llama Stack.
 
-=== 4. PostgreSQL Databases
+=== 4. PostgreSQL Databases (Local-Only)
+
+IMPORTANT: *Skip this step if you are using pre-deployed APIs on OpenShift* (instructor-led or self-deploy). PostgreSQL runs on the cluster and is already configured. This section is only for self-paced local development.
 
 Ensure PostgreSQL is running before creating the databases. You can check with `pg_isready`.
 
@@ -181,10 +183,15 @@ curl $LLAMA_STACK_BASE_URL/v1/models
 
 # Check Python
 python --version  # Should be 3.12+
+----
 
-# Check Java
+If running backend APIs locally (Self-Paced mode), also verify:
+
+[source,bash]
+----
 java --version    # Should be 21+
 mvn --version     # Should be 3.8+
+pg_isready        # PostgreSQL is running
 ----
 
 === Deep Verification (Optional)
