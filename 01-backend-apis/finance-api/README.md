@@ -1,4 +1,4 @@
-# NovaCrest Finance API
+# ACME Finance API
 
 A comprehensive Finance REST API built with Java 21, Spring Boot 3.2, Maven, PostgreSQL, and containerized with Docker and Kubernetes.
 
@@ -26,7 +26,7 @@ A comprehensive Finance REST API built with Java 21, Spring Boot 3.2, Maven, Pos
 
 ### Postgres
 ```bash
-createdb novacrest_finance
+createdb acme_finance
 ```
 
 ### Run Application
@@ -42,7 +42,7 @@ mvn clean package
 Ensure PostgreSQL is running and update `src/main/resources/application.properties`:
 
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/novacrest_finance
+spring.datasource.url=jdbc:postgresql://localhost:5432/acme_finance
 spring.datasource.username=postgres
 spring.datasource.password=postgres
 ```
@@ -65,7 +65,7 @@ mvn clean package
 ```
 
 ```bash
-java -jar target/novacrest-finance-api-1.0.0.jar
+java -jar target/acme-finance-api-1.0.0.jar
 ```
 
 ```bash
@@ -93,17 +93,17 @@ podman login quay.io
 
 
 ```bash
-podman build --arch amd64 --os linux -t quay.io/novacrest/novacrest-finance-api:1.0.0 -f deployment/Dockerfile .
+podman build --arch amd64 --os linux -t quay.io/acme/acme-finance-api:1.0.0 -f deployment/Dockerfile .
 ```
 
 ```bash
 podman run \
-  --name novacrest-finance-api \
+  --name acme-finance-api \
   -p 8082:8082 \
-  -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/novacrest_finance \
+  -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/acme_finance \
   -e SPRING_DATASOURCE_USERNAME=postgres \
   -e SPRING_DATASOURCE_PASSWORD=postgres \
-  quay.io/novacrest/novacrest-finance-api:1.0.0
+  quay.io/acme/acme-finance-api:1.0.0
 ```
 
 ```bash
@@ -111,11 +111,11 @@ curl $FIN_URL/api/finance/health
 ```
 
 ```bash
-podman push quay.io/novacrest/novacrest-finance-api:1.0.0
+podman push quay.io/acme/acme-finance-api:1.0.0
 ```
 
 ```bash
-oc new-project novacrest
+oc new-project acme
 ```
 
 IF using the docker.io postgres image
@@ -149,11 +149,11 @@ oc get services
 ```
 
 ```bash
-oc expose service novacrest-finance-service
+oc expose service acme-finance-service
 ```
 
 ```bash
-export FIN_URL=http://$(oc get routes -n novacrest -l app=novacrest-finance-api -o jsonpath="{range .items[*]}{.status.ingress[0].host}{end}")
+export FIN_URL=http://$(oc get routes -n acme -l app=acme-finance-api -o jsonpath="{range .items[*]}{.status.ingress[0].host}{end}")
 echo $FIN_URL
 ```
 
@@ -262,5 +262,5 @@ The application includes:
 Database cleaning
 
 ```bash
-psql -U postgres -d novacrest_finance -c "DO \$\$ DECLARE r RECORD; BEGIN FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE'; END LOOP; END \$\$;"
+psql -U postgres -d acme_finance -c "DO \$\$ DECLARE r RECORD; BEGIN FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE'; END LOOP; END \$\$;"
 ```

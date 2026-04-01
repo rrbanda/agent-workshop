@@ -24,7 +24,7 @@
 |--------|--------------|
 | `1_list_eval_related_providers.py` | List eval, dataset, and scoring providers |
 | `2_register_dataset_basic_subset_of.py` | Register a simple Q&A dataset |
-| `2_register_dataset_agent_evals_customer.py` | Register NovaCrest customer eval dataset |
+| `2_register_dataset_agent_evals_customer.py` | Register ACME customer eval dataset |
 | `3_list_datasets.py` | List all registered datasets |
 | `4_list_scoring_functions.py` | List available scoring functions |
 | `4_basic_subset_of_scoring_function.py` | Test rule-based scoring directly |

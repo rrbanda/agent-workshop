@@ -89,11 +89,11 @@ except Exception as e:
     sys.exit(1)
 
 # Load document from local source_docs directory only
-source_docs_path = os.path.join(os.path.dirname(__file__), "source_docs", "NovaCrestHRBenefits_clean.txt")
+source_docs_path = os.path.join(os.path.dirname(__file__), "source_docs", "AcmeHRBenefits_clean.txt")
 try:
     if not os.path.exists(source_docs_path):
         logger.error(f"Document not found: {source_docs_path}")
-        logger.error("Please ensure NovaCrestHRBenefits_clean.txt exists in source_docs/")
+        logger.error("Please ensure AcmeHRBenefits_clean.txt exists in source_docs/")
         sys.exit(1)
     logger.info(f"Loading document from local file...")
     with open(source_docs_path, "r", encoding="utf-8") as f:

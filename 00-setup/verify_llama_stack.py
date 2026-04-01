@@ -3,7 +3,7 @@
 Llama Stack Workshop Readiness Check
 
 Verifies that a Llama Stack server has all capabilities the
-NovaCrest Agent Workshop requires:
+ACME Agent Workshop requires:
 
   [1/6] Models ........... inference + embedding models exist
   [2/6] Chat ............. test prompt returns a response
@@ -177,7 +177,7 @@ def check_vector_store(client, emb_available):
 
         results = client.vector_stores.search(
             vector_store_id=vs_id,
-            query="What is NovaCrest?",
+            query="What is ACME?",
             max_num_results=1,
         )
         steps_done.append("search")

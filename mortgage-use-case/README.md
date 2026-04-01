@@ -2,7 +2,7 @@
 
 ## Your Mission
 
-You are a developer at NovaCrest Financial Services. The mortgage division has asked you to automate their conditional approval workflow -- the back-and-forth loop where borrowers submit documents, underwriters review them, and conditions get cleared one by one. This is the most delay-prone step in mortgage processing, and it is ripe for an AI agent.
+You are a developer at ACME Financial Services. The mortgage division has asked you to automate their conditional approval workflow -- the back-and-forth loop where borrowers submit documents, underwriters review them, and conditions get cleared one by one. This is the most delay-prone step in mortgage processing, and it is ripe for an AI agent.
 
 You have completed the core modules. Now apply everything you learned -- MCP tools, RAG, multi-turn conversations, human-in-the-loop interaction, safety shields, and evaluation pipelines -- to build this agent from the ground up.
 
@@ -177,7 +177,7 @@ flowchart TD
     LS --> MCP
 
     MCP --> API[Mortgage API :8083]
-    API --> DB[(PostgreSQL\nnovacrest_mortgage)]
+    API --> DB[(PostgreSQL\nacme_mortgage)]
 
     subgraph data [Database Tables]
         Apps[mortgage_applications]
@@ -223,7 +223,7 @@ And have running:
 ### 1. Create the database
 
 ```bash
-createdb novacrest_mortgage
+createdb acme_mortgage
 ```
 
 ### 2. Start the Mortgage API
@@ -272,7 +272,7 @@ PORT_FOR_MORTGAGE_MCP=9003
 python 1_create_vector_store.py
 ```
 
-This ingests `MortgageLendingPolicy.txt` into a Llama Stack vector store with hybrid search. The policy contains NovaCrest's rules for document requirements, acceptance criteria, DTI limits, and credit score minimums.
+This ingests `MortgageLendingPolicy.txt` into a Llama Stack vector store with hybrid search. The policy contains ACME's rules for document requirements, acceptance criteria, DTI limits, and credit score minimums.
 
 **Concepts applied:** Vector store creation, document chunking, hybrid search (from Module 08)
 
@@ -430,7 +430,7 @@ Runs an evaluation pipeline against the mortgage domain:
 3. Evaluates the base model (without RAG) on these questions
 4. Displays per-question pass/fail results and overall accuracy
 
-The key insight: the model evaluated **without RAG** will likely miss NovaCrest-specific answers (e.g., exact loan limits). Comparing this with the RAG-powered agent's answers from Steps 3-6 demonstrates why retrieval augmentation is essential for domain-specific accuracy.
+The key insight: the model evaluated **without RAG** will likely miss ACME-specific answers (e.g., exact loan limits). Comparing this with the RAG-powered agent's answers from Steps 3-6 demonstrates why retrieval augmentation is essential for domain-specific accuracy.
 
 **Concepts applied:** Dataset registration, benchmark registration, eval execution, scoring functions (from Module 10)
 
@@ -470,7 +470,7 @@ You now have a complete agent stack: REST API, MCP tools, Agent with RAG, safety
 **Extend the mortgage agent:**
 
 - Add a new MCP tool for appraisal valuation checks (does the appraised value meet the purchase price?)
-- Create a second vector store with NovaCrest's compliance policies and add it to the agent
+- Create a second vector store with ACME's compliance policies and add it to the agent
 - Build an LLM-as-judge eval that scores the agent's document review reasoning, not just factual accuracy (Module 10, script `9_llm_as_judge.py`)
 - Deploy the agent behind a FastAPI endpoint with a Chat UI
 
@@ -489,7 +489,7 @@ The patterns you learned are domain-agnostic. To build an agent for a different 
 
 | Problem | Solution |
 |---------|----------|
-| Mortgage API errors | Verify PostgreSQL database `novacrest_mortgage` exists and API is running on port 8083 |
+| Mortgage API errors | Verify PostgreSQL database `acme_mortgage` exists and API is running on port 8083 |
 | MCP tools not found | Check `MORTGAGE_MCP_SERVER_URL` in `.env` and that the MCP server is running on port 9003 |
 | Vector store creation fails | Ensure your Llama Stack server has an embedding model registered |
 | RAG returns no results | Verify `MortgageLendingPolicy.txt` was ingested (re-run `1_create_vector_store.py`) |

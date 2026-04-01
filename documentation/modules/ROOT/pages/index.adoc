@@ -1,4 +1,4 @@
-= NovaCrest Agent Workshop
+= ACME Agent Workshop
 include::_attributes.adoc[]
 
 Build production-ready AI agents that run anywhere -- using Llama Stack, MCP, and open-source LLMs.
@@ -43,7 +43,7 @@ TIP: _"Llama Stack is less about replacing your favorite agent library, and more
 * *Safety-Guarded Agents* -- Content safety shields with Llama Guard for input and output filtering
 * *Evaluation Pipelines* -- Automated scoring, benchmarks, and LLM-as-judge quality measurement
 
-Then, in the *capstone*, you apply everything to a real business problem: building a *Mortgage Approval Agent* that automates NovaCrest's conditional approval workflow.
+Then, in the *capstone*, you apply everything to a real business problem: building a *Mortgage Approval Agent* that automates ACME's conditional approval workflow.
 
 '''
 
@@ -82,7 +82,7 @@ flowchart TD
 
 |01
 |xref:01-backend-apis.adoc[Backend APIs]
-|Build and run NovaCrest Customer and Finance REST APIs
+|Build and run ACME Customer and Finance REST APIs
 |30 min
 
 |02
@@ -159,9 +159,9 @@ source .env
 curl $LLAMA_STACK_BASE_URL/v1/models
 
 # 5. Create databases
-createdb novacrest_customer
-createdb novacrest_finance
-createdb novacrest_mortgage    # for the capstone
+createdb acme_customer
+createdb acme_finance
+createdb acme_mortgage    # for the capstone
 
 # 6. Begin the workshop
 # Follow the modules in order, starting with Module 00: Environment Setup
@@ -241,7 +241,7 @@ NOTE: *Llama Stack server required.* You need access to a Llama Stack server wit
 
 == Domain
 
-*NovaCrest* is a fictional financial services company used as the example domain throughout this workshop. It has customers, financial orders/invoices, and a mortgage lending division. All seed data is pre-loaded via SQL scripts when you start the backend APIs.
+*ACME* is a fictional financial services company used as the example domain throughout this workshop. It has customers, financial orders/invoices, and a mortgage lending division. All seed data is pre-loaded via SQL scripts when you start the backend APIs.
 
 '''
 

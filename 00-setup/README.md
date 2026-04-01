@@ -74,9 +74,9 @@ You should see at least an inference model (e.g., `vllm-inference/gpt-oss-120b`)
 Ensure PostgreSQL is running before creating the databases. You can check with `pg_isready`.
 
 ```bash
-createdb novacrest_customer
-createdb novacrest_finance
-createdb novacrest_mortgage    # needed for the capstone
+createdb acme_customer
+createdb acme_finance
+createdb acme_mortgage    # needed for the capstone
 ```
 
 ## Verification
@@ -122,8 +122,8 @@ Result: 6/6 checks passed -- server is ready for the workshop
 
 - All workshop modules share the same `.env` configuration
 - Llama Stack provides a unified API for inference, agents, tools, RAG, safety, and evals
-- The workshop uses NovaCrest (a fictional financial services company) as its example domain
+- The workshop uses ACME (a fictional financial services company) as its example domain
 
 ## Next Module
 
-Proceed to [01-backend-apis](../01-backend-apis/) to set up the NovaCrest backend services.
+Proceed to [01-backend-apis](../01-backend-apis/) to set up the ACME backend services.

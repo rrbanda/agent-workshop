@@ -1,4 +1,4 @@
-# Llama Stack Server Configuration for NovaCrest Agent Workshop
+# Llama Stack Server Configuration for ACME Agent Workshop
 #
 # This run.yaml configures all providers the workshop requires:
 #   - Inference (vLLM remote + sentence-transformers for embedding)
@@ -17,7 +17,7 @@
 #   TAVILY_SEARCH_API_KEY - Optional, for web search tool
 
 version: "2"
-image_name: novacrest-workshop
+image_name: acme-workshop
 apis:
   - agents
   - datasetio
@@ -46,7 +46,7 @@ providers:
     - provider_id: milvus
       provider_type: inline::milvus
       config:
-        db_path: ${env.MILVUS_DB_PATH:=~/.llama/distributions/novacrest-workshop/milvus.db}
+        db_path: ${env.MILVUS_DB_PATH:=~/.llama/distributions/acme-workshop/milvus.db}
         kvstore:
           backend: default
           namespace: "milvus"
@@ -88,7 +88,7 @@ providers:
           backend: sql
           namespace: "files"
           table_name: "files_metadata"
-        storage_dir: ${env.FILES_STORAGE_DIR:=~/.llama/distributions/novacrest-workshop/files}
+        storage_dir: ${env.FILES_STORAGE_DIR:=~/.llama/distributions/acme-workshop/files}
 
   datasetio:
     - provider_id: localfs
@@ -127,11 +127,11 @@ storage:
   backends:
     default:
       type: kv_sqlite
-      db_path: ${env.STORAGE_DB_PATH:=~/.llama/distributions/novacrest-workshop/storage.db}
+      db_path: ${env.STORAGE_DB_PATH:=~/.llama/distributions/acme-workshop/storage.db}
       namespace: null
     sql:
       type: sql_sqlite
-      db_path: ${env.SQL_STORAGE_DB_PATH:=~/.llama/distributions/novacrest-workshop/sql_storage.db}
+      db_path: ${env.SQL_STORAGE_DB_PATH:=~/.llama/distributions/acme-workshop/sql_storage.db}
   stores:
     metadata:
       backend: default

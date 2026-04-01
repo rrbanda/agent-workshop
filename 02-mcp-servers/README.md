@@ -18,7 +18,7 @@
 
 The **Model Context Protocol (MCP)** provides a standard way to expose tools to LLMs. An MCP server wraps existing APIs as tool functions that an LLM can discover and call. FastMCP is a Python library that makes building MCP servers straightforward.
 
-## NovaCrest MCP Tools
+## ACME MCP Tools
 
 ### Customer MCP (port 9001)
 

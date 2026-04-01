@@ -1,6 +1,6 @@
 # Llama Stack Server Setup
 
-Deploy a Llama Stack server with all capabilities the NovaCrest Agent Workshop requires.
+Deploy a Llama Stack server with all capabilities the ACME Agent Workshop requires.
 
 ## Prerequisites
 
@@ -28,13 +28,13 @@ Deploy a Llama Stack server with all capabilities the NovaCrest Agent Workshop r
 3. Wait for the pod:
 
    ```bash
-   oc get pods -w -l llamastack.io/distribution=llamastack-novacrest-workshop
+   oc get pods -w -l llamastack.io/distribution=llamastack-acme-workshop
    ```
 
 4. Create a route and get the URL:
 
    ```bash
-   oc create route edge llamastack --service=llamastack-novacrest-workshop-service --port=8321
+   oc create route edge llamastack --service=llamastack-acme-workshop-service --port=8321
    LLAMA_STACK_URL=https://$(oc get route llamastack -o jsonpath='{.spec.host}')
    echo $LLAMA_STACK_URL
    ```
@@ -107,7 +107,7 @@ Then set `LLAMA_STACK_BASE_URL=http://localhost:8321` in your `.env`.
 
 | Problem | Solution |
 |---|---|
-| Pod in CrashLoopBackOff | Check logs: `oc logs -l llamastack.io/distribution=llamastack-novacrest-workshop`. Usually a bad `VLLM_API_URL` or token. |
+| Pod in CrashLoopBackOff | Check logs: `oc logs -l llamastack.io/distribution=llamastack-acme-workshop`. Usually a bad `VLLM_API_URL` or token. |
 | Models list empty | The vLLM provider auto-discovers models. Verify your MaaS has models: `curl -H "Authorization: Bearer $TOKEN" $VLLM_API_URL/models` |
 | Embedding model missing | The `sentence-transformers` provider downloads on first use. Pod needs internet access; startup takes 1-2 min. |
 | Route returns 503 | Pod still starting. Wait for `1/1 Running` in `oc get pods`. |

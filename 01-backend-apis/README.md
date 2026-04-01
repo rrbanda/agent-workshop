@@ -2,7 +2,7 @@
 
 ## Learning Objectives
 
-- Understand the NovaCrest domain model (Customer and Finance)
+- Understand the ACME domain model (Customer and Finance)
 - Run the Spring Boot REST APIs locally
 - Explore the API endpoints via Swagger UI
 
@@ -12,13 +12,13 @@
 ## Prerequisites
 
 - [Module 00: Environment Setup](../00-setup/) completed
-- PostgreSQL running with `novacrest_customer` and `novacrest_finance` databases
+- PostgreSQL running with `acme_customer` and `acme_finance` databases
 
 ## Concepts
 
-Agents need **tools** to interact with the real world. In this workshop, the tools are REST APIs that manage NovaCrest's customer and financial data. Before building agents, you need to understand what data and operations are available.
+Agents need **tools** to interact with the real world. In this workshop, the tools are REST APIs that manage ACME's customer and financial data. Before building agents, you need to understand what data and operations are available.
 
-## NovaCrest Domain Model
+## ACME Domain Model
 
 ### Customer API (port 8081)
 

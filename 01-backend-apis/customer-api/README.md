@@ -1,6 +1,6 @@
-# NovaCrest Customer API
+# ACME Customer API
 
-NovaCrest REST API for managing customer master data. External systems can create, read, update, and delete customer records with support for searching by ID, company name, contact name, email, and phone number.
+ACME REST API for managing customer master data. External systems can create, read, update, and delete customer records with support for searching by ID, company name, contact name, email, and phone number.
 
 ## Features
 
@@ -21,7 +21,7 @@ NovaCrest REST API for managing customer master data. External systems can creat
 
 ## Postgres 
 ```bash
-createdb novacrest_customer
+createdb acme_customer
 ```
 
 ## Build
@@ -37,7 +37,7 @@ mvn clean package
 Ensure PostgreSQL is running and update `src/main/resources/application.properties`:
 
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/novacrest_customer
+spring.datasource.url=jdbc:postgresql://localhost:5432/acme_customer
 spring.datasource.username=postgres
 spring.datasource.password=postgres
 ```
@@ -55,7 +55,7 @@ mvn clean compile package
 ```
 
 ```bash
-java -jar target/novacrest-customer-api-1.0.0.jar
+java -jar target/acme-customer-api-1.0.0.jar
 ```
 
 ```bash
@@ -87,8 +87,8 @@ podman login quay.io
 ```
 
 ```bash
-podman build --arch amd64 --os linux -t quay.io/novacrest/novacrest-customer-api:1.0.0 -f deployment/Dockerfile .
-podman push quay.io/novacrest/novacrest-customer-api:1.0.0
+podman build --arch amd64 --os linux -t quay.io/acme/acme-customer-api:1.0.0 -f deployment/Dockerfile .
+podman push quay.io/acme/acme-customer-api:1.0.0
 ```
 
 Go into quay.io and make the image public
@@ -98,16 +98,16 @@ Go into quay.io and make the image public
 
 ```bash
 podman run -p 8081:8081 \
-  -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/novacrest_customer \
+  -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/acme_customer \
   -e SPRING_DATASOURCE_USERNAME=postgres \
   -e SPRING_DATASOURCE_PASSWORD=admin \
-  quay.io/novacrest/novacrest-customer-api:1.0.0
+  quay.io/acme/acme-customer-api:1.0.0
 ```
 
 ### OpenShift
 
 ```bash
-oc new-project novacrest
+oc new-project acme
 ```
 
 IF you are using the [docker.io Postgres](https://hub.docker.com/_/postgres) image
@@ -143,7 +143,7 @@ postgres=# \l
                                                     List of databases
        Name       |  Owner   | Encoding |  Collate   |   Ctype    | ICU Locale | Locale Provider |   Access privileges   
 ------------------+----------+----------+------------+------------+------------+-----------------+-----------------------
- novacrest_customer | postgres | UTF8     | en_US.utf8 | en_US.utf8 |            | libc            | 
+ acme_customer | postgres | UTF8     | en_US.utf8 | en_US.utf8 |            | libc            | 
  postgres         | postgres | UTF8     | en_US.utf8 | en_US.utf8 |            | libc            | 
  template0        | postgres | UTF8     | en_US.utf8 | en_US.utf8 |            | libc            | =c/postgres          +
                   |          |          |            |            |            |                 | postgres=CTc/postgres
@@ -168,12 +168,12 @@ oc get pods
 
 ```
 NAME                                     READY   STATUS    RESTARTS   AGE
-novacrest-customer-api-7bdc4dd866-46j64   1/1     Running   0          93s
+acme-customer-api-7bdc4dd866-46j64   1/1     Running   0          93s
 postgresql-665b46c48-ttrnd               1/1     Running   0          3m16s
 ```
 
 ```bash
-export CUST_URL=http://$(oc get routes -n novacrest -l app=novacrest-customer-api -o jsonpath="{range .items[*]}{.status.ingress[0].host}{end}")
+export CUST_URL=http://$(oc get routes -n acme -l app=acme-customer-api -o jsonpath="{range .items[*]}{.status.ingress[0].host}{end}")
 echo $CUST_URL
 ```
 
@@ -201,7 +201,7 @@ Once the application is running, access:
 ## API Endpoints
 
 ```bash
-# export CUST_URL=http://$(oc get routes -n novacrest -l app=novacrest-customer-api -o jsonpath="{range .items[*]}{.status.ingress[0].host}{end}")
+# export CUST_URL=http://$(oc get routes -n acme -l app=acme-customer-api -o jsonpath="{range .items[*]}{.status.ingress[0].host}{end}")
 export CUST_URL=http://localhost:8081
 ```
 
@@ -381,5 +381,5 @@ mvn test
 ## Cleaning
 
 ```bash
-psql -U postgres -d novacrest_customer -c "DO \$\$ DECLARE r RECORD; BEGIN FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE'; END LOOP; END \$\$;"
+psql -U postgres -d acme_customer -c "DO \$\$ DECLARE r RECORD; BEGIN FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE'; END LOOP; END \$\$;"
 ```

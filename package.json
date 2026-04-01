@@ -1,6 +1,6 @@
 {
-  "name": "novacrest-agent-workshop",
-  "description": "NovaCrest Agent Workshop -- Build production-ready AI agents with Llama Stack, MCP, and open-source LLMs",
+  "name": "acme-agent-workshop",
+  "description": "ACME Agent Workshop -- Build production-ready AI agents with Llama Stack, MCP, and open-source LLMs",
   "homepage": "https://rrbanda.github.io/agent-workshop/",
   "author": {
     "name": "rrbanda"

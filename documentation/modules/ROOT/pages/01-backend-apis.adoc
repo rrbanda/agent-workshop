@@ -3,7 +3,7 @@ include::_attributes.adoc[]
 
 == Learning Objectives
 
-* Understand the NovaCrest domain model (Customer and Finance)
+* Understand the ACME domain model (Customer and Finance)
 * Deploy or connect to the Spring Boot REST APIs
 * Explore the API endpoints
 
@@ -15,9 +15,9 @@ TIP: *Capstone Preview:* In the capstone, you will work with a Mortgage API that
 
 == Concepts
 
-Agents need *tools* to interact with the real world. In this workshop, the tools are REST APIs that manage NovaCrest's customer and financial data. Before building agents, you need to understand what data and operations are available.
+Agents need *tools* to interact with the real world. In this workshop, the tools are REST APIs that manage ACME's customer and financial data. Before building agents, you need to understand what data and operations are available.
 
-== NovaCrest Domain Model
+== ACME Domain Model
 
 === Customer API (port {customer-api-port})
 
@@ -83,12 +83,12 @@ Choose the path that matches your deployment:
 
 === Option A: Use Pre-Deployed APIs on OpenShift (Recommended)
 
-If your instructor has deployed the backend APIs on OpenShift (or you deployed them yourself using the Helm chart in `site/13-deployment/helm/novacrest-app/`), get the route URLs:
+If your instructor has deployed the backend APIs on OpenShift (or you deployed them yourself using the Helm chart in `site/13-deployment/helm/acme-app/`), get the route URLs:
 
 [source,bash]
 ----
-echo "CUSTOMER_API_BASE_URL=https://$(oc get route novacrest-customer-service -o jsonpath='{.spec.host}')"
-echo "FINANCE_API_BASE_URL=https://$(oc get route novacrest-finance-service -o jsonpath='{.spec.host}')"
+echo "CUSTOMER_API_BASE_URL=https://$(oc get route acme-customer-service -o jsonpath='{.spec.host}')"
+echo "FINANCE_API_BASE_URL=https://$(oc get route acme-finance-service -o jsonpath='{.spec.host}')"
 ----
 
 Set these in your `.env` file and skip to <<_verification>>.
@@ -97,7 +97,7 @@ TIP: *Instructor-led?* Your instructor will provide these URLs. Just paste them 
 
 === Option B: Run Locally
 
-Requires PostgreSQL running locally with `novacrest_customer` and `novacrest_finance` databases (see xref:00-setup.adoc#_4_postgresql_databases[Module 00 PostgreSQL setup]).
+Requires PostgreSQL running locally with `acme_customer` and `acme_finance` databases (see xref:00-setup.adoc#_4_postgresql_databases[Module 00 PostgreSQL setup]).
 
 ==== 1. Build and Run Customer API
 

@@ -8,7 +8,7 @@
 - Debug and optimize retrieval quality
 
 > [!TIP]
-> **Capstone Preview:** In the capstone, RAG retrieves NovaCrest's mortgage lending policy so the agent can check document requirements and acceptance criteria when reviewing applications.
+> **Capstone Preview:** In the capstone, RAG retrieves ACME's mortgage lending policy so the agent can check document requirements and acceptance criteria when reviewing applications.
 
 ## Prerequisites
 
@@ -54,7 +54,7 @@ Confirm your embedding model (e.g., `vllm-embedding/nomic-embed-text-v1-5`) appe
 python 1_create_vector_store.py
 ```
 
-This creates a hybrid vector store, uploads the NovaCrest HR benefits document, and chunks it with static chunking (100 tokens, 10 overlap).
+This creates a hybrid vector store, uploads the ACME HR benefits document, and chunks it with static chunking (100 tokens, 10 overlap).
 
 ### 2. Test RAG Queries
 
@@ -84,7 +84,7 @@ Client initialized successfully
 Creating vector store...
 ✓ Vector store created: hr-benefits-hybrid
 Loading document from local file...
-✓ Loaded 5432 characters from source_docs/NovaCrestHRBenefits_clean.txt
+✓ Loaded 5432 characters from source_docs/AcmeHRBenefits_clean.txt
 Uploading document to Llama Stack...
 ✓ File uploaded: file-abc123
 Attaching file to vector store...

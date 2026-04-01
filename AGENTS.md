@@ -42,14 +42,14 @@ uv run --with llama-stack llama stack run starter
 - Java: 4-space indentation, `PascalCase` classes, `camelCase` methods/fields
 - Python: 4-space indentation, `snake_case` functions/variables, `PascalCase` classes
 - YAML/JSON: 2-space indentation, lowercase keys with hyphens
-- Package names: `com.novacrest.customer`, `com.novacrest.finance`
+- Package names: `com.acme.customer`, `com.acme.finance`
 
 ## Configuration
 
 - All environment variables documented in `.env.example`
 - Common vars: `LLAMA_STACK_BASE_URL`, `INFERENCE_MODEL`, `CUSTOMER_MCP_SERVER_URL`, `FINANCE_MCP_SERVER_URL`
-- Database: `novacrest_customer` (port 5432), `novacrest_finance` (port 5432)
+- Database: `acme_customer` (port 5432), `acme_finance` (port 5432)
 
 ## Domain
 
-NovaCrest is a fictional financial services company used as the example domain throughout this workshop.
+ACME is a fictional financial services company used as the example domain throughout this workshop.

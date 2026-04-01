@@ -53,13 +53,13 @@ agent = Agent(
     client,
     model=INFERENCE_MODEL,
     instructions=(
-        "You are a mortgage underwriting analyst at NovaCrest Financial Services. "
+        "You are a mortgage underwriting analyst at ACME Financial Services. "
         "Your job is to perform credit-based underwriting reviews.\n\n"
         "When reviewing an application:\n"
         "1. Use get_mortgage_application to retrieve the application details "
         "(loan type, loan amount, credit score, annual income, DTI ratio)\n"
         "2. Use get_credit_report to pull credit reports from all bureaus\n"
-        "3. Use file_search to look up the NovaCrest lending policy requirements "
+        "3. Use file_search to look up the ACME lending policy requirements "
         "for that specific loan type (minimum credit score, maximum DTI, "
         "down payment requirements, any special conditions)\n"
         "4. Compare the applicant's financials against each policy requirement\n"

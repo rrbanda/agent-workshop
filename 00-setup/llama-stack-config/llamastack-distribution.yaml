@@ -2,8 +2,8 @@ apiVersion: llamastack.io/v1alpha1
 kind: LlamaStackDistribution
 metadata:
   annotations:
-    openshift.io/display-name: llamastack-novacrest-workshop
-  name: llamastack-novacrest-workshop
+    openshift.io/display-name: llamastack-acme-workshop
+  name: llamastack-acme-workshop
   labels:
     opendatahub.io/dashboard: "true"
 spec:

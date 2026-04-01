@@ -1,6 +1,6 @@
 # Customer MCP Server - OpenShift Deployment
 # Deploys the Customer MCP server with a Service and Route.
-# Prerequisites: Customer API must be deployed (novacrest-customer-service on port 8081).
+# Prerequisites: Customer API must be deployed (acme-customer-service on port 8081).
 #
 # Usage:
 #   oc apply -f 02-mcp-servers/openshift/customer-mcp.yaml
@@ -24,11 +24,11 @@ spec:
     spec:
       containers:
       - name: mcp-server
-        image: quay.io/novacrest/mcp-server-customer:1.0.0
+        image: quay.io/acme/mcp-server-customer:1.0.0
         imagePullPolicy: Always
         env:
         - name: CUSTOMER_API_BASE_URL
-          value: "http://novacrest-customer-service:8081"
+          value: "http://acme-customer-service:8081"
         ports:
         - containerPort: 9001
           name: http

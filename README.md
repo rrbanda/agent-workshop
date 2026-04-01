@@ -1,4 +1,4 @@
-# NovaCrest Agent Workshop
+# ACME Agent Workshop
 
 > **Build production-ready AI agents that run anywhere -- using Llama Stack, MCP, and open-source LLMs.**
 
@@ -34,7 +34,7 @@ By the end of this workshop, you will have built:
 - **Safety-guarded agents** -- agents with Llama Guard content safety shields
 - **Evaluation pipelines** -- automated scoring, benchmarks, and LLM-as-judge
 
-Then, in the **capstone**, you apply everything to a real business problem: building a **Mortgage Approval Agent** that automates NovaCrest's conditional approval workflow -- the most delay-prone step in mortgage processing.
+Then, in the **capstone**, you apply everything to a real business problem: building a **Mortgage Approval Agent** that automates ACME's conditional approval workflow -- the most delay-prone step in mortgage processing.
 
 ---
 
@@ -135,9 +135,9 @@ source .env
 curl $LLAMA_STACK_BASE_URL/v1/models
 
 # 5. Create databases
-createdb novacrest_customer
-createdb novacrest_finance
-createdb novacrest_mortgage    # for the capstone
+createdb acme_customer
+createdb acme_finance
+createdb acme_mortgage    # for the capstone
 
 # 6. Begin the workshop
 # Continue with Module 01 (01-backend-apis/README.md)
@@ -155,7 +155,7 @@ createdb novacrest_mortgage    # for the capstone
 | # | Module | What You Learn | Duration |
 |---|--------|----------------|----------|
 | 00 | [Environment Setup](00-setup/) | Install Python, Java, PostgreSQL; configure Llama Stack | 30 min |
-| 01 | [Backend APIs](01-backend-apis/) | Build and run NovaCrest Customer and Finance REST APIs | 30 min |
+| 01 | [Backend APIs](01-backend-apis/) | Build and run ACME Customer and Finance REST APIs | 30 min |
 | 02 | [MCP Servers](02-mcp-servers/) | Wrap REST APIs as LLM-callable tools using FastMCP | 20 min |
 | 03 | [Llama Stack Basics](03-llama-stack-basics/) | Create your first agent, streaming responses, tool inspection | 20 min |
 | 04 | [Agents with MCP Tools](04-agents-with-tools/) | Bind tools to agents, single-domain and multi-domain reasoning | 30 min |
@@ -186,7 +186,7 @@ createdb novacrest_mortgage    # for the capstone
 
 ## Domain
 
-**NovaCrest** is a fictional financial services company used as the example domain throughout this workshop. It has customers, financial orders/invoices, and a mortgage lending division. All seed data is pre-loaded via SQL scripts when you start the backend APIs.
+**ACME** is a fictional financial services company used as the example domain throughout this workshop. It has customers, financial orders/invoices, and a mortgage lending division. All seed data is pre-loaded via SQL scripts when you start the backend APIs.
 
 ---
 

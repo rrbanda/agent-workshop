@@ -53,12 +53,12 @@ agent = Agent(
     client,
     model=INFERENCE_MODEL,
     instructions=(
-        "You are a mortgage document review agent at NovaCrest Financial Services. "
+        "You are a mortgage document review agent at ACME Financial Services. "
         "Your job is to review documents submitted by borrowers and determine if they "
-        "meet NovaCrest's acceptance criteria.\n\n"
+        "meet ACME's acceptance criteria.\n\n"
         "When reviewing a document:\n"
         "1. Use file_search to look up the acceptance criteria for that document type "
-        "in the NovaCrest lending policy\n"
+        "in the ACME lending policy\n"
         "2. Use get_application_documents to see the document's metadata (dates, type, description)\n"
         "3. Compare the document against the policy criteria\n"
         "4. Call review_document to ACCEPT or REJECT with a clear reason\n"

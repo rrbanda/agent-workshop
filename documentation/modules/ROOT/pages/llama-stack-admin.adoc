@@ -1,7 +1,7 @@
 = Llama Stack Server Setup (Admin Guide)
 include::_attributes.adoc[]
 
-Deploy a Llama Stack server with all capabilities the NovaCrest Agent Workshop requires.
+Deploy a Llama Stack server with all capabilities the ACME Agent Workshop requires.
 
 == Prerequisites
 
@@ -34,14 +34,14 @@ oc apply -f 00-setup/llama-stack-config/llamastack-distribution.yaml
 
 [source,bash]
 ----
-oc get pods -w -l llamastack.io/distribution=llamastack-novacrest-workshop
+oc get pods -w -l llamastack.io/distribution=llamastack-acme-workshop
 ----
 
 === 4. Create a route and get the URL
 
 [source,bash]
 ----
-oc create route edge llamastack --service=llamastack-novacrest-workshop-service --port=8321
+oc create route edge llamastack --service=llamastack-acme-workshop-service --port=8321
 LLAMA_STACK_URL=https://$(oc get route llamastack -o jsonpath='{.spec.host}')
 echo $LLAMA_STACK_URL
 ----
@@ -154,7 +154,7 @@ Then set `LLAMA_STACK_BASE_URL=http://localhost:{llama-stack-port}` in your `.en
 
 == Deploy Backend Services (Instructor-Led Workshop)
 
-For an instructor-led workshop, you also need to deploy the NovaCrest backend APIs, PostgreSQL databases, and MCP servers so that participants use remote services instead of running them locally.
+For an instructor-led workshop, you also need to deploy the ACME backend APIs, PostgreSQL databases, and MCP servers so that participants use remote services instead of running them locally.
 
 Helm charts are provided in `site/13-deployment/helm/`:
 
@@ -162,26 +162,26 @@ Helm charts are provided in `site/13-deployment/helm/`:
 
 [source,bash]
 ----
-helm install novacrest-app site/13-deployment/helm/novacrest-app/
+helm install acme-app site/13-deployment/helm/acme-app/
 ----
 
 This deploys:
 
-* *Customer API* -- Spring Boot app with PostgreSQL (`novacrest_customer` database)
-* *Finance API* -- Spring Boot app with PostgreSQL (`novacrest_finance` database)
+* *Customer API* -- Spring Boot app with PostgreSQL (`acme_customer` database)
+* *Finance API* -- Spring Boot app with PostgreSQL (`acme_finance` database)
 * OpenShift Routes for external access
 
 === MCP Servers
 
 [source,bash]
 ----
-helm install novacrest-mcp site/13-deployment/helm/novacrest-mcp/
+helm install acme-mcp site/13-deployment/helm/acme-mcp/
 ----
 
 This deploys:
 
-* *Customer MCP* -- wraps the Customer API (connects via internal cluster DNS `http://novacrest-customer-service:8081`)
-* *Finance MCP* -- wraps the Finance API (connects via internal cluster DNS `http://novacrest-finance-service:8082`)
+* *Customer MCP* -- wraps the Customer API (connects via internal cluster DNS `http://acme-customer-service:8081`)
+* *Finance MCP* -- wraps the Finance API (connects via internal cluster DNS `http://acme-finance-service:8082`)
 * OpenShift Routes for external access
 
 NOTE: The Helm values wire MCP servers to backend APIs using *in-cluster service names*, so MCP-to-API traffic stays inside the cluster. Only the MCP routes are exposed externally.
@@ -193,8 +193,8 @@ After all services are deployed, gather the route URLs to share with workshop pa
 [source,bash]
 ----
 echo "LLAMA_STACK_BASE_URL=https://$(oc get route llamastack -o jsonpath='{.spec.host}')"
-echo "CUSTOMER_API_BASE_URL=https://$(oc get route novacrest-customer-service -o jsonpath='{.spec.host}')"
-echo "FINANCE_API_BASE_URL=https://$(oc get route novacrest-finance-service -o jsonpath='{.spec.host}')"
+echo "CUSTOMER_API_BASE_URL=https://$(oc get route acme-customer-service -o jsonpath='{.spec.host}')"
+echo "FINANCE_API_BASE_URL=https://$(oc get route acme-finance-service -o jsonpath='{.spec.host}')"
 echo "CUSTOMER_MCP_SERVER_URL=https://$(oc get route mcp-customer-route -o jsonpath='{.spec.host}')/mcp"
 echo "FINANCE_MCP_SERVER_URL=https://$(oc get route mcp-finance-route -o jsonpath='{.spec.host}')/mcp"
 ----
@@ -209,7 +209,7 @@ Participants paste these values into their `.env` file (uncomment the "Remote" l
 |Solution
 
 |Pod in CrashLoopBackOff
-|Check logs: `oc logs -l llamastack.io/distribution=llamastack-novacrest-workshop`. Usually a bad `VLLM_API_URL` or token.
+|Check logs: `oc logs -l llamastack.io/distribution=llamastack-acme-workshop`. Usually a bad `VLLM_API_URL` or token.
 
 |Models list empty
 |The vLLM provider auto-discovers models. Verify your MaaS has models: `curl -H "Authorization: Bearer $TOKEN" $VLLM_API_URL/models`

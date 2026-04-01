@@ -1,6 +1,6 @@
 # Mortgage MCP Server - OpenShift Deployment
 # Deploys the Mortgage MCP server with a Service and Route.
-# Prerequisites: Mortgage API must be deployed (novacrest-mortgage-service on port 8083).
+# Prerequisites: Mortgage API must be deployed (acme-mortgage-service on port 8083).
 #
 # Usage:
 #   oc apply -f mortgage-use-case/openshift/mortgage-mcp.yaml
@@ -24,11 +24,11 @@ spec:
     spec:
       containers:
       - name: mcp-server
-        image: quay.io/novacrest/mcp-server-mortgage:1.0.0
+        image: quay.io/acme/mcp-server-mortgage:1.0.0
         imagePullPolicy: Always
         env:
         - name: MORTGAGE_API_BASE_URL
-          value: "http://novacrest-mortgage-service:8083"
+          value: "http://acme-mortgage-service:8083"
         ports:
         - containerPort: 9003
           name: http

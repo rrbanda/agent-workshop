@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: llama-stack-config
   labels:
-    llamastack.io/distribution: llamastack-novacrest-workshop
+    llamastack.io/distribution: llamastack-acme-workshop
     opendatahub.io/dashboard: "true"
 data:
   run.yaml: |

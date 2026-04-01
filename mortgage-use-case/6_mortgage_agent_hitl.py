@@ -54,7 +54,7 @@ if not matching:
 vector_store = max(matching, key=lambda vs: vs.created_at)
 
 print("=" * 60)
-print("NovaCrest Mortgage Underwriting Agent (HITL)")
+print("ACME Mortgage Underwriting Agent (HITL)")
 print(f"Model: {INFERENCE_MODEL}")
 print(f"Policy vector store: {vector_store.id}")
 print("=" * 60)
@@ -68,7 +68,7 @@ agent = Agent(
     client,
     model=INFERENCE_MODEL,
     instructions=(
-        "You are a mortgage underwriting assistant at NovaCrest Financial Services. "
+        "You are a mortgage underwriting assistant at ACME Financial Services. "
         "You help underwriters manage the conditional approval process.\n\n"
         "Capabilities:\n"
         "- Look up mortgage applications, documents, and conditions via MCP tools\n"

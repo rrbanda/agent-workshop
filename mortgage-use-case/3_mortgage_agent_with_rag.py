@@ -3,7 +3,7 @@
 Step 3: Mortgage agent with MCP tools AND RAG on the lending policy.
 
 This agent combines tool calling with file_search on the mortgage policy
-vector store. It can cross-reference NovaCrest's lending policy (what documents
+vector store. It can cross-reference ACME's lending policy (what documents
 are required, acceptance criteria) with actual application data (what documents
 have been submitted).
 
@@ -51,10 +51,10 @@ agent = Agent(
     client,
     model=INFERENCE_MODEL,
     instructions=(
-        "You are a mortgage underwriting assistant at NovaCrest Financial Services. "
+        "You are a mortgage underwriting assistant at ACME Financial Services. "
         "You have access to two capabilities:\n"
         "1. Function tools to look up mortgage applications, documents, conditions, and credit reports\n"
-        "2. file_search to look up NovaCrest's mortgage lending policy for document "
+        "2. file_search to look up ACME's mortgage lending policy for document "
         "requirements and acceptance criteria\n\n"
         "When asked about what documents are needed, ALWAYS use file_search to check "
         "the lending policy. When asked about a specific application, use the function tools "
@@ -71,7 +71,7 @@ agent = Agent(
 session_id = agent.create_session(session_name="mortgage-rag")
 
 # Query 1: Policy lookup (RAG)
-query1 = "What documents are required for a conventional loan according to NovaCrest policy?"
+query1 = "What documents are required for a conventional loan according to ACME policy?"
 print(f"Query 1: {query1}")
 print("-" * 60)
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Step 1: Create a vector store from the NovaCrest Mortgage Lending Policy document.
+Step 1: Create a vector store from the ACME Mortgage Lending Policy document.
 
 This script ingests the mortgage policy into a Llama Stack vector store with
 hybrid search (BM25 keyword + semantic) so the mortgage agent can look up

@@ -22,7 +22,7 @@ The *Model Context Protocol (MCP)* provides a standard way to expose tools to LL
 
 IMPORTANT: *MCP servers must be reachable from the Llama Stack server.* If your Llama Stack runs on OpenShift (remote), MCP servers must also be deployed remotely. MCP servers on `localhost` are invisible to a remote Llama Stack -- you will get `RuntimeError: No response available`. See xref:00-setup.adoc#_deployment_scenarios[Deployment Scenarios].
 
-== NovaCrest MCP Tools
+== ACME MCP Tools
 
 === Customer MCP
 
@@ -79,11 +79,11 @@ This is the recommended path when your Llama Stack runs on OpenShift. The MCP se
 
 NOTE: *If your instructor has already deployed MCP servers*, skip to <<_3_update_env>> and use the route URLs your instructor provided.
 
-IMPORTANT: Deploy into the *same namespace* as the backend APIs (e.g., `novacrest-workshop`). The MCP server images are stored in the internal registry under that namespace, and the env vars use cross-namespace DNS to reach the APIs.
+IMPORTANT: Deploy into the *same namespace* as the backend APIs (e.g., `acme-workshop`). The MCP server images are stored in the internal registry under that namespace, and the env vars use cross-namespace DNS to reach the APIs.
 
 [source,bash]
 ----
-oc project novacrest-workshop
+oc project acme-workshop
 ----
 
 ==== 1. Deploy Customer MCP

@@ -258,7 +258,7 @@ TIP: In an *instructor-led workshop*, your instructor provides the remote URLs f
 |The MaaS inference backend has rate limits. Wait 30-60 seconds and retry. For eval scripts, the built-in retry logic handles this automatically.
 
 |Database errors
-|Verify PostgreSQL is running and databases exist (`createdb novacrest_customer`)
+|Verify PostgreSQL is running and databases exist (`createdb acme_customer`)
 
 |Import errors
 |Activate your venv and run `pip install -r requirements.txt`
