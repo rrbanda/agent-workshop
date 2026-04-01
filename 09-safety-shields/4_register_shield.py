@@ -1,29 +1,28 @@
 #!/usr/bin/env python3
 """
-Register a new shield with a Llama Stack server.
+Register a safety shield with the TrustyAI Guardrails Orchestrator.
+
+On RHOAI, shields use the trustyai_fms provider backed by the
+GuardrailsOrchestrator (regex PII detectors, HAP models, etc.).
+Shields are registered at runtime via the /v1/shields API with
+detector configuration in the params field.
 """
 
 import logging
 import os
 import sys
 
+import httpx
 from dotenv import load_dotenv
-from llama_stack_client import LlamaStackClient
+from llama_stack_client import LlamaStackClient, BadRequestError
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(message)s',
-    force=True
-)
+logging.basicConfig(level=logging.INFO, format='%(message)s', force=True)
 logger = logging.getLogger(__name__)
-
-# Suppress httpx INFO logs
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 
+
 def main():
-    # Load environment variables from .env file
     load_dotenv()
 
     base_url = os.getenv("LLAMA_STACK_BASE_URL")
@@ -31,36 +30,69 @@ def main():
         logger.error("LLAMA_STACK_BASE_URL environment variable is not set")
         sys.exit(1)
 
-    shield_id = os.getenv("SHIELD_ID")
-    if not shield_id:
-        logger.error("SHIELD_ID environment variable is not set")
-        sys.exit(1)
-
-    shield_model = os.getenv("SHIELD_MODEL")
-    if not shield_model:
-        logger.error("SHIELD_MODEL environment variable is not set")
-        sys.exit(1)
-
-    shield_provider = os.getenv("SHIELD_PROVIDER")
-    if not shield_provider:
-        logger.error("SHIELD_PROVIDER environment variable is not set")
-        sys.exit(1)
+    shield_id = os.getenv("SHIELD_ID", "pii_detector")
+    shield_provider = os.getenv("SHIELD_PROVIDER", "trustyai_fms")
 
     logger.info(f"Connecting to Llama Stack server at: {base_url}")
+    logger.info(f"Registering shield '{shield_id}' with provider: {shield_provider}")
 
-    # Create the Llama Stack client
-    client = LlamaStackClient(base_url=base_url)
+    if shield_provider == "trustyai_fms":
+        payload = {
+            "shield_id": shield_id,
+            "provider_shield_id": shield_id,
+            "provider_id": shield_provider,
+            "params": {
+                "type": "content",
+                "confidence_threshold": 0.5,
+                "verify_ssl": False,
+                "message_types": ["system", "user"],
+                "detectors": {
+                    "regex": {
+                        "detector_params": {
+                            "regex": [
+                                "email",
+                                "us-social-security-number",
+                                "credit-card",
+                            ]
+                        }
+                    }
+                },
+            },
+        }
 
-    # Register the shield
-    logger.info(f"Registering shield '{shield_id}' with model: {shield_model}")
+        url = f"{base_url}/v1/shields"
+        try:
+            resp = httpx.post(url, json=payload, timeout=30)
+            if resp.status_code == 200:
+                logger.info(f"Shield '{shield_id}' registered successfully")
+            elif resp.status_code == 400 and "already exists" in resp.text:
+                logger.info(f"Shield '{shield_id}' already exists, skipping registration")
+            else:
+                logger.error(f"Failed to register shield: {resp.status_code} {resp.text}")
+                sys.exit(1)
+        except httpx.ConnectError as e:
+            logger.error(f"Cannot connect to Llama Stack at {base_url}: {e}")
+            sys.exit(1)
+    else:
+        client = LlamaStackClient(base_url=base_url)
+        shield_model = os.getenv("SHIELD_MODEL", "")
+        logger.info(f"Using llama-guard style registration with model: {shield_model}")
+        try:
+            client.shields.register(
+                shield_id=shield_id,
+                provider_id=shield_provider,
+                provider_shield_id=shield_model,
+            )
+            logger.info(f"Shield '{shield_id}' registered successfully")
+        except BadRequestError as e:
+            if "already exists" in str(e):
+                logger.info(f"Shield '{shield_id}' already exists, skipping registration")
+            else:
+                raise
 
-    shield = client.shields.register(
-        shield_id=shield_id,
-        provider_id=shield_provider,
-        provider_shield_id=shield_model,
-    )
+    logger.info("")
+    logger.info("Next step: run 5_test_shield.py to verify the shield works")
 
-    logger.info(f"Shield registered successfully: {shield_id}")
 
 if __name__ == "__main__":
     main()

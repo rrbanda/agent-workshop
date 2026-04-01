@@ -1,5 +1,5 @@
 :inference-model: vllm-inference/gpt-oss-120b
-:embedding-model: sentence-transformers/nomic-ai/nomic-embed-text-v1.5
+:embedding-model: vllm-embedding/nomic-embed-text-v1-5
 :embedding-dimension: 768
 :github-repo: https://github.com/rrbanda/agent-workshop
 :llama-stack-repo: https://github.com/llamastack/llama-stack

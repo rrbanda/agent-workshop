@@ -29,7 +29,7 @@ LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL", "http://localhost:8321"
 LLAMA_STACK_API_KEY = os.getenv("LLAMA_STACK_API_KEY", "fake")
 INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "vllm-inference/gpt-oss-120b")
 EMBEDDING_MODEL = os.getenv(
-    "EMBEDDING_MODEL", "sentence-transformers/nomic-ai/nomic-embed-text-v1.5"
+    "EMBEDDING_MODEL", "vllm-embedding/nomic-embed-text-v1-5"
 )
 EXPECTED_EMBEDDING_DIM = int(os.getenv("EMBEDDING_DIMENSION", "768"))
 
@@ -74,7 +74,7 @@ def get_client():
     except ImportError:
         print(
             f"{FAIL}: llama-stack-client not installed. "
-            "Run: pip install 'llama-stack-client>=0.5.0,<0.6.0'"
+            "Run: pip install 'llama-stack-client==0.5.0'"
         )
         sys.exit(1)
     except Exception as e:
@@ -163,9 +163,14 @@ def check_vector_store(client, emb_available):
     vs_id = None
     steps_done = []
     try:
+        providers = client.providers.list()
+        vec_providers = [p for p in providers if getattr(p, "api", None) == "vector_io"]
+        provider_id = vec_providers[0].provider_id if len(vec_providers) == 1 else "faiss"
+
         vs = client.vector_stores.create(
             name=test_name,
             metadata={"embedding_model": EMBEDDING_MODEL},
+            extra_body={"provider_id": provider_id},
         )
         vs_id = vs.id
         steps_done.append("create")
@@ -205,8 +210,10 @@ def check_safety(client):
         ]
         provider_ids = [p.provider_id for p in safety_providers]
 
-        if "llama-guard" in provider_ids:
-            result_line(5, "Safety", "pass", "llama-guard provider available")
+        known_safety = {"llama-guard", "trustyai_fms"}
+        found_known = [p for p in provider_ids if p in known_safety]
+        if found_known:
+            result_line(5, "Safety", "pass", f"{', '.join(found_known)} provider available")
         elif safety_providers:
             result_line(
                 5,

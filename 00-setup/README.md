@@ -55,7 +55,7 @@ cp .env.example .env
 # Edit .env -- set LLAMA_STACK_BASE_URL and verify model names match your server
 ```
 
-The `.env.example` defaults to `vllm-inference/gpt-oss-120b` for inference and `sentence-transformers/nomic-ai/nomic-embed-text-v1.5` for embedding. Update these if your Llama Stack server uses different model identifiers.
+The `.env.example` defaults to `vllm-inference/gpt-oss-120b` for inference and `vllm-embedding/nomic-embed-text-v1-5` for embedding. Update these if your Llama Stack server uses different model identifiers.
 
 ### 3. Verify Llama Stack Server
 
@@ -64,7 +64,7 @@ source .env
 curl $LLAMA_STACK_BASE_URL/v1/models
 ```
 
-You should see at least an inference model (e.g., `vllm-inference/gpt-oss-120b`) and an embedding model (e.g., `sentence-transformers/nomic-ai/nomic-embed-text-v1.5`) in the response.
+You should see at least an inference model (e.g., `vllm-inference/gpt-oss-120b`) and an embedding model (e.g., `vllm-embedding/nomic-embed-text-v1-5`) in the response.
 
 > [!IMPORTANT]
 > **MCP connectivity:** The Llama Stack server must be able to reach your MCP servers over the network. If your Llama Stack is remote, MCP servers must also be deployed remotely (or exposed via a public URL). MCP servers running on `localhost` are not reachable from a remote Llama Stack.

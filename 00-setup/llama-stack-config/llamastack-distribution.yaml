@@ -21,7 +21,7 @@ spec:
           value: "4096"
         # ── UPDATE THESE to your MaaS / vLLM endpoint ──
         - name: VLLM_API_URL
-          value: "https://your-vllm-endpoint/v1"
+          value: "https://litellm-prod.apps.maas.redhatworkshops.io/v1"
         - name: VLLM_API_TOKEN
           value: "your-api-token"
       name: llama-stack

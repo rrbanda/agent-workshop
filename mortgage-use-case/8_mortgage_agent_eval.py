@@ -86,6 +86,7 @@ try:
         benchmark_id=BENCHMARK_ID,
         dataset_id=DATASET_ID,
         scoring_functions=[SCORING_FN],
+        provider_id="meta-reference",
     )
     print(f"   Benchmark '{BENCHMARK_ID}' registered")
 except BadRequestError as e:

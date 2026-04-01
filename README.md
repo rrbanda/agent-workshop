@@ -247,12 +247,13 @@ All modules share a single `.env` file at the repo root. See [.env.example](.env
 
 | Problem | Solution |
 |---------|----------|
-| `RuntimeError: No response available` | Your Llama Stack is remote but MCP servers are on `localhost`. Remote Llama Stack cannot reach your local machine. Deploy MCP remotely or run Llama Stack locally. |
-| `Connection refused` on Llama Stack | Verify the server is running: `curl $LLAMA_STACK_BASE_URL/v1/models` |
-| Empty tool lists | Ensure MCP servers are running on their expected ports. If Llama Stack is remote, MCP must also be remote. |
+| `RuntimeError: No response available` | Your Llama Stack is remote but MCP servers are on `localhost`. Remote Llama Stack cannot reach your local machine. Deploy MCP servers on OpenShift (`oc apply -f 02-mcp-servers/openshift/`) or run Llama Stack locally. See [Deployment Scenarios](documentation/modules/ROOT/pages/00-setup.adoc). |
+| `Connection refused` on Llama Stack | Verify the server is running: `source .env && curl $LLAMA_STACK_BASE_URL/v1/models` |
+| Empty tool lists | Ensure MCP servers are running on their expected ports. If Llama Stack is remote, MCP servers must also be deployed remotely -- `localhost` MCP URLs are not reachable from a remote server. |
+| MCP tools fail with remote Llama Stack | MCP server URLs must be reachable *from the Llama Stack server*, not just from your laptop. Deploy MCP servers on the same cluster or expose them via public routes. |
 | `LLAMA_STACK_BASE_URL not set` | Copy `.env.example` to `.env` and set `LLAMA_STACK_BASE_URL` to your server URL (local or remote) |
 | Model not found | Check `INFERENCE_MODEL` matches a model on your Llama Stack server (`curl $LLAMA_STACK_BASE_URL/v1/models`) |
-| `429 Too Many Requests` / rate limiting | MaaS backend has rate limits. Wait 30-60 seconds and retry. |
+| `429 Too Many Requests` / rate limiting | MaaS backend has rate limits. Wait 30-60 seconds and retry. Eval scripts include built-in retry logic. |
 | Database errors (Linux) | Set postgres password: `sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"` and check `pg_hba.conf` |
 | Import errors | Activate your venv and run `pip install -r requirements.txt` |
 

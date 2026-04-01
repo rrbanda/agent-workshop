@@ -26,7 +26,7 @@ LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL")
 if not LLAMA_STACK_BASE_URL:
     print("Error: LLAMA_STACK_BASE_URL not set. Copy .env.example to .env and configure it.")
     sys.exit(1)
-EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "sentence-transformers/nomic-ai/nomic-embed-text-v1.5")
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "vllm-embedding/nomic-embed-text-v1-5")
 EMBEDDING_DIMENSION = int(os.getenv("EMBEDDING_DIMENSION", "768"))
 
 client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
@@ -61,6 +61,11 @@ vector_store = client.vector_stores.create(
             "max_chunk_size_tokens": 100,
             "chunk_overlap_tokens": 10,
         },
+    },
+    extra_body={
+        "provider_id": "faiss",
+        "embedding_model": EMBEDDING_MODEL,
+        "embedding_dimension": EMBEDDING_DIMENSION,
     },
 )
 print(f"Vector store created: {vector_store.id}")

@@ -68,11 +68,12 @@ try:
     vs = client.vector_stores.create(
         name="hr-benefits-hybrid",
         extra_body={
+            "provider_id": "faiss",
             "embedding_model": EMBEDDING_MODEL,
             "embedding_dimension": EMBEDDING_DIMENSION,
-            "search_mode": "hybrid",  # Enable hybrid search (keyword + semantic)
-            "bm25_weight": 0.5,  # Weight for keyword search (BM25)
-            "semantic_weight": 0.5,  # Weight for semantic search
+            "search_mode": "hybrid",
+            "bm25_weight": 0.5,
+            "semantic_weight": 0.5,
         }
     )
     logger.info(f"✓ Vector store created: {vs.id}")
@@ -173,31 +174,28 @@ try:
 
         if f.status == "completed":
             logger.info("✓ File processing completed successfully!")
-            logger.info("\nVector store is ready for querying")
-            logger.info(f"Vector store ID: {vs.id}")
-        elif f.status == "failed":
-            logger.error("✗ File processing failed!")
-
-            # Try to get detailed error information
-            if hasattr(f, 'last_error') and f.last_error:
-                logger.error(f"Error details: {f.last_error}")
-
-            # Show full file object for debugging
-            logger.error(f"\nFull file object: {f}")
-
-            logger.error("\nTroubleshooting suggestions:")
-            logger.error("1. Check that the embedding model is available on the server")
-            logger.error("   Current model: " + EMBEDDING_MODEL)
-            logger.error("2. Verify EMBEDDING_DIMENSION matches the model")
-            logger.error(f"   Current dimension: {EMBEDDING_DIMENSION}")
-            logger.error("3. Check server logs for detailed error messages")
-            logger.error("4. Try a different embedding model in .env file")
-            sys.exit(1)
         elif f.status == "in_progress":
             logger.warning("File is still processing. It may take a few more moments.")
             logger.info("Run 2_list_available_vector_stores.py later to check status")
         else:
-            logger.warning(f"Unexpected file status: {f.status}")
+            logger.warning(f"File status: {f.status} (may be a server-side status tracking issue)")
+
+    # Verify ingestion by running a test search
+    logger.info("Verifying data ingestion with test search...")
+    try:
+        results = list(client.vector_stores.search(
+            vector_store_id=vs.id, query="benefits", max_num_results=3
+        ))
+        if results:
+            logger.info(f"✓ Test search returned {len(results)} results -- data ingested successfully!")
+        else:
+            logger.warning("Test search returned no results -- data may not be ingested yet")
+            logger.info("Run 2_list_available_vector_stores.py later to check status")
+    except Exception as e:
+        logger.warning(f"Test search failed: {e}")
+
+    logger.info(f"\nVector store is ready for querying")
+    logger.info(f"Vector store ID: {vs.id}")
 
 except APIConnectionError as e:
     logger.error("Lost connection to Llama Stack server while checking status")

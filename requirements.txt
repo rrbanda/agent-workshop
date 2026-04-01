@@ -6,7 +6,7 @@ python-dotenv==1.2.1
 requests==2.32.5
 
 # Llama Stack
-llama-stack-client>=0.5.0,<0.6.0
+llama-stack-client==0.5.0
 
 # FastAPI & Web Framework
 fastapi==0.115.5

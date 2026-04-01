@@ -13,7 +13,7 @@
 ## Prerequisites
 
 - [Module 03: Llama Stack Basics](../03-llama-stack-basics/) completed
-- Llama Stack server running with an embedding model available (e.g., `sentence-transformers/nomic-ai/nomic-embed-text-v1.5`)
+- Llama Stack server running with an embedding model available (e.g., `vllm-embedding/nomic-embed-text-v1-5`)
 - `EMBEDDING_MODEL` and `EMBEDDING_DIMENSION` set in your `.env` (see `.env.example`)
 
 ## Concepts
@@ -46,7 +46,7 @@
 python 0_list_embedding_models.py
 ```
 
-Confirm your embedding model (e.g., `sentence-transformers/nomic-ai/nomic-embed-text-v1.5`) appears in the list. If it does not, check that your Llama Stack server has an embedding provider configured.
+Confirm your embedding model (e.g., `vllm-embedding/nomic-embed-text-v1-5`) appears in the list. If it does not, check that your Llama Stack server has an embedding provider configured.
 
 ### 1. Create the Vector Store
 
