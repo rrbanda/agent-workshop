@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Llama Stack Server Setup (Admin Guide) :: NovaCrest Agent Workshop</title>
-    <link rel="canonical" href="https://rrbanda.github.io/agent-workshop/novacrest-agent-workshop/v1.0/llama-stack-admin.html">
+    <title>Llama Stack Server Setup (Admin Guide) :: ACME Agent Workshop</title>
+    <link rel="canonical" href="https://rrbanda.github.io/agent-workshop/acme-agent-workshop/v1.0/llama-stack-admin.html">
     <link rel="prev" href="00-setup.html">
     <link rel="next" href="01-backend-apis.html">
     <meta name="generator" content="Antora 2.3.1">
@@ -18,7 +18,7 @@
     <div class="navbar-brand">
       <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
           src="../../_/img/RHDLogo.svg" height="40px" alt="Red Hat Developer Program"></a>
-      <a class="navbar-item" href="https://rrbanda.github.io/agent-workshop">NovaCrest Agent Workshop</a>
+      <a class="navbar-item" href="https://rrbanda.github.io/agent-workshop">ACME Agent Workshop</a>
       <button class="navbar-burger" data-target="topbar-nav">
         <span></span>
         <span></span>
@@ -62,12 +62,12 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="novacrest-agent-workshop" data-version="v1.0">
+<div class="nav-container" data-component="acme-agent-workshop" data-version="v1.0">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
   <nav class="nav-menu">
-    <h3 class="title"><a href="index.html" class=" query-params-link">novacrest-agent-workshop</a></h3>
+    <h3 class="title"><a href="index.html" class=" query-params-link">acme-agent-workshop</a></h3>
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
@@ -120,12 +120,12 @@
 </div>
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
-    <span class="title">novacrest-agent-workshop</span>
+    <span class="title">acme-agent-workshop</span>
     <span class="version">v1.0</span>
   </div>
   <ul class="components">
     <li class="component is-current">
-      <span class="title">novacrest-agent-workshop</span>
+      <span class="title">acme-agent-workshop</span>
       <ul class="versions">
         <li class="version is-current is-latest">
           <a href="index.html">v1.0</a>
@@ -143,7 +143,7 @@
   <a href="index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
-    <li><a href="index.html">novacrest-agent-workshop</a></li>
+    <li><a href="index.html">acme-agent-workshop</a></li>
     <li><a href="00-setup.html">Module 00: Environment Setup</a></li>
     <li><a href="llama-stack-admin.html">Llama Stack Admin Guide</a></li>
   </ul>
@@ -156,7 +156,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Deploy a Llama Stack server with all capabilities the NovaCrest Agent Workshop requires.</p>
+<p>Deploy a Llama Stack server with all capabilities the ACME Agent Workshop requires.</p>
 </div>
 </div>
 </div>
@@ -205,7 +205,7 @@ oc apply -f 00-setup/llama-stack-config/llamastack-distribution.yaml</code></pre
 <h3 id="_3_wait_for_the_pod"><a class="anchor" href="#_3_wait_for_the_pod"></a>3. Wait for the pod</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pods -w -l llamastack.io/distribution=llamastack-novacrest-workshop</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pods -w -l llamastack.io/distribution=llamastack-acme-workshop</code></pre>
 </div>
 </div>
 </div>
@@ -213,7 +213,7 @@ oc apply -f 00-setup/llama-stack-config/llamastack-distribution.yaml</code></pre
 <h3 id="_4_create_a_route_and_get_the_url"><a class="anchor" href="#_4_create_a_route_and_get_the_url"></a>4. Create a route and get the URL</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc create route edge llamastack --service=llamastack-novacrest-workshop-service --port=8321
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc create route edge llamastack --service=llamastack-acme-workshop-service --port=8321
 LLAMA_STACK_URL=https://$(oc get route llamastack -o jsonpath='{.spec.host}')
 echo $LLAMA_STACK_URL</code></pre>
 </div>
@@ -379,7 +379,7 @@ llama stack run 00-setup/llama-stack-config/run.yaml</code></pre>
 <h2 id="_deploy_backend_services_instructor_led_workshop"><a class="anchor" href="#_deploy_backend_services_instructor_led_workshop"></a>Deploy Backend Services (Instructor-Led Workshop)</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>For an instructor-led workshop, you also need to deploy the NovaCrest backend APIs, PostgreSQL databases, and MCP servers so that participants use remote services instead of running them locally.</p>
+<p>For an instructor-led workshop, you also need to deploy the ACME backend APIs, PostgreSQL databases, and MCP servers so that participants use remote services instead of running them locally.</p>
 </div>
 <div class="paragraph">
 <p>Helm charts are provided in <code>site/13-deployment/helm/</code>:</p>
@@ -388,7 +388,7 @@ llama stack run 00-setup/llama-stack-config/run.yaml</code></pre>
 <h3 id="_backend_apis_postgresql"><a class="anchor" href="#_backend_apis_postgresql"></a>Backend APIs + PostgreSQL</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm install novacrest-app site/13-deployment/helm/novacrest-app/</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm install acme-app site/13-deployment/helm/acme-app/</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -397,10 +397,10 @@ llama stack run 00-setup/llama-stack-config/run.yaml</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Customer API</strong>&#8201;&#8212;&#8201;Spring Boot app with PostgreSQL (<code>novacrest_customer</code> database)</p>
+<p><strong>Customer API</strong>&#8201;&#8212;&#8201;Spring Boot app with PostgreSQL (<code>acme_customer</code> database)</p>
 </li>
 <li>
-<p><strong>Finance API</strong>&#8201;&#8212;&#8201;Spring Boot app with PostgreSQL (<code>novacrest_finance</code> database)</p>
+<p><strong>Finance API</strong>&#8201;&#8212;&#8201;Spring Boot app with PostgreSQL (<code>acme_finance</code> database)</p>
 </li>
 <li>
 <p>OpenShift Routes for external access</p>
@@ -412,7 +412,7 @@ llama stack run 00-setup/llama-stack-config/run.yaml</code></pre>
 <h3 id="_mcp_servers"><a class="anchor" href="#_mcp_servers"></a>MCP Servers</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm install novacrest-mcp site/13-deployment/helm/novacrest-mcp/</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm install acme-mcp site/13-deployment/helm/acme-mcp/</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -421,10 +421,10 @@ llama stack run 00-setup/llama-stack-config/run.yaml</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Customer MCP</strong>&#8201;&#8212;&#8201;wraps the Customer API (connects via internal cluster DNS <code><a href="http://novacrest-customer-service:8081" class="bare">http://novacrest-customer-service:8081</a></code>)</p>
+<p><strong>Customer MCP</strong>&#8201;&#8212;&#8201;wraps the Customer API (connects via internal cluster DNS <code><a href="http://acme-customer-service:8081" class="bare">http://acme-customer-service:8081</a></code>)</p>
 </li>
 <li>
-<p><strong>Finance MCP</strong>&#8201;&#8212;&#8201;wraps the Finance API (connects via internal cluster DNS <code><a href="http://novacrest-finance-service:8082" class="bare">http://novacrest-finance-service:8082</a></code>)</p>
+<p><strong>Finance MCP</strong>&#8201;&#8212;&#8201;wraps the Finance API (connects via internal cluster DNS <code><a href="http://acme-finance-service:8082" class="bare">http://acme-finance-service:8082</a></code>)</p>
 </li>
 <li>
 <p>OpenShift Routes for external access</p>
@@ -452,8 +452,8 @@ The Helm values wire MCP servers to backend APIs using <strong>in-cluster servic
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "LLAMA_STACK_BASE_URL=https://$(oc get route llamastack -o jsonpath='{.spec.host}')"
-echo "CUSTOMER_API_BASE_URL=https://$(oc get route novacrest-customer-service -o jsonpath='{.spec.host}')"
-echo "FINANCE_API_BASE_URL=https://$(oc get route novacrest-finance-service -o jsonpath='{.spec.host}')"
+echo "CUSTOMER_API_BASE_URL=https://$(oc get route acme-customer-service -o jsonpath='{.spec.host}')"
+echo "FINANCE_API_BASE_URL=https://$(oc get route acme-finance-service -o jsonpath='{.spec.host}')"
 echo "CUSTOMER_MCP_SERVER_URL=https://$(oc get route mcp-customer-route -o jsonpath='{.spec.host}')/mcp"
 echo "FINANCE_MCP_SERVER_URL=https://$(oc get route mcp-finance-route -o jsonpath='{.spec.host}')/mcp"</code></pre>
 </div>
@@ -481,7 +481,7 @@ echo "FINANCE_MCP_SERVER_URL=https://$(oc get route mcp-finance-route -o jsonpat
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Pod in CrashLoopBackOff</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Check logs: <code>oc logs -l llamastack.io/distribution=llamastack-novacrest-workshop</code>. Usually a bad <code>VLLM_API_URL</code> or token.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Check logs: <code>oc logs -l llamastack.io/distribution=llamastack-acme-workshop</code>. Usually a bad <code>VLLM_API_URL</code> or token.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Models list empty</p></td>

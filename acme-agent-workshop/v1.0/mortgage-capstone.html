@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Capstone: Mortgage Approval Agent :: NovaCrest Agent Workshop</title>
-    <link rel="canonical" href="https://rrbanda.github.io/agent-workshop/novacrest-agent-workshop/v1.0/mortgage-capstone.html">
+    <title>Capstone: Mortgage Approval Agent :: ACME Agent Workshop</title>
+    <link rel="canonical" href="https://rrbanda.github.io/agent-workshop/acme-agent-workshop/v1.0/mortgage-capstone.html">
     <link rel="prev" href="10-evaluations.html">
     <link rel="next" href="reference.html">
     <meta name="generator" content="Antora 2.3.1">
@@ -18,7 +18,7 @@
     <div class="navbar-brand">
       <a class="navbar-item" href="https://developers.redhat.com" target="_blank"><img
           src="../../_/img/RHDLogo.svg" height="40px" alt="Red Hat Developer Program"></a>
-      <a class="navbar-item" href="https://rrbanda.github.io/agent-workshop">NovaCrest Agent Workshop</a>
+      <a class="navbar-item" href="https://rrbanda.github.io/agent-workshop">ACME Agent Workshop</a>
       <button class="navbar-burger" data-target="topbar-nav">
         <span></span>
         <span></span>
@@ -62,12 +62,12 @@
   </nav>
 </header>
 <div class="body">
-<div class="nav-container" data-component="novacrest-agent-workshop" data-version="v1.0">
+<div class="nav-container" data-component="acme-agent-workshop" data-version="v1.0">
   <aside class="nav">
     <div class="panels">
 <div class="nav-panel-menu is-active" data-panel="menu">
   <nav class="nav-menu">
-    <h3 class="title"><a href="index.html" class=" query-params-link">novacrest-agent-workshop</a></h3>
+    <h3 class="title"><a href="index.html" class=" query-params-link">acme-agent-workshop</a></h3>
 <ul class="nav-list">
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
@@ -120,12 +120,12 @@
 </div>
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
-    <span class="title">novacrest-agent-workshop</span>
+    <span class="title">acme-agent-workshop</span>
     <span class="version">v1.0</span>
   </div>
   <ul class="components">
     <li class="component is-current">
-      <span class="title">novacrest-agent-workshop</span>
+      <span class="title">acme-agent-workshop</span>
       <ul class="versions">
         <li class="version is-current is-latest">
           <a href="index.html">v1.0</a>
@@ -143,7 +143,7 @@
   <a href="index.html" class="home-link"></a>
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
-    <li><a href="index.html">novacrest-agent-workshop</a></li>
+    <li><a href="index.html">acme-agent-workshop</a></li>
     <li><a href="mortgage-capstone.html">Capstone: Mortgage Approval Agent</a></li>
   </ul>
 </nav>
@@ -156,7 +156,7 @@
 <h2 id="_your_mission"><a class="anchor" href="#_your_mission"></a>Your Mission</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You are a developer at NovaCrest Financial Services. The mortgage division has asked you to automate their conditional approval workflow&#8201;&#8212;&#8201;the back-and-forth loop where borrowers submit documents, underwriters review them, and conditions get cleared one by one. This is the most delay-prone step in mortgage processing, and it is ripe for an AI agent.</p>
+<p>You are a developer at ACME Financial Services. The mortgage division has asked you to automate their conditional approval workflow&#8201;&#8212;&#8201;the back-and-forth loop where borrowers submit documents, underwriters review them, and conditions get cleared one by one. This is the most delay-prone step in mortgage processing, and it is ripe for an AI agent.</p>
 </div>
 <div class="paragraph">
 <p>You have completed the core modules. Now apply everything you learned&#8201;&#8212;&#8201;MCP tools, RAG, multi-turn conversations, human-in-the-loop interaction, safety shields, and evaluation pipelines&#8201;&#8212;&#8201;to build this agent from the ground up.</p>
@@ -442,7 +442,7 @@ flowchart TD
     LS --> MCP
 
     MCP --> API["Mortgage API :8083"]
-    API --> DB[("PostgreSQL - novacrest_mortgage")]
+    API --> DB[("PostgreSQL - acme_mortgage")]
 
     subgraph data [Database Tables]
         Apps[mortgage_applications]
@@ -567,7 +567,7 @@ echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonp
 <h4 id="_1_create_the_database"><a class="anchor" href="#_1_create_the_database"></a>1. Create the database</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">createdb novacrest_mortgage</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">createdb acme_mortgage</code></pre>
 </div>
 </div>
 </div>
@@ -651,7 +651,7 @@ PORT_FOR_MORTGAGE_MCP=9003</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This ingests <code>MortgageLendingPolicy.txt</code> into a Llama Stack vector store with hybrid search. The policy contains NovaCrest&#8217;s rules for document requirements, acceptance criteria, DTI limits, and credit score minimums.</p>
+<p>This ingests <code>MortgageLendingPolicy.txt</code> into a Llama Stack vector store with hybrid search. The policy contains ACME&#8217;s rules for document requirements, acceptance criteria, DTI limits, and credit score minimums.</p>
 </div>
 <div class="paragraph">
 <p><strong>Concepts applied:</strong> Vector store creation, document chunking, hybrid search (from Module 08)</p>
@@ -1001,7 +1001,7 @@ Requires <code>SHIELD_ID</code> in your <code>.env</code> (registered in Module 
 </ol>
 </div>
 <div class="paragraph">
-<p>The key insight: the model evaluated <strong>without RAG</strong> will likely miss NovaCrest-specific answers (e.g., exact loan limits). Comparing this with the RAG-powered agent&#8217;s answers from Steps 3-6 demonstrates why retrieval augmentation is essential for domain-specific accuracy.</p>
+<p>The key insight: the model evaluated <strong>without RAG</strong> will likely miss ACME-specific answers (e.g., exact loan limits). Comparing this with the RAG-powered agent&#8217;s answers from Steps 3-6 demonstrates why retrieval augmentation is essential for domain-specific accuracy.</p>
 </div>
 <div class="paragraph">
 <p><strong>Concepts applied:</strong> Dataset registration, benchmark registration, eval execution, scoring functions (from Module 10)</p>
@@ -1145,7 +1145,7 @@ Requires <code>SHIELD_ID</code> in your <code>.env</code> (registered in Module 
 <p>Add a new MCP tool for appraisal valuation checks (does the appraised value meet the purchase price?)</p>
 </li>
 <li>
-<p>Create a second vector store with NovaCrest&#8217;s compliance policies and add it to the agent</p>
+<p>Create a second vector store with ACME&#8217;s compliance policies and add it to the agent</p>
 </li>
 <li>
 <p>Build an LLM-as-judge eval that scores the agent&#8217;s document review reasoning, not just factual accuracy (Module 10, script <code>9_llm_as_judge.py</code>)</p>
@@ -1203,7 +1203,7 @@ Requires <code>SHIELD_ID</code> in your <code>.env</code> (registered in Module 
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Mortgage API errors</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Verify PostgreSQL database <code>novacrest_mortgage</code> exists and API is running on port 8083</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify PostgreSQL database <code>acme_mortgage</code> exists and API is running on port 8083</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">MCP tools not found</p></td>
