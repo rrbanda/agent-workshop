@@ -4,7 +4,7 @@ include::_attributes.adoc[]
 == Learning Objectives
 
 * Understand the ACME domain model (Customer and Finance)
-* Deploy or connect to the Spring Boot REST APIs
+* Build and deploy the Spring Boot REST APIs to OpenShift
 * Explore the API endpoints
 
 TIP: *Capstone Preview:* In the capstone, you will work with a Mortgage API that follows this same Spring Boot pattern -- same entity/repository/controller structure, same Swagger UI, same seed data approach.
@@ -12,6 +12,7 @@ TIP: *Capstone Preview:* In the capstone, you will work with a Mortgage API that
 == Prerequisites
 
 * xref:00-setup.adoc[Module 00: Environment Setup] completed
+* Access to an OpenShift cluster (logged in via `oc`)
 
 == Concepts
 
@@ -79,11 +80,40 @@ Four entities: Order, Invoice, Dispute, Receipt -- all linked by customerId.
 
 == Step-by-Step
 
-Choose the path that matches your deployment:
+NOTE: *Working directory:* All commands in this module run from the *repo root* (`agent-workshop/`).
 
-=== Option A: Use Pre-Deployed APIs on OpenShift (Recommended)
+Since Llama Stack runs on RHOAI, the backend APIs must also be deployed on OpenShift so MCP servers can reach them.
 
-If your instructor has deployed the backend APIs on OpenShift (or you deployed them yourself using the Helm chart in `site/13-deployment/helm/acme-app/`), get the route URLs:
+=== 1. Build the Customer API
+
+[source,bash]
+----
+oc new-build --binary --strategy=docker --name=customer-api
+cp 01-backend-apis/customer-api/deployment/Dockerfile 01-backend-apis/customer-api/Dockerfile
+oc start-build customer-api --from-dir=01-backend-apis/customer-api/ --follow
+rm 01-backend-apis/customer-api/Dockerfile
+----
+
+=== 2. Build the Finance API
+
+[source,bash]
+----
+oc new-build --binary --strategy=docker --name=finance-api
+cp 01-backend-apis/finance-api/deployment/Dockerfile 01-backend-apis/finance-api/Dockerfile
+oc start-build finance-api --from-dir=01-backend-apis/finance-api/ --follow
+rm 01-backend-apis/finance-api/Dockerfile
+----
+
+=== 3. Deploy to OpenShift
+
+[source,bash]
+----
+oc apply -f 00-setup/admin/k8s/apis.yaml
+----
+
+This creates Deployments, Services, PostgreSQL instances, and Routes for both APIs. The databases are auto-populated with seed data on startup.
+
+=== 4. Get the Route URLs
 
 [source,bash]
 ----
@@ -91,42 +121,13 @@ echo "CUSTOMER_API_BASE_URL=https://$(oc get route acme-customer-service -o json
 echo "FINANCE_API_BASE_URL=https://$(oc get route acme-finance-service -o jsonpath='{.spec.host}')"
 ----
 
-Set these in your `.env` file and skip to <<_verification>>.
+Set these in your `.env` file.
 
-TIP: *Instructor-led?* Your instructor will provide these URLs. Just paste them into your `.env`.
+=== 5. Explore the APIs
 
-=== Option B: Run Locally
+* Customer Swagger: `https://<customer-route>/swagger-ui.html`
+* Finance Swagger: `https://<finance-route>/swagger-ui.html`
 
-Requires PostgreSQL running locally with `acme_customer` and `acme_finance` databases (see xref:00-setup.adoc#_4_postgresql_databases[Module 00 PostgreSQL setup]).
-
-==== 1. Build and Run Customer API
-
-In a dedicated terminal (from the repo root):
-
-[source,bash]
-----
-cd 01-backend-apis/customer-api
-mvn clean package -DskipTests
-mvn spring-boot:run
-----
-
-==== 2. Build and Run Finance API
-
-In a second terminal (from the repo root):
-
-[source,bash]
-----
-cd 01-backend-apis/finance-api
-mvn clean package -DskipTests
-mvn spring-boot:run
-----
-
-==== 3. Explore the APIs
-
-* Customer Swagger: http://localhost:{customer-api-port}/swagger-ui.html
-* Finance Swagger: http://localhost:{finance-api-port}/swagger-ui.html
-
-[[_verification]]
 == Verification
 
 Verify the APIs are reachable using the URLs in your `.env`:

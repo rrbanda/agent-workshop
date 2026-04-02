@@ -3,7 +3,7 @@
 ## Learning Objectives
 
 - Understand the ACME domain model (Customer and Finance)
-- Run the Spring Boot REST APIs locally
+- Build and deploy the Spring Boot REST APIs to OpenShift
 - Explore the API endpoints via Swagger UI
 
 > [!TIP]
@@ -12,7 +12,7 @@
 ## Prerequisites
 
 - [Module 00: Environment Setup](../00-setup/) completed
-- PostgreSQL running with `acme_customer` and `acme_finance` databases
+- Access to an OpenShift cluster (logged in via `oc`)
 
 ## Concepts
 
@@ -46,66 +46,65 @@ Four entities: Order, Invoice, Dispute, Receipt -- all linked by customerId.
 ## Step-by-Step
 
 > [!NOTE]
-> **Working directory:** All commands in this module run from `01-backend-apis/`.
+> **Working directory:** All commands in this module run from the **repo root** (`agent-workshop/`).
 
-### 1. Build and Run Customer API
+Since Llama Stack runs on RHOAI, the backend APIs must also be deployed on OpenShift so MCP servers can reach them.
 
-In a dedicated terminal:
-
-```bash
-cd customer-api
-mvn clean package -DskipTests
-mvn spring-boot:run
-```
-
-### 2. Build and Run Finance API
-
-In a second terminal:
+### 1. Build the Customer API
 
 ```bash
-cd finance-api
-mvn clean package -DskipTests
-mvn spring-boot:run
-```
-
-### 3. Explore the APIs
-
-- Customer Swagger: http://localhost:8081/swagger-ui.html
-- Finance Swagger: http://localhost:8082/swagger-ui.html
-
-## Verification
-
-```bash
-# Search customers
-curl http://localhost:8081/api/customers?companyName=Around
-
-# Get order history
-curl -X POST http://localhost:8082/api/finance/orders/history \
-  -H "Content-Type: application/json" \
-  -d '{"customerId": "AROUT"}'
-```
-
-## Deploying to OpenShift
-
-If your Llama Stack server is remote (e.g., on OpenShift), the backend APIs must also be deployed remotely so MCP servers can reach them. Use the admin deploy script or build manually:
-
-```bash
-# From repo root -- build images via OpenShift binary builds
 oc new-build --binary --strategy=docker --name=customer-api
 cp 01-backend-apis/customer-api/deployment/Dockerfile 01-backend-apis/customer-api/Dockerfile
 oc start-build customer-api --from-dir=01-backend-apis/customer-api/ --follow
 rm 01-backend-apis/customer-api/Dockerfile
+```
 
+### 2. Build the Finance API
+
+```bash
 oc new-build --binary --strategy=docker --name=finance-api
 cp 01-backend-apis/finance-api/deployment/Dockerfile 01-backend-apis/finance-api/Dockerfile
 oc start-build finance-api --from-dir=01-backend-apis/finance-api/ --follow
 rm 01-backend-apis/finance-api/Dockerfile
+```
 
-# Deploy (includes Deployment, Service, Route for each API)
+### 3. Deploy to OpenShift
+
+```bash
 oc apply -f 00-setup/admin/k8s/apis.yaml
 ```
 
-Then update your `.env` with the OpenShift route URLs. See `00-setup/admin/deploy.sh` for the full automated deployment.
+This creates Deployments, Services, PostgreSQL instances, and Routes for both APIs. The databases are auto-populated with seed data on startup.
+
+### 4. Get the Route URLs
+
+```bash
+echo "CUSTOMER_API_BASE_URL=https://$(oc get route acme-customer-service -o jsonpath='{.spec.host}')"
+echo "FINANCE_API_BASE_URL=https://$(oc get route acme-finance-service -o jsonpath='{.spec.host}')"
+```
+
+Set these in your `.env` file.
+
+### 5. Explore the APIs
+
+- Customer Swagger: `https://<customer-route>/swagger-ui.html`
+- Finance Swagger: `https://<finance-route>/swagger-ui.html`
+
+## Verification
+
+```bash
+source .env
+
+# Search customers
+curl $CUSTOMER_API_BASE_URL/api/customers?companyName=Around
+
+# Get order history
+curl -X POST $FINANCE_API_BASE_URL/api/finance/orders/history \
+  -H "Content-Type: application/json" \
+  -d '{"customerId": "AROUT"}'
+```
+
+You should see JSON responses with customer and order data.
 
 ## Key Takeaways
 
