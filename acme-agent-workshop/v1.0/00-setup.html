@@ -238,13 +238,13 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<strong>Instructor-led / Remote workshops:</strong> You only need <strong>Python 3.12+</strong>. Java, Maven, and PostgreSQL are only required if you plan to run the backend APIs locally (Self-Paced mode). All backend services and MCP servers are pre-deployed on OpenShift.
+<strong>Instructor-led workshops:</strong> You only need <strong>Python 3.12+</strong>. Java, Maven, and PostgreSQL are only required if you are building and deploying the backend APIs yourself. All backend services, MCP servers, and Llama Stack are pre-deployed on OpenShift.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>You also need access to a <strong>Llama Stack server</strong> with at least an inference model and an embedding model registered. The server can run locally or on a remote cluster (e.g., OpenShift).</p>
+<p>You also need access to a <strong>Llama Stack server</strong> with at least an inference model and an embedding model registered. The Llama Stack server is pre-deployed on RHOAI (OpenShift AI) with all required models. Set <code>LLAMA_STACK_BASE_URL</code> in your <code>.env</code> to the server URL provided by your instructor or team.</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -253,11 +253,7 @@
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<strong>Starting a Llama Stack server:</strong><br>
-<strong>Remote server</strong> (recommended for this workshop): Set <code>LLAMA_STACK_BASE_URL</code> in your <code>.env</code> to the server URL provided by your instructor or team.<br>
-<strong>Local server</strong>: Run <code>uv run --with llama-stack llama stack run starter</code> from the repo root. See the <a href="https://github.com/llamastack/llama-stack" target="_blank" rel="noopener">Llama Stack docs</a> for full setup instructions.<br>
-<br>
-<strong>For admins deploying a Llama Stack server:</strong> See the <a href="llama-stack-admin.html" class="page">Llama Stack Admin Guide</a> for a complete server configuration (<code>run.yaml</code>), an RHOAI OpenShift CRD template, and step-by-step deployment instructions.
+<strong>For admins deploying a Llama Stack server:</strong> See the <a href="llama-stack-admin.html" class="page">Llama Stack Admin Guide</a> for RHOAI deployment instructions, the server configuration, and an OpenShift CRD template.
 </td>
 </tr>
 </table>
@@ -325,21 +321,19 @@ python -c "import fastmcp; print('fastmcp OK')"</code></pre>
 <div class="sect2">
 <h3 id="_deployment_scenarios"><a class="anchor" href="#_deployment_scenarios"></a>Deployment Scenarios</h3>
 <div class="paragraph">
-<p>The workshop supports three deployment modes:</p>
+<p>The workshop supports two deployment modes. Llama Stack is always pre-deployed on RHOAI.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 14.2857%;">
-<col style="width: 28.5714%;">
-<col style="width: 28.5714%;">
-<col style="width: 28.5715%;">
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top"></th>
 <th class="tableblock halign-left valign-top">Instructor-Led (Remote)</th>
 <th class="tableblock halign-left valign-top">Self-Deploy (OpenShift)</th>
-<th class="tableblock halign-left valign-top">Self-Paced (Local)</th>
 </tr>
 </thead>
 <tbody>
@@ -347,31 +341,26 @@ python -c "import fastmcp; print('fastmcp OK')"</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Llama Stack</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">URL provided by instructor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deploy with <code>oc apply</code> (see <a href="llama-stack-admin.html" class="page">Admin Guide</a>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>uv run --with llama-stack llama stack run starter</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Backend APIs</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Pre-deployed; use route URLs</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Deploy with <code>helm install</code> (see <a href="llama-stack-admin.html" class="page">Admin Guide</a>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mvn spring-boot:run</code> (Module 01)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deploy with <code>helm install</code> or <code>oc new-build</code> (see <a href="llama-stack-admin.html" class="page">Admin Guide</a>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>MCP Servers</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Pre-deployed; use route URLs</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>oc apply -f 02-mcp-servers/openshift/</code> (Module 02)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>python &#8230;&#8203;mcp-server.py</code> (Module 02)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>PostgreSQL</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">On cluster</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">On cluster (via Helm)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Running locally (<code>pg_isready</code>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong><code>.env</code> setup</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Uncomment "Remote" lines, paste URLs from instructor</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Uncomment "Remote" lines, get URLs from <code>oc get route</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Use localhost defaults as-is</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Paste URLs from instructor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Get URLs from <code>oc get route</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -382,7 +371,7 @@ python -c "import fastmcp; print('fastmcp OK')"</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-<strong>Remote Llama Stack + local MCP does not work.</strong> When Llama Stack runs on a remote cluster, MCP server URLs must be reachable from that cluster. MCP servers on <code>localhost</code> are invisible to a remote Llama Stack. Deploy MCP servers on OpenShift using <code>oc apply -f 02-mcp-servers/openshift/</code> (see <a href="02-mcp-servers.html" class="page">Module 02</a>).
+<strong>MCP servers must be deployed on OpenShift.</strong> Since Llama Stack runs on RHOAI, MCP server URLs must be reachable from the cluster. MCP servers on <code>localhost</code> are not reachable from the Llama Stack server. Deploy MCP servers on OpenShift using <code>oc apply -f 02-mcp-servers/openshift/</code> (see <a href="02-mcp-servers.html" class="page">Module 02</a>).
 </td>
 </tr>
 </table>
@@ -413,7 +402,7 @@ curl $LLAMA_STACK_BASE_URL/v1/models</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_4_postgresql_databases_local_only"><a class="anchor" href="#_4_postgresql_databases_local_only"></a>4. PostgreSQL Databases (Local-Only)</h3>
+<h3 id="_4_postgresql_databases_self_deploy_only"><a class="anchor" href="#_4_postgresql_databases_self_deploy_only"></a>4. PostgreSQL Databases (Self-Deploy Only)</h3>
 <div class="admonitionblock important">
 <table>
 <tr>
@@ -421,7 +410,7 @@ curl $LLAMA_STACK_BASE_URL/v1/models</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-<strong>Skip this step if you are using pre-deployed APIs on OpenShift</strong> (instructor-led or self-deploy). PostgreSQL runs on the cluster and is already configured. This section is only for self-paced local development.
+<strong>Skip this step if you are using pre-deployed APIs on OpenShift</strong> (instructor-led). PostgreSQL runs on the cluster and is already configured. This section is only needed if you are building and deploying APIs yourself.
 </td>
 </tr>
 </table>
@@ -478,7 +467,7 @@ python --version  # Should be 3.12+</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If running backend APIs locally (Self-Paced mode), also verify:</p>
+<p>If building backend APIs locally before deploying, also verify:</p>
 </div>
 <div class="listingblock">
 <div class="content">

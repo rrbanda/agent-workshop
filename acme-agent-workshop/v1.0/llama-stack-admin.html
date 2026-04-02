@@ -257,33 +257,6 @@ echo $LLAMA_STACK_URL</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_alternative_run_locally"><a class="anchor" href="#_alternative_run_locally"></a>Alternative: Run Locally</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>If you don&#8217;t have OpenShift, you can run Llama Stack locally using the standalone <code>run.yaml</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export VLLM_API_URL=https://your-vllm-endpoint/v1
-export VLLM_API_TOKEN=your-token
-pip install llama-stack
-llama stack run 00-setup/llama-stack-config/run.yaml</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Or use the simplest path with Ollama:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">uv run --with llama-stack llama stack run starter --image-type venv</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Then set <code>LLAMA_STACK_BASE_URL=http://localhost:8321</code> in your <code>.env</code>.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
 <h2 id="_whats_in_this_directory"><a class="anchor" href="#_whats_in_this_directory"></a>What&#8217;s In This Directory</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
@@ -308,7 +281,7 @@ llama stack run 00-setup/llama-stack-config/run.yaml</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>run.yaml</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Standalone server config for local <code>llama stack run</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Server configuration (embedded in ConfigMap for RHOAI deployment)</p></td>
 </tr>
 </tbody>
 </table>

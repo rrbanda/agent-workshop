@@ -285,8 +285,8 @@ In an <strong>instructor-led workshop</strong>, your instructor provides the rem
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LLAMA_STACK_BASE_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Llama Stack server URL</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:8321" class="bare">http://localhost:8321</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Llama Stack server URL (pre-deployed on RHOAI)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provided by instructor or <code>oc get route</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LLAMA_STACK_API_KEY</code></p></td>
@@ -550,7 +550,7 @@ In an <strong>instructor-led workshop</strong>, your instructor provides the rem
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RuntimeError: No response available</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Your Llama Stack is remote but MCP servers are on <code>localhost</code>. Remote Llama Stack cannot reach your local machine. Deploy MCP remotely or run Llama Stack locally. See <a href="00-setup.html#_deployment_scenarios" class="page">Deployment Scenarios</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MCP servers are on <code>localhost</code> but Llama Stack is on RHOAI. The Llama Stack server cannot reach your local machine. Deploy MCP servers on OpenShift. See <a href="00-setup.html#_deployment_scenarios" class="page">Deployment Scenarios</a>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Connection refused</code> on Llama Stack</p></td>
@@ -558,7 +558,7 @@ In an <strong>instructor-led workshop</strong>, your instructor provides the rem
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LLAMA_STACK_BASE_URL not set</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Copy <code>.env.example</code> to <code>.env</code> and set <code>LLAMA_STACK_BASE_URL</code> to your server URL (local or remote)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Copy <code>.env.example</code> to <code>.env</code> and set <code>LLAMA_STACK_BASE_URL</code> to the pre-deployed RHOAI server URL</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Empty tool lists</p></td>
