@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Llama Stack Server Setup (Admin Guide) :: ACME Agent Workshop</title>
+    <title>Llama Stack Server Setup (Admin Reference) :: ACME Agent Workshop</title>
     <link rel="canonical" href="https://rrbanda.github.io/agent-workshop/acme-agent-workshop/v1.0/llama-stack-admin.html">
     <link rel="prev" href="00-setup.html">
     <link rel="next" href="01-backend-apis.html">
@@ -152,91 +152,25 @@
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Llama Stack Server Setup (Admin Guide)</h1>
+<h1 class="page">Llama Stack Server Setup (Admin Reference)</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Deploy a Llama Stack server with all capabilities the ACME Agent Workshop requires.</p>
+<p>The Llama Stack server is <strong>pre-deployed on RHOAI</strong> (OpenShift AI) with all required models and capabilities. Workshop participants do not need to deploy or configure Llama Stack&#8201;&#8212;&#8201;they only need the server URL.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<h2 id="_get_the_server_url"><a class="anchor" href="#_get_the_server_url"></a>Get the Server URL</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>OpenShift cluster with <strong>RHOAI operator</strong> installed (includes the Llama Stack K8s operator)</p>
-</li>
-<li>
-<p>A <strong>MaaS / vLLM inference endpoint</strong> accessible from the cluster (provides models like <code>gpt-oss-120b</code>)</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_deploy_on_openshift_2_commands"><a class="anchor" href="#_deploy_on_openshift_2_commands"></a>Deploy on OpenShift (2 commands)</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_1_edit_the_distribution_yaml"><a class="anchor" href="#_1_edit_the_distribution_yaml"></a>1. Edit the distribution YAML</h3>
-<div class="paragraph">
-<p>Set your MaaS token in <code>llamastack-distribution.yaml</code> (the MaaS URL is pre-configured):</p>
-</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">- name: VLLM_API_URL
-  value: "https://litellm-prod.apps.maas.redhatworkshops.io/v1"
-- name: VLLM_API_TOKEN
-  value: "your-api-token"   # &lt;-- set your MaaS API key here</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_2_apply_both_files"><a class="anchor" href="#_2_apply_both_files"></a>2. Apply both files</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f 00-setup/llama-stack-config/llamastack-configmap.yaml
-oc apply -f 00-setup/llama-stack-config/llamastack-distribution.yaml</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_3_wait_for_the_pod"><a class="anchor" href="#_3_wait_for_the_pod"></a>3. Wait for the pod</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pods -w -l llamastack.io/distribution=llamastack-acme-workshop</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_4_create_a_route_and_get_the_url"><a class="anchor" href="#_4_create_a_route_and_get_the_url"></a>4. Create a route and get the URL</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc create route edge llamastack --service=llamastack-acme-workshop-service --port=8321
-LLAMA_STACK_URL=https://$(oc get route llamastack -o jsonpath='{.spec.host}')
-echo $LLAMA_STACK_URL</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_5_verify"><a class="anchor" href="#_5_verify"></a>5. Verify</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl -s "$LLAMA_STACK_URL/v1/models" | python3 -m json.tool</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_6_set_the_url_in_env"><a class="anchor" href="#_6_set_the_url_in_env"></a>6. Set the URL in <code>.env</code></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">LLAMA_STACK_BASE_URL=https://llamastack-....apps.your-cluster.com</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">LLAMA_STACK_BASE_URL=https://$(oc get route llamastack -o jsonpath='{.spec.host}')
+echo $LLAMA_STACK_BASE_URL</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>That&#8217;s it. The Llama Stack pod connects to your MaaS endpoint for LLM inference and runs embedding, vector store, agents, safety, eval, and tool runtime inline.</p>
-</div>
+<p>Set this URL in your <code>.env</code> file. Your instructor will provide this if you are in an instructor-led workshop.</p>
 </div>
 </div>
 </div>
@@ -259,6 +193,9 @@ echo $LLAMA_STACK_URL</code></pre>
 <div class="sect1">
 <h2 id="_whats_in_this_directory"><a class="anchor" href="#_whats_in_this_directory"></a>What&#8217;s In This Directory</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>These files are the RHOAI deployment artifacts used to set up the Llama Stack server. They are kept here for reference&#8201;&#8212;&#8201;the server is already deployed and running.</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -273,15 +210,15 @@ echo $LLAMA_STACK_URL</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>llamastack-configmap.yaml</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ConfigMap containing the full <code>run.yaml</code> (apply this first)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ConfigMap containing the server configuration</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>llamastack-distribution.yaml</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">RHOAI CRD that creates the Llama Stack pod (apply this second)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RHOAI CRD that creates the Llama Stack pod</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>run.yaml</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Server configuration (embedded in ConfigMap for RHOAI deployment)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Server configuration (embedded in the ConfigMap)</p></td>
 </tr>
 </tbody>
 </table>
@@ -498,20 +435,16 @@ echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonp
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Pod in CrashLoopBackOff</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Check logs: <code>oc logs -l llamastack.io/distribution=llamastack-acme-workshop</code>. Usually a bad <code>VLLM_API_URL</code> or token.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>curl</code> returns connection error</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify the route exists: <code>oc get route llamastack</code>. If the server was recently restarted, wait for <code>1/1 Running</code> in <code>oc get pods</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Models list empty</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The vLLM provider auto-discovers models. Verify your MaaS has models: <code>curl -H "Authorization: Bearer $TOKEN" $VLLM_API_URL/models</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Check the Llama Stack pod logs: <code>oc logs -l llamastack.io/distribution=llamastack-acme-workshop</code>. The vLLM provider auto-discovers models from the MaaS endpoint.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Embedding model missing</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If using <code>sentence-transformers</code>: pod needs internet access, downloads on first use (~1-2 min). If using <code>vllm-embedding</code>: verify the vLLM embedding endpoint is accessible and supports the <code>dimensions</code> parameter (may need <code>--hf-overrides</code> for matryoshka models).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Route returns 503</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Pod still starting. Wait for <code>1/1 Running</code> in <code>oc get pods</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>verify_llama_stack.py</code> fails on embedding</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify the embedding model is registered: <code>curl $LLAMA_STACK_BASE_URL/v1/models</code>. If using vLLM-hosted embedding, ensure the endpoint supports the <code>dimensions</code> parameter.</p></td>
 </tr>
 </tbody>
 </table>
