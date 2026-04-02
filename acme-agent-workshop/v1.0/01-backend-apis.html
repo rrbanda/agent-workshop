@@ -161,7 +161,7 @@
 <p>Understand the ACME domain model (Customer and Finance)</p>
 </li>
 <li>
-<p>Deploy or connect to the Spring Boot REST APIs</p>
+<p>Build and deploy the Spring Boot REST APIs to OpenShift</p>
 </li>
 <li>
 <p>Explore the API endpoints</p>
@@ -189,6 +189,9 @@
 <ul>
 <li>
 <p><a href="00-setup.html" class="page">Module 00: Environment Setup</a> completed</p>
+</li>
+<li>
+<p>Access to an OpenShift cluster (logged in via <code>oc</code>)</p>
 </li>
 </ul>
 </div>
@@ -299,14 +302,56 @@
 <div class="sect1">
 <h2 id="_step_by_step"><a class="anchor" href="#_step_by_step"></a>Step-by-Step</h2>
 <div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>Working directory:</strong> All commands in this module run from the <strong>repo root</strong> (<code>agent-workshop/</code>).
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
-<p>Choose the path that matches your deployment:</p>
+<p>Since Llama Stack runs on RHOAI, the backend APIs must also be deployed on OpenShift so MCP servers can reach them.</p>
 </div>
 <div class="sect2">
-<h3 id="_option_a_use_pre_deployed_apis_on_openshift_recommended"><a class="anchor" href="#_option_a_use_pre_deployed_apis_on_openshift_recommended"></a>Option A: Use Pre-Deployed APIs on OpenShift (Recommended)</h3>
-<div class="paragraph">
-<p>If your instructor has deployed the backend APIs on OpenShift (or you deployed them yourself using the Helm chart in <code>site/13-deployment/helm/acme-app/</code>), get the route URLs:</p>
+<h3 id="_1_build_the_customer_api"><a class="anchor" href="#_1_build_the_customer_api"></a>1. Build the Customer API</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc new-build --binary --strategy=docker --name=customer-api
+cp 01-backend-apis/customer-api/deployment/Dockerfile 01-backend-apis/customer-api/Dockerfile
+oc start-build customer-api --from-dir=01-backend-apis/customer-api/ --follow
+rm 01-backend-apis/customer-api/Dockerfile</code></pre>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_build_the_finance_api"><a class="anchor" href="#_2_build_the_finance_api"></a>2. Build the Finance API</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc new-build --binary --strategy=docker --name=finance-api
+cp 01-backend-apis/finance-api/deployment/Dockerfile 01-backend-apis/finance-api/Dockerfile
+oc start-build finance-api --from-dir=01-backend-apis/finance-api/ --follow
+rm 01-backend-apis/finance-api/Dockerfile</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_deploy_to_openshift"><a class="anchor" href="#_3_deploy_to_openshift"></a>3. Deploy to OpenShift</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f 00-setup/admin/k8s/apis.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This creates Deployments, Services, PostgreSQL instances, and Routes for both APIs. The databases are auto-populated with seed data on startup.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_4_get_the_route_urls"><a class="anchor" href="#_4_get_the_route_urls"></a>4. Get the Route URLs</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "CUSTOMER_API_BASE_URL=https://$(oc get route acme-customer-service -o jsonpath='{.spec.host}')"
@@ -314,64 +359,20 @@ echo "FINANCE_API_BASE_URL=https://$(oc get route acme-finance-service -o jsonpa
 </div>
 </div>
 <div class="paragraph">
-<p>Set these in your <code>.env</code> file and skip to <a href="#_verification">Verification</a>.</p>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<strong>Instructor-led?</strong> Your instructor will provide these URLs. Just paste them into your <code>.env</code>.
-</td>
-</tr>
-</table>
+<p>Set these in your <code>.env</code> file.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_option_b_run_locally"><a class="anchor" href="#_option_b_run_locally"></a>Option B: Run Locally</h3>
-<div class="paragraph">
-<p>Requires PostgreSQL running locally with <code>acme_customer</code> and <code>acme_finance</code> databases (see <a href="00-setup.html#_4_postgresql_databases" class="page">Module 00 PostgreSQL setup</a>).</p>
-</div>
-<div class="sect3">
-<h4 id="_1_build_and_run_customer_api"><a class="anchor" href="#_1_build_and_run_customer_api"></a>1. Build and Run Customer API</h4>
-<div class="paragraph">
-<p>In a dedicated terminal (from the repo root):</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd 01-backend-apis/customer-api
-mvn clean package -DskipTests
-mvn spring-boot:run</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_2_build_and_run_finance_api"><a class="anchor" href="#_2_build_and_run_finance_api"></a>2. Build and Run Finance API</h4>
-<div class="paragraph">
-<p>In a second terminal (from the repo root):</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd 01-backend-apis/finance-api
-mvn clean package -DskipTests
-mvn spring-boot:run</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_3_explore_the_apis"><a class="anchor" href="#_3_explore_the_apis"></a>3. Explore the APIs</h4>
+<h3 id="_5_explore_the_apis"><a class="anchor" href="#_5_explore_the_apis"></a>5. Explore the APIs</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>Customer Swagger: <a href="http://localhost:8081/swagger-ui.html" class="bare">http://localhost:8081/swagger-ui.html</a></p>
+<p>Customer Swagger: <code><a href="https://&lt;customer-route&gt;/swagger-ui.html" class="bare">https://&lt;customer-route&gt;/swagger-ui.html</a></code></p>
 </li>
 <li>
-<p>Finance Swagger: <a href="http://localhost:8082/swagger-ui.html" class="bare">http://localhost:8082/swagger-ui.html</a></p>
+<p>Finance Swagger: <code><a href="https://&lt;finance-route&gt;/swagger-ui.html" class="bare">https://&lt;finance-route&gt;/swagger-ui.html</a></code></p>
 </li>
 </ul>
-</div>
 </div>
 </div>
 </div>
