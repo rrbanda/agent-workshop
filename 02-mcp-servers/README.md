@@ -67,9 +67,12 @@ oc start-build finance-mcp --from-dir=02-mcp-servers/finance-mcp/ --follow
 ### 3. Deploy to OpenShift
 
 ```bash
-oc apply -f 02-mcp-servers/openshift/customer-mcp.yaml
-oc apply -f 02-mcp-servers/openshift/finance-mcp.yaml
+sed "s/NAMESPACE/$(oc project -q)/g" 02-mcp-servers/openshift/customer-mcp.yaml | oc apply -f -
+sed "s/NAMESPACE/$(oc project -q)/g" 02-mcp-servers/openshift/finance-mcp.yaml | oc apply -f -
 ```
+
+> [!NOTE]
+> The manifests contain a `NAMESPACE` placeholder in the image references. The `sed` command replaces it with your current OpenShift project name before applying.
 
 ### 4. Get the Route URLs
 

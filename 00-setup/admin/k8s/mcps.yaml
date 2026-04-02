@@ -1,6 +1,7 @@
 # ACME MCP Servers: Customer, Finance, Mortgage
 # Images are built via oc new-build and stored in the internal registry.
-# The NAMESPACE placeholder is replaced at deploy time by deploy.sh.
+# The NAMESPACE placeholder must be replaced with your OpenShift project name:
+#   sed "s/NAMESPACE/$(oc project -q)/g" 00-setup/admin/k8s/mcps.yaml | oc apply -f -
 ---
 apiVersion: apps/v1
 kind: Deployment

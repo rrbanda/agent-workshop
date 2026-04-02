@@ -8,8 +8,8 @@
 #        oc new-build --binary --strategy=docker --name=customer-mcp
 #        oc start-build customer-mcp --from-dir=02-mcp-servers/customer-mcp/ --follow
 #
-# Usage:
-#   oc apply -f 02-mcp-servers/openshift/customer-mcp.yaml
+# Usage (replace NAMESPACE with your OpenShift project name):
+#   sed "s/NAMESPACE/$(oc project -q)/g" 02-mcp-servers/openshift/customer-mcp.yaml | oc apply -f -
 #   oc get route mcp-customer-route -o jsonpath='https://{.spec.host}/mcp'
 ---
 apiVersion: apps/v1
@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: mcp-server
-        image: image-registry.openshift-image-registry.svc:5000/acme-workshop/customer-mcp:latest
+        image: image-registry.openshift-image-registry.svc:5000/NAMESPACE/customer-mcp:latest
         imagePullPolicy: Always
         env:
         - name: CUSTOMER_API_BASE_URL

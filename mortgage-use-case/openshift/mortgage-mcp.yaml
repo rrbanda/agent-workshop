@@ -8,8 +8,8 @@
 #        oc new-build --binary --strategy=docker --name=mortgage-mcp
 #        oc start-build mortgage-mcp --from-dir=mortgage-use-case/mortgage-mcp/ --follow
 #
-# Usage:
-#   oc apply -f mortgage-use-case/openshift/mortgage-mcp.yaml
+# Usage (replace NAMESPACE with your OpenShift project name):
+#   sed "s/NAMESPACE/$(oc project -q)/g" mortgage-use-case/openshift/mortgage-mcp.yaml | oc apply -f -
 #   oc get route mcp-mortgage-route -o jsonpath='https://{.spec.host}/mcp'
 ---
 apiVersion: apps/v1
@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: mcp-server
-        image: image-registry.openshift-image-registry.svc:5000/acme-workshop/mortgage-mcp:latest
+        image: image-registry.openshift-image-registry.svc:5000/NAMESPACE/mortgage-mcp:latest
         imagePullPolicy: Always
         env:
         - name: MORTGAGE_API_BASE_URL

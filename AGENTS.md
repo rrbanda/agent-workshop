@@ -31,7 +31,7 @@ cp 01-backend-apis/finance-api/deployment/Dockerfile 01-backend-apis/finance-api
 oc start-build finance-api --from-dir=01-backend-apis/finance-api/ --follow
 rm 01-backend-apis/finance-api/Dockerfile
 
-oc apply -f 00-setup/admin/k8s/apis.yaml
+sed "s/NAMESPACE/$(oc project -q)/g" 00-setup/admin/k8s/apis.yaml | oc apply -f -
 ```
 
 ### MCP Servers (Module 02) -- Build & Deploy to OpenShift
@@ -42,8 +42,8 @@ oc start-build customer-mcp --from-dir=02-mcp-servers/customer-mcp/ --follow
 oc new-build --binary --strategy=docker --name=finance-mcp
 oc start-build finance-mcp --from-dir=02-mcp-servers/finance-mcp/ --follow
 
-oc apply -f 02-mcp-servers/openshift/customer-mcp.yaml
-oc apply -f 02-mcp-servers/openshift/finance-mcp.yaml
+sed "s/NAMESPACE/$(oc project -q)/g" 02-mcp-servers/openshift/customer-mcp.yaml | oc apply -f -
+sed "s/NAMESPACE/$(oc project -q)/g" 02-mcp-servers/openshift/finance-mcp.yaml | oc apply -f -
 ```
 
 ### Llama Stack Server

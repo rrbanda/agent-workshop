@@ -236,10 +236,10 @@ rm mortgage-use-case/mortgage-api/Dockerfile
 ### 2. Deploy to OpenShift
 
 ```bash
-oc apply -f 00-setup/admin/k8s/apis.yaml
+sed "s/NAMESPACE/$(oc project -q)/g" 00-setup/admin/k8s/apis.yaml | oc apply -f -
 ```
 
-This is the same manifest you applied in Module 01. It covers all three APIs (Customer, Finance, and Mortgage). Re-applying it is safe -- Kubernetes will only create or update resources that changed. The Mortgage API's PostgreSQL database is auto-populated with seed data on startup (4 applications, 12 documents, 4 conditions, 6 credit reports).
+This is the same manifest you applied in Module 01 (with the `NAMESPACE` placeholder replaced by your current project). It covers all three APIs (Customer, Finance, and Mortgage). Re-applying it is safe -- Kubernetes will only create or update resources that changed. The Mortgage API's PostgreSQL database is auto-populated with seed data on startup (4 applications, 12 documents, 4 conditions, 6 credit reports).
 
 > [!TIP]
 > **Recognize the pattern:** This API follows the same Spring Boot structure you deployed in Module 01. Compare `mortgage-api/src/` with `customer-api/src/` -- same entity/repository/service/controller layers, same `data.sql` seed data approach.
@@ -262,7 +262,7 @@ Only needed if you want to experiment with MCP-based tools instead of client-sid
 ```bash
 oc new-build --binary --strategy=docker --name=mortgage-mcp
 oc start-build mortgage-mcp --from-dir=mortgage-use-case/mortgage-mcp/ --follow
-oc apply -f mortgage-use-case/openshift/mortgage-mcp.yaml
+sed "s/NAMESPACE/$(oc project -q)/g" mortgage-use-case/openshift/mortgage-mcp.yaml | oc apply -f -
 echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonpath='{.spec.host}')/mcp"
 ```
 

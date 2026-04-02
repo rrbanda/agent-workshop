@@ -78,8 +78,10 @@ rm 01-backend-apis/finance-api/Dockerfile
 ### 3. Deploy to OpenShift
 
 ```bash
-oc apply -f 00-setup/admin/k8s/apis.yaml
+sed "s/NAMESPACE/$(oc project -q)/g" 00-setup/admin/k8s/apis.yaml | oc apply -f -
 ```
+
+The manifest contains a `NAMESPACE` placeholder in the image references. The `sed` command above replaces it with your current OpenShift project name before applying.
 
 This creates Deployments, Services, PostgreSQL instances, and Routes for the Customer and Finance APIs. Each API gets its own PostgreSQL database that is auto-populated with seed data on startup. (This same manifest also includes the Mortgage API used in the capstone -- it is safe to apply now.)
 
