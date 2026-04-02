@@ -129,9 +129,8 @@ pip install -r requirements.txt
 
 # 3. Configure environment
 cp .env.example .env
-# Edit .env -- set LLAMA_STACK_BASE_URL to your Llama Stack server
-# Instructor-led workshop? Uncomment the "Remote" lines and use URLs from your instructor
-# Self-paced / local? Use the localhost defaults, or: uv run --with llama-stack llama stack run starter
+# Edit .env -- set LLAMA_STACK_BASE_URL to the pre-deployed RHOAI server URL
+# provided by your instructor or from: oc get route llamastack -o jsonpath='https://{.spec.host}'
 
 # 4. Verify Llama Stack connectivity
 source .env
@@ -147,7 +146,7 @@ createdb acme_mortgage    # for the capstone
 ```
 
 > [!NOTE]
-> **Llama Stack server required.** You need access to a Llama Stack server with an inference model and an embedding model registered. For detailed setup instructions (tool versions, verification), see [00-setup](00-setup/).
+> **Llama Stack server required.** The Llama Stack server is pre-deployed on RHOAI (OpenShift AI) with all required models. Set `LLAMA_STACK_BASE_URL` in your `.env` to the server URL. For detailed setup instructions (tool versions, verification), see [00-setup](00-setup/).
 
 ---
 
@@ -183,7 +182,7 @@ createdb acme_mortgage    # for the capstone
 | Java | 21+ | Backend Spring Boot APIs |
 | Maven | 3.8+ | Java build tool |
 | PostgreSQL | 15+ | Database for Customer, Finance, Mortgage APIs |
-| Llama Stack server | Any | Provides inference, embedding, and safety models (local or remote) |
+| Llama Stack server | Any | Pre-deployed on RHOAI -- provides inference, embedding, and safety models |
 
 ---
 
@@ -225,7 +224,7 @@ All modules share a single `.env` file at the repo root. See [.env.example](.env
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `LLAMA_STACK_BASE_URL` | Llama Stack server URL | `http://localhost:8321` |
+| `LLAMA_STACK_BASE_URL` | Llama Stack server URL (pre-deployed on RHOAI) | From instructor or `oc get route` |
 | `LLAMA_STACK_API_KEY` | API key for Llama Stack (use `fake` if none required) | `fake` |
 | `INFERENCE_MODEL` | LLM model identifier | `vllm-inference/gpt-oss-120b` |
 | `CUSTOMER_API_BASE_URL` | Customer REST API | `http://localhost:8081` |
@@ -263,7 +262,7 @@ All modules share a single `.env` file at the repo root. See [.env.example](.env
 | `Connection refused` on Llama Stack | Verify the server is running: `source .env && curl $LLAMA_STACK_BASE_URL/v1/models` |
 | Empty tool lists | Ensure MCP servers are running on their expected ports. If Llama Stack is remote, MCP servers must also be deployed remotely -- `localhost` MCP URLs are not reachable from a remote server. |
 | MCP tools fail with remote Llama Stack | MCP server URLs must be reachable *from the Llama Stack server*, not just from your laptop. Deploy MCP servers on the same cluster or expose them via public routes. |
-| `LLAMA_STACK_BASE_URL not set` | Copy `.env.example` to `.env` and set `LLAMA_STACK_BASE_URL` to your server URL (local or remote) |
+| `LLAMA_STACK_BASE_URL not set` | Copy `.env.example` to `.env` and set `LLAMA_STACK_BASE_URL` to the pre-deployed RHOAI server URL |
 | Model not found | Check `INFERENCE_MODEL` matches a model on your Llama Stack server (`curl $LLAMA_STACK_BASE_URL/v1/models`) |
 | `429 Too Many Requests` / rate limiting | MaaS backend has rate limits. Wait 30-60 seconds and retry. Eval scripts include built-in retry logic. |
 | Database errors (Linux) | Set postgres password: `sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"` and check `pg_hba.conf` |

@@ -151,8 +151,7 @@ pip install -r requirements.txt
 
 # 3. Configure environment
 cp .env.example .env
-# Edit .env -- set LLAMA_STACK_BASE_URL to your Llama Stack server
-# (If running locally: uv run --with llama-stack llama stack run starter)
+# Edit .env -- set LLAMA_STACK_BASE_URL to the pre-deployed RHOAI server URL
 
 # 4. Verify Llama Stack connectivity
 source .env
@@ -167,7 +166,7 @@ createdb acme_mortgage    # for the capstone
 # Follow the modules in order, starting with Module 00: Environment Setup
 ----
 
-NOTE: *Llama Stack server required.* You need access to a Llama Stack server with an inference model and an embedding model registered. See xref:00-setup.adoc[Module 00] for details.
+NOTE: *Llama Stack server required.* The Llama Stack server is pre-deployed on RHOAI (OpenShift AI) with all required models. Set `LLAMA_STACK_BASE_URL` in your `.env` to the server URL. See xref:00-setup.adoc[Module 00] for details.
 
 '''
 

@@ -73,27 +73,6 @@ python 00-setup/verify_llama_stack.py
 
 All 6 checks should pass before starting the workshop. See xref:00-setup.adoc#_deep_verification_optional[Deep Verification] for sample output.
 
-== Alternative: Run Locally
-
-If you don't have OpenShift, you can run Llama Stack locally using the standalone `run.yaml`:
-
-[source,bash]
-----
-export VLLM_API_URL=https://your-vllm-endpoint/v1
-export VLLM_API_TOKEN=your-token
-pip install llama-stack
-llama stack run 00-setup/llama-stack-config/run.yaml
-----
-
-Or use the simplest path with Ollama:
-
-[source,bash]
-----
-uv run --with llama-stack llama stack run starter --image-type venv
-----
-
-Then set `LLAMA_STACK_BASE_URL=http://localhost:{llama-stack-port}` in your `.env`.
-
 == What's In This Directory
 
 [cols="2,4", options="header"]
@@ -108,7 +87,7 @@ Then set `LLAMA_STACK_BASE_URL=http://localhost:{llama-stack-port}` in your `.en
 |RHOAI CRD that creates the Llama Stack pod (apply this second)
 
 |`run.yaml`
-|Standalone server config for local `llama stack run`
+|Server configuration (embedded in ConfigMap for RHOAI deployment)
 |===
 
 == What the Server Provides

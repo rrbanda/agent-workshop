@@ -8,10 +8,9 @@
 #     -- add a faiss provider or update the scripts if needed)
 #   - Agents, Safety, Eval, Scoring, Files, Datasets, Tool Runtime
 #
-# Usage:
-#   export VLLM_API_URL=https://your-vllm-endpoint/v1
-#   export VLLM_API_TOKEN=your-token
-#   llama stack run /path/to/run.yaml
+# Deployment:
+#   This config is deployed via llamastack-configmap.yaml on RHOAI (OpenShift AI).
+#   See the README in this directory for RHOAI deployment instructions.
 #
 # Environment variables used:
 #   VLLM_API_URL   - vLLM / MaaS inference endpoint (required)
