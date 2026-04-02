@@ -1,57 +1,15 @@
-# Llama Stack Server Setup
+# Llama Stack Server Setup (Admin Reference)
 
-Deploy a Llama Stack server with all capabilities the ACME Agent Workshop requires.
+The Llama Stack server is **pre-deployed on RHOAI** (OpenShift AI) with all required models and capabilities. Workshop participants do not need to deploy or configure Llama Stack -- they only need the server URL.
 
-## Prerequisites
+## Get the Server URL
 
-- OpenShift cluster with **RHOAI operator** installed (includes the Llama Stack K8s operator)
-- A **MaaS / vLLM inference endpoint** accessible from the cluster (provides models like `gpt-oss-120b`)
+```bash
+LLAMA_STACK_BASE_URL=https://$(oc get route llamastack -o jsonpath='{.spec.host}')
+echo $LLAMA_STACK_BASE_URL
+```
 
-## Deploy on OpenShift (2 commands)
-
-1. Edit `llamastack-distribution.yaml` -- set your MaaS endpoint:
-
-   ```yaml
-   - name: VLLM_API_URL
-     value: "https://your-maas-endpoint/v1"   # <-- your MaaS URL
-   - name: VLLM_API_TOKEN
-     value: "your-api-token"                   # <-- your MaaS token
-   ```
-
-2. Apply both files:
-
-   ```bash
-   oc apply -f llamastack-configmap.yaml
-   oc apply -f llamastack-distribution.yaml
-   ```
-
-3. Wait for the pod:
-
-   ```bash
-   oc get pods -w -l llamastack.io/distribution=llamastack-acme-workshop
-   ```
-
-4. Create a route and get the URL:
-
-   ```bash
-   oc create route edge llamastack --service=llamastack-acme-workshop-service --port=8321
-   LLAMA_STACK_URL=https://$(oc get route llamastack -o jsonpath='{.spec.host}')
-   echo $LLAMA_STACK_URL
-   ```
-
-5. Verify:
-
-   ```bash
-   curl -s "$LLAMA_STACK_URL/v1/models" | python3 -m json.tool
-   ```
-
-6. Set `LLAMA_STACK_BASE_URL` in your `.env`:
-
-   ```
-   LLAMA_STACK_BASE_URL=https://llamastack-....apps.your-cluster.com
-   ```
-
-That's it. The Llama Stack pod connects to your MaaS endpoint for LLM inference and runs vector store, agents, eval, and tool runtime inline. Embedding runs either inline (sentence-transformers) or via a remote vLLM embedding endpoint, depending on your configuration.
+Set this URL in your `.env` file. Your instructor will provide this if you are in an instructor-led workshop.
 
 ## Verify All Capabilities
 
@@ -65,11 +23,13 @@ All 6 checks should pass before starting the workshop.
 
 ## What's In This Directory
 
+These files are the RHOAI deployment artifacts used to set up the Llama Stack server. They are kept here for reference -- the server is already deployed and running.
+
 | File | Description |
 |---|---|
-| `llamastack-configmap.yaml` | ConfigMap containing the full `run.yaml` (apply this first) |
-| `llamastack-distribution.yaml` | RHOAI CRD that creates the Llama Stack pod (apply this second) |
-| `run.yaml` | Server configuration (embedded in ConfigMap for RHOAI deployment) |
+| `llamastack-configmap.yaml` | ConfigMap containing the server configuration |
+| `llamastack-distribution.yaml` | RHOAI CRD that creates the Llama Stack pod |
+| `run.yaml` | Server configuration (embedded in the ConfigMap) |
 
 ## What the Server Provides
 
@@ -88,7 +48,6 @@ All 6 checks should pass before starting the workshop.
 
 | Problem | Solution |
 |---|---|
-| Pod in CrashLoopBackOff | Check logs: `oc logs -l llamastack.io/distribution=llamastack-acme-workshop`. Usually a bad `VLLM_API_URL` or token. |
-| Models list empty | The vLLM provider auto-discovers models. Verify your MaaS has models: `curl -H "Authorization: Bearer $TOKEN" $VLLM_API_URL/models` |
-| Embedding model missing | If using `sentence-transformers`: pod needs internet access, downloads on first use (~1-2 min). If using `vllm-embedding`: verify the vLLM embedding endpoint is accessible and supports the `dimensions` parameter (may need `--hf-overrides` for matryoshka models). |
-| Route returns 503 | Pod still starting. Wait for `1/1 Running` in `oc get pods`. |
+| `curl` returns connection error | Verify the route exists: `oc get route llamastack`. If the server was recently restarted, wait for `1/1 Running` in `oc get pods`. |
+| Models list empty | Check the Llama Stack pod logs: `oc logs -l llamastack.io/distribution=llamastack-acme-workshop`. The vLLM provider auto-discovers models from the MaaS endpoint. |
+| `verify_llama_stack.py` fails on embedding | Verify the embedding model is registered: `curl $LLAMA_STACK_BASE_URL/v1/models`. If using vLLM-hosted embedding, ensure the endpoint supports the `dimensions` parameter. |

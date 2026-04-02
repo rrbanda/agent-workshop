@@ -26,7 +26,7 @@ None -- this is the starting point.
 You also need access to a **Llama Stack server** with at least an inference model and an embedding model registered. The Llama Stack server is pre-deployed on RHOAI (OpenShift AI) with all required models. Set `LLAMA_STACK_BASE_URL` in your `.env` to the server URL provided by your instructor or team.
 
 > [!TIP]
-> **For admins deploying a Llama Stack server:** See [llama-stack-config/](./llama-stack-config/) for RHOAI deployment instructions, the server configuration, and an OpenShift CRD template.
+> **Admin reference:** The RHOAI deployment artifacts (ConfigMap, CRD, server config) are in [llama-stack-config/](./llama-stack-config/) for reference. The Llama Stack server is already deployed and running.
 
 > [!NOTE]
 > **Working directory:** All commands in this module run from the **repo root** (`agent-workshop/`).

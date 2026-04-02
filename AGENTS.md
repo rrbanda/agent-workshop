@@ -5,7 +5,7 @@
 This is a progressive workshop organized into numbered modules:
 
 - `00-setup/`: Environment setup guide
-  - `llama-stack-config/`: Admin reference -- Llama Stack server config (run.yaml, RHOAI CRD, deployment guide)
+  - `llama-stack-config/`: Admin reference -- RHOAI deployment artifacts (ConfigMap, CRD, server config)
   - `verify_llama_stack.py`: Server readiness check (tests all 6 required capabilities)
 - `01-backend-apis/`: Spring Boot Customer and Finance APIs (Java 21, Maven, PostgreSQL)
 - `02-mcp-servers/`: Python MCP servers wrapping the backend APIs
@@ -32,7 +32,7 @@ python 02-mcp-servers/finance-mcp/finance-api-mcp-server.py
 ```
 
 ### Llama Stack Server
-The Llama Stack server is pre-deployed (OpenShift or instructor-provided). Set `LLAMA_STACK_BASE_URL` in `.env` to the server URL. For admin setup instructions, see `00-setup/llama-stack-config/`.
+The Llama Stack server is pre-deployed on RHOAI. Set `LLAMA_STACK_BASE_URL` in `.env` to the server URL provided by your instructor or from `oc get route llamastack`.
 
 ## Coding Style & Naming Conventions
 
