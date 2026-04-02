@@ -239,8 +239,8 @@ flowchart TD
 flowchart LR
     subgraph inputs [Agent Reads]
         RAG[Lending Policy via RAG]
-        Tools[Application Data via MCP Tools]
-        Credit[Credit Reports via MCP Tools]
+        Tools[Application Data via Client Tools]
+        Credit[Credit Reports via Client Tools]
     end
 
     subgraph reasoning [Agent Reasons]
@@ -272,7 +272,7 @@ flowchart LR
 <p><strong>Reads lending policy</strong> (via RAG) to know what documents are required and their acceptance criteria</p>
 </li>
 <li>
-<p><strong>Checks application status</strong> (via MCP tools) to see what conditions are outstanding</p>
+<p><strong>Checks application status</strong> (via client tools) to see what conditions are outstanding</p>
 </li>
 <li>
 <p><strong>Retrieves credit reports</strong> and analyzes scores, DTI, and debt against policy thresholds</p>
@@ -357,7 +357,7 @@ flowchart LR
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>2_mortgage_agent_basic.py</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Agent creation, MCP tool binding</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Agent creation, client tool binding</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Phase 2: check status</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Modules 03-04</p></td>
 </tr>
@@ -428,20 +428,21 @@ flowchart LR
 flowchart TD
     Agent[Mortgage Agent]
     LS["Llama Stack :8321"]
+    API["Mortgage API :8083"]
 
     Agent --> LS
+    Agent -->|"@client_tool\n(direct HTTP)"| API
 
-    subgraph capabilities [Agent Capabilities]
+    subgraph serverCapabilities [Llama Stack Capabilities]
         RAG["RAG - Lending Policy Vector Store"]
-        Safety["Safety Shields - Llama Guard"]
-        MCP["MCP Tools - mortgage-mcp :9003"]
+        Safety[Safety Shields]
+        Inference[LLM Inference]
     end
 
     LS --> RAG
     LS --> Safety
-    LS --> MCP
+    LS --> Inference
 
-    MCP --> API["Mortgage API :8083"]
     API --> DB[("PostgreSQL - acme_mortgage")]
 
     subgraph data [Database Tables]
@@ -488,7 +489,7 @@ flowchart TD
 <p><strong>Module 08</strong>&#8201;&#8212;&#8201;RAG (vector stores, file_search, hybrid search)</p>
 </li>
 <li>
-<p><strong>Module 09</strong>&#8201;&#8212;&#8201;Safety shields (Llama Guard registration, input/output checks)</p>
+<p><strong>Module 09</strong>&#8201;&#8212;&#8201;Safety shields (shield registration, input/output checks)</p>
 </li>
 <li>
 <p><strong>Module 10</strong>&#8201;&#8212;&#8201;Evaluations (datasets, scoring functions, benchmarks)</p>
@@ -665,10 +666,10 @@ PORT_FOR_MORTGAGE_MCP=9003</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>A simple agent with only MCP tools (no RAG). Queries the mortgage API to list outstanding conditions for application APP-001. This is the same pattern as Module 04&#8201;&#8212;&#8201;single-domain agent with tool calling.</p>
+<p>A simple agent with client-side tools (no RAG). Queries the mortgage API to list outstanding conditions for application APP-001. This uses <code>@client_tool</code> functions that call the Mortgage API directly via HTTP&#8201;&#8212;&#8201;the same agent patterns from Module 04, but with tools executed client-side instead of via MCP.</p>
 </div>
 <div class="paragraph">
-<p><strong>Concepts applied:</strong> Agent creation, MCP tool binding, tool calling (from Modules 03-04)</p>
+<p><strong>Concepts applied:</strong> Agent creation, client tool binding, tool calling (from Modules 03-04)</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -691,7 +692,7 @@ PORT_FOR_MORTGAGE_MCP=9003</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Adds RAG (<code>file_search</code>) alongside MCP tools. The agent can now:</p>
+<p>Adds RAG (<code>file_search</code>) alongside client tools. The agent can now:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -713,7 +714,7 @@ PORT_FOR_MORTGAGE_MCP=9003</code></pre>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<strong>Try it yourself:</strong> Write your own query that asks about VA loan document requirements. Does the agent use file_search, MCP tools, or both? Watch the tool calls in the output to see the agent&#8217;s reasoning.
+<strong>Try it yourself:</strong> Write your own query that asks about VA loan document requirements. Does the agent use file_search, client tools, or both? Watch the tool calls in the output to see the agent&#8217;s reasoning.
 </td>
 </tr>
 </table>
@@ -1135,7 +1136,7 @@ Requires <code>SHIELD_ID</code> in your <code>.env</code> (registered in Module 
 <h2 id="_whats_next"><a class="anchor" href="#_whats_next"></a>What&#8217;s Next</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You now have a complete agent stack: REST API, MCP tools, Agent with RAG, safety shields, and evaluation. Here are ways to extend this or apply it to your own domain.</p>
+<p>You now have a complete agent stack: REST API, client tools, Agent with RAG, safety shields, and evaluation. Here are ways to extend this or apply it to your own domain.</p>
 </div>
 <div class="sect2">
 <h3 id="_extend_the_mortgage_agent"><a class="anchor" href="#_extend_the_mortgage_agent"></a>Extend the mortgage agent</h3>
@@ -1206,8 +1207,8 @@ Requires <code>SHIELD_ID</code> in your <code>.env</code> (registered in Module 
 <td class="tableblock halign-left valign-top"><p class="tableblock">Verify PostgreSQL database <code>acme_mortgage</code> exists and API is running on port 8083</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">MCP tools not found</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Check <code>MORTGAGE_MCP_SERVER_URL</code> in <code>.env</code> and that the MCP server is running on port 9003</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tool calls fail</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify <code>MORTGAGE_API_BASE_URL</code> in <code>.env</code> points to a running Mortgage API. The capstone uses client-side tools that call the API directly (not via MCP).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Vector store creation fails</p></td>
@@ -1231,7 +1232,7 @@ Requires <code>SHIELD_ID</code> in your <code>.env</code> (registered in Module 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Shield doesn&#8217;t block unsafe input</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ensure the shield model (Llama Guard) is available on your Llama Stack server</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ensure the shield is registered (run Module 09, script <code>4_register_shield.py</code>) and <code>SHIELD_ID</code> is set in <code>.env</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Eval dataset registration fails (Step 8)</p></td>

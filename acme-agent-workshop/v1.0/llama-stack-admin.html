@@ -338,12 +338,12 @@ llama stack run 00-setup/llama-stack-config/run.yaml</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Embedding</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inline::sentence-transformers</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inline::sentence-transformers</code> (or <code>remote::vllm</code> for vLLM-hosted embedding)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="08-rag.html" class="page">08-rag</a>, <a href="mortgage-capstone.html" class="page">Capstone</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Vector Store</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inline::milvus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inline::milvus</code> (workshop scripts use <code>provider_id: "faiss"</code>&#8201;&#8212;&#8201;ensure your server has a matching provider)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="08-rag.html" class="page">08-rag</a>, <a href="mortgage-capstone.html" class="page">Capstone</a></p></td>
 </tr>
 <tr>
@@ -353,7 +353,7 @@ llama stack run 00-setup/llama-stack-config/run.yaml</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Safety</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inline::llama-guard</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inline::llama-guard</code> or <code>trustyai_fms</code> (see <a href="09-safety-shields.html" class="page">Module 09</a>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="09-safety-shields.html" class="page">09-safety-shields</a></p></td>
 </tr>
 <tr>
@@ -534,7 +534,7 @@ echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonp
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Embedding model missing</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>sentence-transformers</code> provider downloads on first use. Pod needs internet access; startup takes 1-2 min.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If using <code>sentence-transformers</code>: pod needs internet access, downloads on first use (~1-2 min). If using <code>vllm-embedding</code>: verify the vLLM embedding endpoint is accessible and supports the <code>dimensions</code> parameter (may need <code>--hf-overrides</code> for matryoshka models).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Route returns 503</p></td>

@@ -240,7 +240,7 @@
 <p><strong>RAG-Powered Agents</strong>&#8201;&#8212;&#8201;Agents that retrieve and reason over documents using vector stores</p>
 </li>
 <li>
-<p><strong>Safety-Guarded Agents</strong>&#8201;&#8212;&#8201;Content safety shields with Llama Guard for input and output filtering</p>
+<p><strong>Safety-Guarded Agents</strong>&#8201;&#8212;&#8201;Content safety shields for input and output filtering</p>
 </li>
 <li>
 <p><strong>Evaluation Pipelines</strong>&#8201;&#8212;&#8201;Automated scoring, benchmarks, and LLM-as-judge quality measurement</p>
@@ -334,7 +334,7 @@ flowchart TD
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">09</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="09-safety-shields.html" class="page">Safety Shields</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Register Llama Guard shields, input/output content safety</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Register safety shields, input/output content safety</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">20 min</p></td>
 </tr>
 <tr>
@@ -364,7 +364,7 @@ flowchart TD
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="mortgage-capstone.html" class="page">Mortgage Approval Agent</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">End-to-end agent combining MCP tools + RAG + multi-turn + HITL + safety shields + evaluation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">End-to-end agent combining client tools + RAG + multi-turn + HITL + safety shields + evaluation</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">90 min</p></td>
 </tr>
 </tbody>
@@ -500,6 +500,18 @@ createdb acme_mortgage    # for the capstone
                           │    PostgreSQL     │
                           └──────────────────┘</code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>Capstone architecture note:</strong> The capstone mortgage agent uses <strong>client-side tools</strong> (<code>@client_tool</code>) that call the Mortgage API directly from your machine, bypassing the MCP server. The Customer and Finance agents in Modules 03-05 use MCP tools via Llama Stack. See <code>mortgage_client_tools.py</code> for the client-tool implementation.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><strong>Tech stack:</strong> Python 3.12 | Java 21 + Spring Boot | PostgreSQL | Llama Stack | FastMCP</p>

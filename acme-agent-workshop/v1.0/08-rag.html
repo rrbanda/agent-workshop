@@ -299,6 +299,18 @@
 <div class="paragraph">
 <p>This creates a hybrid vector store, uploads the ACME HR benefits document, and chunks it with static chunking (100 tokens, 10 overlap).</p>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>Provider note:</strong> The script specifies <code>provider_id: "faiss"</code> for the vector store. If your Llama Stack server only has <code>milvus</code>, change the <code>provider_id</code> in <code>1_create_vector_store.py</code> (line 71) or add a <code>faiss</code> provider to your server config. When multiple <code>vector_io</code> providers exist, you must specify <code>provider_id</code> in <code>extra_body</code>.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_2_test_rag_queries"><a class="anchor" href="#_2_test_rag_queries"></a>2. Test RAG Queries</h3>

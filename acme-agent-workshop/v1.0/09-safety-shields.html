@@ -249,7 +249,7 @@ If your Llama Stack server has a <code>llama-guard</code> provider instead, set 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>4_register_shield.py</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Register a Llama Guard shield</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Register a safety shield</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5_test_shield.py</code></p></td>
@@ -383,8 +383,8 @@ User: My SSN is 123-45-6789 and my email is user@example.com. Can you help with 
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">"Shield model not found"</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Verify <code>SHIELD_MODEL</code> is registered on your Llama Stack server</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"Shield not found"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify <code>SHIELD_ID</code> matches a registered shield on your Llama Stack server (run <code>3_list_shields.py</code> to check)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">All inputs flagged as violations</p></td>

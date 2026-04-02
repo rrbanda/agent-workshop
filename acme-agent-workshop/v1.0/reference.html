@@ -194,8 +194,8 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="08-rag.html" class="page">Module 08</a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Llama Guard</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Safety classifier that detects harmful content in inputs and outputs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Safety Shields</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Content classifiers (TrustyAI Guardrails for PII detection, or Llama Guard for broader classification) that check inputs and outputs</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="09-safety-shields.html" class="page">Module 09</a></p></td>
 </tr>
 <tr>
@@ -410,14 +410,14 @@ In an <strong>instructor-led workshop</strong>, your instructor provides the rem
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SHIELD_MODEL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Model used by the Llama Guard safety provider</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vllm-inference/gpt-oss-120b</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SHIELD_PROVIDER</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Safety shield provider (<code>trustyai_fms</code> or <code>llama-guard</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustyai_fms</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>SHIELD_ID</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Shield identifier registered on Llama Stack</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>content_safety</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pii_detector</code></p></td>
 </tr>
 </tbody>
 </table>
