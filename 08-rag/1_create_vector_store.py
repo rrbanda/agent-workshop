@@ -62,13 +62,33 @@ except Exception as e:
     logger.error("Make sure Llama Stack server is running")
     sys.exit(1)
 
+# Auto-detect vector_io provider
+try:
+    providers = client.providers.list()
+    vec_providers = [p for p in providers if getattr(p, "api", None) == "vector_io"]
+    if len(vec_providers) == 1:
+        vector_provider_id = vec_providers[0].provider_id
+    else:
+        faiss_providers = [p for p in vec_providers if p.provider_id == "faiss"]
+        milvus_providers = [p for p in vec_providers if p.provider_id == "milvus"]
+        if faiss_providers:
+            vector_provider_id = "faiss"
+        elif milvus_providers:
+            vector_provider_id = "milvus"
+        else:
+            vector_provider_id = vec_providers[0].provider_id if vec_providers else "faiss"
+    logger.info(f"Using vector_io provider: {vector_provider_id}")
+except Exception as e:
+    logger.warning(f"Could not auto-detect vector_io provider, defaulting to faiss: {e}")
+    vector_provider_id = "faiss"
+
 # Create vector store with embedding model configuration and hybrid search
 try:
     logger.info("Creating vector store...")
     vs = client.vector_stores.create(
         name="hr-benefits-hybrid",
         extra_body={
-            "provider_id": "faiss",
+            "provider_id": vector_provider_id,
             "embedding_model": EMBEDDING_MODEL,
             "embedding_dimension": EMBEDDING_DIMENSION,
             "search_mode": "hybrid",

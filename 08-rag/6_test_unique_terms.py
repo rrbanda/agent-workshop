@@ -46,7 +46,12 @@ for query in queries:
     agent = Agent(
         client,
         model=INFERENCE_MODEL,
-        instructions="You MUST use the file_search tool. Provide ALL details found in the documents.",
+        instructions=(
+            "You MUST use the file_search tool to answer questions from the HR benefits document. "
+            "Only answer based on what is found in the document. If the document does not contain "
+            "relevant information, say so briefly. Keep responses concise -- a few sentences or "
+            "short bullet points. Do not generate long generic answers."
+        ),
         tools=[{"type": "file_search", "vector_store_ids": [vector_store.id]}],
     )
 

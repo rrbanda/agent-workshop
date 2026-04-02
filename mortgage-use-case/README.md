@@ -194,7 +194,7 @@ flowchart TD
 ```
 
 > [!NOTE]
-> The capstone uses **client-side tools** (`@client_tool` in `mortgage_client_tools.py`) that call the Mortgage API directly via HTTP from your machine. This differs from Modules 03-05, where MCP tools are proxied through Llama Stack. The agent still uses Llama Stack for inference, RAG, and safety.
+> **Why client-side tools?** The capstone uses `@client_tool` functions (in `mortgage_client_tools.py`) that call the Mortgage API directly via HTTP from your machine, rather than MCP tools proxied through Llama Stack. This avoids issues with streaming responses and parallel tool calls that can occur when Llama Stack proxies MCP calls. The agent still uses Llama Stack for inference, RAG, and safety -- only the tool execution happens client-side. In Modules 03-05, you used MCP tools via Llama Stack to learn that pattern; here, you learn the alternative `@client_tool` pattern.
 
 ## Prerequisites
 
@@ -239,7 +239,7 @@ rm mortgage-use-case/mortgage-api/Dockerfile
 oc apply -f 00-setup/admin/k8s/apis.yaml
 ```
 
-This creates the Deployment, Service, PostgreSQL instance, and Route for the Mortgage API. The database is auto-populated with seed data on startup (4 applications, 12 documents, 4 conditions, 6 credit reports).
+This is the same manifest you applied in Module 01. It covers all three APIs (Customer, Finance, and Mortgage). Re-applying it is safe -- Kubernetes will only create or update resources that changed. The Mortgage API's PostgreSQL database is auto-populated with seed data on startup (4 applications, 12 documents, 4 conditions, 6 credit reports).
 
 > [!TIP]
 > **Recognize the pattern:** This API follows the same Spring Boot structure you deployed in Module 01. Compare `mortgage-api/src/` with `customer-api/src/` -- same entity/repository/service/controller layers, same `data.sql` seed data approach.
@@ -404,7 +404,8 @@ Interactive session where you act as the underwriter. Try:
 python 7_mortgage_agent_with_safety.py
 ```
 
-> Requires `SHIELD_ID` in your `.env` (registered in Module 09).
+> [!IMPORTANT]
+> This step requires a safety shield to be actively registered on the Llama Stack server. If you completed Module 09 earlier, the shield should already be registered. If not (or if the server was restarted since then), re-run `python 09-safety-shields/4_register_shield.py` from the repo root before running this step. Also verify `SHIELD_ID` is set in your `.env`.
 
 Wraps the mortgage agent with input/output safety checks. Tests three queries:
 

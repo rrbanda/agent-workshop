@@ -21,6 +21,8 @@ An **agent with tools** is an LLM that can take action in the real world. When y
 
 ## Scripts
 
+Scripts use a global numbering scheme that continues from Module 03 (where scripts start at `1_*`).
+
 | Script | What It Does |
 |--------|--------------|
 | `4_agent_customer_mcp.py` | Agent with customer tools only |

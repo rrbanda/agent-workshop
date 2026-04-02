@@ -11,8 +11,7 @@
 
 ## Prerequisites
 
-- [Module 00: Environment Setup](../00-setup/) completed
-- Access to an OpenShift cluster (logged in via `oc`)
+- [Module 00: Environment Setup](../00-setup/) completed (Python venv active, `.env` configured, `oc login` done)
 
 ## Concepts
 
@@ -52,12 +51,17 @@ Since Llama Stack runs on RHOAI, the backend APIs must also be deployed on OpenS
 
 ### 1. Build the Customer API
 
+The build uses OpenShift binary builds with a multi-stage Dockerfile that compiles the Java source inside the container. The Dockerfile lives in `deployment/` and must be copied to the project root for the build context.
+
 ```bash
 oc new-build --binary --strategy=docker --name=customer-api
 cp 01-backend-apis/customer-api/deployment/Dockerfile 01-backend-apis/customer-api/Dockerfile
 oc start-build customer-api --from-dir=01-backend-apis/customer-api/ --follow
 rm 01-backend-apis/customer-api/Dockerfile
 ```
+
+> [!TIP]
+> If you see `"customer-api" already exists`, the build config was already created. You can skip `oc new-build` and just re-run the `cp`, `oc start-build`, and `rm` commands.
 
 ### 2. Build the Finance API
 
@@ -68,13 +72,16 @@ oc start-build finance-api --from-dir=01-backend-apis/finance-api/ --follow
 rm 01-backend-apis/finance-api/Dockerfile
 ```
 
+> [!TIP]
+> Same as above -- if `"finance-api" already exists`, skip `oc new-build` and re-run only the build.
+
 ### 3. Deploy to OpenShift
 
 ```bash
 oc apply -f 00-setup/admin/k8s/apis.yaml
 ```
 
-This creates Deployments, Services, PostgreSQL instances, and Routes for both APIs. The databases are auto-populated with seed data on startup.
+This creates Deployments, Services, PostgreSQL instances, and Routes for the Customer and Finance APIs. Each API gets its own PostgreSQL database that is auto-populated with seed data on startup. (This same manifest also includes the Mortgage API used in the capstone -- it is safe to apply now.)
 
 ### 4. Get the Route URLs
 

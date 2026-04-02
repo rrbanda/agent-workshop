@@ -36,6 +36,26 @@ print(f"Embedding model: {EMBEDDING_MODEL}")
 print(f"Embedding dimension: {EMBEDDING_DIMENSION}")
 print("-" * 60)
 
+# Auto-detect vector_io provider
+try:
+    providers = client.providers.list()
+    vec_providers = [p for p in providers if getattr(p, "api", None) == "vector_io"]
+    if len(vec_providers) == 1:
+        vector_provider_id = vec_providers[0].provider_id
+    else:
+        faiss_providers = [p for p in vec_providers if p.provider_id == "faiss"]
+        milvus_providers = [p for p in vec_providers if p.provider_id == "milvus"]
+        if faiss_providers:
+            vector_provider_id = "faiss"
+        elif milvus_providers:
+            vector_provider_id = "milvus"
+        else:
+            vector_provider_id = vec_providers[0].provider_id if vec_providers else "faiss"
+    print(f"Using vector_io provider: {vector_provider_id}")
+except Exception as e:
+    print(f"Could not auto-detect vector_io provider, defaulting to faiss: {e}")
+    vector_provider_id = "faiss"
+
 policy_path = os.path.join(os.path.dirname(__file__), "source_docs", "MortgageLendingPolicy.txt")
 
 with open(policy_path, "r") as f:
@@ -63,7 +83,7 @@ vector_store = client.vector_stores.create(
         },
     },
     extra_body={
-        "provider_id": "faiss",
+        "provider_id": vector_provider_id,
         "embedding_model": EMBEDDING_MODEL,
         "embedding_dimension": EMBEDDING_DIMENSION,
     },

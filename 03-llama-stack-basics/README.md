@@ -12,7 +12,8 @@
 
 ## Prerequisites
 
-- [Module 00: Environment Setup](../00-setup/) completed
+- [Module 00: Environment Setup](../00-setup/) completed (Python venv active, `.env` configured)
+- [Module 02: MCP Servers](../02-mcp-servers/) deployed and registered (required for scripts 2 and 3 which list MCP tools)
 - Llama Stack server running
 
 ## Concepts
@@ -60,8 +61,8 @@ python 3_list_customer_tools.py
 python 3_list_finance_tools.py
 ```
 
-> [!NOTE]
-> **Note:** Scripts 2 and 3 list MCP tools that must be registered with Llama Stack first. If you see empty results, complete the MCP server registration steps in [Module 02 examples](../02-mcp-servers/examples/) before running these scripts.
+> [!IMPORTANT]
+> Scripts 2 and 3 list MCP tools that must be registered with Llama Stack first (Module 02, step 6). If you see empty results, go back and run the registration scripts in [02-mcp-servers/examples/](../02-mcp-servers/examples/).
 
 ## What You Should See
 

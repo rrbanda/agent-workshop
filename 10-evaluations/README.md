@@ -20,11 +20,12 @@
 
 ## Scripts
 
+### Core Walkthrough
+
 | Script | What It Does |
 |--------|--------------|
 | `1_list_eval_related_providers.py` | List eval, dataset, and scoring providers |
 | `2_register_dataset_basic_subset_of.py` | Register a simple Q&A dataset |
-| `2_register_dataset_agent_evals_customer.py` | Register ACME customer eval dataset |
 | `3_list_datasets.py` | List all registered datasets |
 | `4_list_scoring_functions.py` | List available scoring functions |
 | `4_basic_subset_of_scoring_function.py` | Test rule-based scoring directly |
@@ -32,6 +33,27 @@
 | `7_execute_eval.py` | Run an evaluation job |
 | `8_review_eval_job.py` | Review eval results |
 | `9_llm_as_judge.py` | LLM-as-judge scoring |
+
+### Optional / Exploration
+
+| Script | What It Does |
+|--------|--------------|
+| `0_chat_completions.py` | Test basic chat completions (sanity check) |
+| `0_chat_completions_candidate.py` | Test the candidate model directly |
+| `0_chat_completions_judge.py` | Test the judge model directly |
+| `2_register_dataset_agent_evals_customer.py` | Register an ACME customer eval dataset (alternative dataset) |
+| `4_list_benchmarks.py` | List all registered benchmarks |
+| `6_list_models.py` | List available models |
+| `10_register_dataset.py` | Register a custom dataset |
+| `11_llm_as_judge_what_model_am_i.py` | Test LLM-as-judge with model identity questions |
+
+### Cleanup
+
+| Script | What It Does |
+|--------|--------------|
+| `2_unregister_dataset_basic_subset_of.py` | Remove the basic eval dataset |
+| `2_unregister_dataset_agent_evals_customer.py` | Remove the customer eval dataset |
+| `5_unregister_benchmark.py` | Remove a registered benchmark |
 
 ## Step-by-Step
 
@@ -59,15 +81,15 @@ python 5_register_benchmark.py
 python 7_execute_eval.py
 ```
 
-Script 7 will print a job ID when it completes (typically `0` for the first eval run). Copy it and set it before running script 8:
+Script 7 will print a job ID when it completes. Look for a line like `Eval job created: job_id=0` in the output. Set this value before running script 8:
 
 ```bash
 export LLAMA_STACK_JOB_ID=0
 python 8_review_eval_job.py
 ```
 
-> [!TIP]
-> The job ID is printed in the output of script 7 as `Eval job started: 0`. Use whatever value appears after the colon.
+> [!IMPORTANT]
+> You **must** export `LLAMA_STACK_JOB_ID` before running script 8. The value is typically `0` for the first eval run, but always use whatever value script 7 printed. If you skip this step, script 8 will exit with an error.
 
 ### 4. LLM-as-Judge
 

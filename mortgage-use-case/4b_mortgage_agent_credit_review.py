@@ -66,7 +66,8 @@ agent = Agent(
         "5. Provide a structured recommendation: APPROVE, CONDITIONAL APPROVE, "
         "or DENY with detailed reasoning for each criterion\n\n"
         "Always cite specific numbers from both the application and the policy. "
-        "Flag any borderline cases where the applicant is close to a threshold."
+        "Flag any borderline cases where the applicant is close to a threshold. "
+        "Keep your analysis concise -- use bullet points, not large tables."
     ),
     tools=ALL_TOOLS + [
         {
@@ -76,21 +77,21 @@ agent = Agent(
     ],
 )
 
-session_id = agent.create_session(session_name="credit-review")
-
 # Review application 1 (AROUT -- Conventional, credit 715, DTI 38.5%)
 query1 = (
     "Perform a credit-based underwriting review for mortgage application 1. "
     "Retrieve the application details and credit reports, look up the policy "
-    "requirements for that loan type, and provide your recommendation."
+    "requirements for that loan type, and provide your recommendation. "
+    "Keep the analysis concise -- use bullet points, not large tables."
 )
 
+session1 = agent.create_session(session_name="credit-review-app1")
 print(f"Query 1: {query1}")
 print("-" * 60)
 
 response = agent.create_turn(
     messages=[{"role": "user", "content": query1}],
-    session_id=session_id,
+    session_id=session1,
     stream=True,
 )
 for log in AgentEventLogger().log(response):
@@ -99,18 +100,21 @@ for log in AgentEventLogger().log(response):
 print("\n" + "=" * 60)
 
 # Review application 4 (FRANR -- Jumbo, credit 580, DTI 52%, DENIED)
+# Uses a separate session since the two reviews are independent
 query2 = (
-    "Now review mortgage application 4. Same process: retrieve the details "
-    "and credit reports, check the policy, and explain why this application "
-    "should be approved or denied."
+    "Perform a credit-based underwriting review for mortgage application 4. "
+    "Retrieve the details and credit reports, check the policy for that loan type, "
+    "and explain why this application should be approved or denied. "
+    "Keep the analysis concise -- use bullet points, not large tables."
 )
 
+session2 = agent.create_session(session_name="credit-review-app4")
 print(f"Query 2: {query2}")
 print("-" * 60)
 
 response = agent.create_turn(
     messages=[{"role": "user", "content": query2}],
-    session_id=session_id,
+    session_id=session2,
     stream=True,
 )
 for log in AgentEventLogger().log(response):

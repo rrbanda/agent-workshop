@@ -2,13 +2,20 @@
 
 ## Learning Objectives
 
-- Install all required tools (Python, Java, Maven, PostgreSQL)
-- Connect to a Llama Stack server
+- Install all required tools (Python, Java, Maven)
+- Log in to your OpenShift cluster
+- Connect to the pre-deployed Llama Stack server
 - Verify connectivity to all services
 
 ## Prerequisites
 
 None -- this is the starting point.
+
+You will be provided with:
+
+- An **OpenShift cluster** with Llama Stack pre-deployed on RHOAI (OpenShift AI)
+- A **cluster URL** and **login credentials** (or token) for `oc` CLI access
+- The **Llama Stack server URL** (`LLAMA_STACK_BASE_URL`)
 
 ## Concepts
 
@@ -21,18 +28,16 @@ None -- this is the starting point.
 | Python | 3.12+ | Agent scripts, MCP servers | https://python.org |
 | Java | 21+ | Backend Spring Boot APIs | https://adoptium.net |
 | Maven | 3.8+ | Java build tool | https://maven.apache.org |
-| PostgreSQL | 15+ | Database for APIs | https://postgresql.org |
+| `oc` CLI | 4.x | OpenShift command-line tool | https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/ |
 
-You also need access to a **Llama Stack server** with at least an inference model and an embedding model registered. The Llama Stack server is pre-deployed on RHOAI (OpenShift AI) with all required models. Set `LLAMA_STACK_BASE_URL` in your `.env` to the server URL provided by your instructor or team.
+> [!NOTE]
+> **No local PostgreSQL needed.** The backend APIs run on OpenShift with their own PostgreSQL instances. You do not need to install or configure PostgreSQL locally.
 
 > [!TIP]
 > **Admin reference:** The RHOAI deployment artifacts (ConfigMap, CRD, server config) are in [llama-stack-config/](./llama-stack-config/) for reference. The Llama Stack server is already deployed and running.
 
 > [!NOTE]
 > **Working directory:** All commands in this module run from the **repo root** (`agent-workshop/`).
-
-> [!IMPORTANT]
-> **Multiple terminals:** This workshop requires several services running simultaneously (backend APIs, MCP servers). Use separate terminal tabs or windows for each long-running process. Keep services running across modules.
 
 ## Step-by-Step Setup
 
@@ -44,16 +49,45 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Environment Variables
+### 2. Log In to OpenShift
+
+Use the cluster URL and credentials you were provided:
+
+```bash
+oc login <cluster-api-url> --username=<your-username> --password=<your-password>
+```
+
+Or, if you were given a token (from the OpenShift web console under your username > "Copy login command"):
+
+```bash
+oc login --token=<your-token> --server=<cluster-api-url>
+```
+
+Verify you are logged in:
+
+```bash
+oc whoami
+oc project
+```
+
+### 3. Environment Variables
 
 ```bash
 cp .env.example .env
-# Edit .env -- set LLAMA_STACK_BASE_URL and verify model names match your server
 ```
+
+Edit `.env` and set `LLAMA_STACK_BASE_URL` to the Llama Stack server URL you were provided. You can also get it from your cluster:
+
+```bash
+oc get route llamastack -o jsonpath='https://{.spec.host}'
+```
+
+> [!NOTE]
+> **What to set now vs later:** At this point, you only need to set `LLAMA_STACK_BASE_URL`. The API and MCP server URLs (`CUSTOMER_API_BASE_URL`, `FINANCE_MCP_SERVER_URL`, etc.) will be filled in as you deploy those services in Modules 01 and 02. The remaining variables (RAG, safety, evals) use sensible defaults from `.env.example`.
 
 The `.env.example` defaults to `vllm-inference/gpt-oss-120b` for inference and `vllm-embedding/nomic-embed-text-v1-5` for embedding. Update these if your Llama Stack server uses different model identifiers.
 
-### 3. Verify Llama Stack Server
+### 4. Verify Llama Stack Server
 
 ```bash
 source .env
@@ -62,23 +96,11 @@ curl $LLAMA_STACK_BASE_URL/v1/models
 
 You should see at least an inference model (e.g., `vllm-inference/gpt-oss-120b`) and an embedding model (e.g., `vllm-embedding/nomic-embed-text-v1-5`) in the response.
 
-> [!IMPORTANT]
-> **MCP connectivity:** The Llama Stack server must be able to reach your MCP servers over the network. Since Llama Stack runs on RHOAI, MCP servers must also be deployed on OpenShift with routes (see Module 02).
-
-### 4. PostgreSQL Databases
-
-Ensure PostgreSQL is running before creating the databases. You can check with `pg_isready`.
-
-```bash
-createdb acme_customer
-createdb acme_finance
-createdb acme_mortgage    # needed for the capstone
-```
-
 ## Verification
 
 ```bash
 source .env
+
 # Check Llama Stack
 curl $LLAMA_STACK_BASE_URL/v1/models
 
@@ -88,6 +110,9 @@ python --version  # Should be 3.12+
 # Check Java
 java --version    # Should be 21+
 mvn --version     # Should be 3.8+
+
+# Check OpenShift
+oc whoami         # Should print your username
 ```
 
 ### Deep Verification (Optional)
@@ -98,7 +123,7 @@ The basic `curl` check confirms the server is reachable. For a thorough check of
 python 00-setup/verify_llama_stack.py
 ```
 
-This tests six capabilities and reports PASS/FAIL for each. All checks should pass before proceeding. Example output:
+This tests six capabilities and reports PASS/FAIL for each. All six checks should pass. Example output:
 
 ```
 Llama Stack Workshop Readiness Check
@@ -116,10 +141,11 @@ Result: 6/6 checks passed -- server is ready for the workshop
 
 ## Key Takeaways
 
-- All workshop modules share the same `.env` configuration
+- All workshop modules share the same `.env` configuration at the repo root
 - Llama Stack provides a unified API for inference, agents, tools, RAG, safety, and evals
 - The workshop uses ACME (a fictional financial services company) as its example domain
+- Backend APIs and MCP servers run on OpenShift -- you do not need a local database
 
 ## Next Module
 
-Proceed to [01-backend-apis](../01-backend-apis/) to set up the ACME backend services.
+Proceed to [01-backend-apis](../01-backend-apis/) to build and deploy the ACME backend services.

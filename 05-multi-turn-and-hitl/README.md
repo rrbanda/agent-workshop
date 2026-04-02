@@ -19,6 +19,8 @@ In a **multi-turn conversation**, the agent maintains context across sequential 
 
 ## Scripts
 
+Scripts continue the global numbering from Module 04 (where scripts were `4_*` and `5_*`).
+
 | Script | What It Does |
 |--------|--------------|
 | `6_multi_turn_agent.py` | Two scripted turns showing context carryover |
@@ -29,7 +31,7 @@ In a **multi-turn conversation**, the agent maintains context across sequential 
 > [!NOTE]
 > **Working directory:** All commands in this module run from `05-multi-turn-and-hitl/`.
 >
-> **Services needed:** Llama Stack, Customer API (8081), Finance API (8082), Customer MCP (9001), Finance MCP (9002).
+> **Services needed:** Llama Stack server, Customer API, Finance API, Customer MCP, Finance MCP -- all deployed on OpenShift (from Modules 01-02).
 
 ### 1. Multi-Turn Conversation
 

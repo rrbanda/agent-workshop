@@ -54,10 +54,7 @@ Confirm your embedding model (e.g., `vllm-embedding/nomic-embed-text-v1-5`) appe
 python 1_create_vector_store.py
 ```
 
-This creates a hybrid vector store, uploads the ACME HR benefits document, and chunks it with static chunking (100 tokens, 10 overlap).
-
-> [!NOTE]
-> **Provider note:** The script specifies `provider_id: "faiss"` for the vector store. If your Llama Stack server only has `milvus`, change the `provider_id` in `1_create_vector_store.py` (line 71) or add a `faiss` provider to your server config. When multiple `vector_io` providers exist, you must specify `provider_id` in `extra_body`.
+This creates a hybrid vector store, uploads the ACME HR benefits document, and chunks it with static chunking (100 tokens, 10 overlap). The script auto-detects your server's vector_io provider (FAISS or Milvus).
 
 ### 2. Test RAG Queries
 
@@ -135,6 +132,10 @@ Result 2: Score: 0.72  Content: ...retirement benefits include...
 | Empty search results | Check that the vector store was created and documents ingested (run script 2 to verify) |
 | "Vector store not found" | Re-run `1_create_vector_store.py` to create it |
 | Low retrieval scores | Try different chunking parameters (chunk size, overlap) |
+
+## Bonus: Jupyter Notebook
+
+This module also includes `llamastack-rag-demo.ipynb`, a Jupyter notebook that walks through the same RAG concepts interactively. It is optional -- the Python scripts above cover the same material.
 
 ## Next Module
 

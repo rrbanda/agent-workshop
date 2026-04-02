@@ -41,13 +41,25 @@ Llama Stack supports multiple safety providers. This workshop uses one of the fo
 >
 > **Services needed:** Llama Stack server with a safety provider configured (`SHIELD_PROVIDER` and `SHIELD_ID` in `.env`).
 
-### 1. Register a Shield
+### 1. Explore Available Providers (Optional)
+
+Before registering a shield, you can explore what your Llama Stack server has available:
+
+```bash
+python 1_list_models.py
+python 2_list_safety_providers.py
+python 3_list_shields.py
+```
+
+Script 2 lists safety providers -- verify that `trustyai_fms` (or your configured `SHIELD_PROVIDER`) appears in the output. If it does not, contact your workshop administrator.
+
+### 2. Register a Shield
 
 ```bash
 python 4_register_shield.py
 ```
 
-### 2. Test the Shield
+### 3. Test the Shield
 
 ```bash
 python 5_test_shield.py
@@ -55,7 +67,7 @@ python 5_test_shield.py
 
 Expected: clean content passes; messages containing PII (email, SSN, credit card) are flagged as violations.
 
-### 3. Agent with Shields
+### 4. Agent with Shields
 
 ```bash
 python 6_agent_shield.py

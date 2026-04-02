@@ -13,8 +13,7 @@
 
 ## Prerequisites
 
-- [Module 01: Backend APIs](../01-backend-apis/) deployed on OpenShift
-- Access to an OpenShift cluster (logged in via `oc`)
+- [Module 01: Backend APIs](../01-backend-apis/) deployed on OpenShift (Customer and Finance APIs running, route URLs set in `.env`)
 
 ## Concepts
 
@@ -52,12 +51,18 @@ oc new-build --binary --strategy=docker --name=customer-mcp
 oc start-build customer-mcp --from-dir=02-mcp-servers/customer-mcp/ --follow
 ```
 
+> [!TIP]
+> If you see `"customer-mcp" already exists`, skip `oc new-build` and just re-run `oc start-build`.
+
 ### 2. Build Finance MCP
 
 ```bash
 oc new-build --binary --strategy=docker --name=finance-mcp
 oc start-build finance-mcp --from-dir=02-mcp-servers/finance-mcp/ --follow
 ```
+
+> [!TIP]
+> If you see `"finance-mcp" already exists`, skip `oc new-build` and just re-run `oc start-build`.
 
 ### 3. Deploy to OpenShift
 

@@ -117,6 +117,8 @@ The workshop follows a linear path where every module builds toward the capstone
 
 ## Quick Start
 
+You will be provided with an OpenShift cluster that has Llama Stack pre-deployed on RHOAI (OpenShift AI). You will also receive `oc login` credentials and the Llama Stack server URL.
+
 ```bash
 # 1. Clone the repo
 git clone https://github.com/rrbanda/agent-workshop.git
@@ -127,26 +129,23 @@ python3.12 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-# 3. Configure environment
-cp .env.example .env
-# Edit .env -- set LLAMA_STACK_BASE_URL to the pre-deployed RHOAI server URL
-# provided by your instructor or from: oc get route llamastack -o jsonpath='https://{.spec.host}'
+# 3. Log in to OpenShift
+oc login <cluster-api-url> --username=<your-username> --password=<your-password>
 
-# 4. Verify Llama Stack connectivity
+# 4. Configure environment
+cp .env.example .env
+# Edit .env -- set LLAMA_STACK_BASE_URL to the Llama Stack server URL you were provided
+
+# 5. Verify Llama Stack connectivity
 source .env
 curl $LLAMA_STACK_BASE_URL/v1/models
-
-# 5. Create databases
-createdb acme_customer
-createdb acme_finance
-createdb acme_mortgage    # for the capstone
 
 # 6. Begin the workshop
 # Continue with Module 01 (01-backend-apis/README.md)
 ```
 
 > [!NOTE]
-> **Llama Stack server required.** The Llama Stack server is pre-deployed on RHOAI (OpenShift AI) with all required models. Set `LLAMA_STACK_BASE_URL` in your `.env` to the server URL. For detailed setup instructions (tool versions, verification), see [00-setup](00-setup/).
+> **No local database needed.** The backend APIs run on OpenShift with their own PostgreSQL instances -- you do not need to install or configure PostgreSQL locally. For detailed setup instructions (tool versions, verification), see [00-setup](00-setup/).
 
 ---
 
@@ -156,8 +155,8 @@ createdb acme_mortgage    # for the capstone
 
 | # | Module | What You Learn | Duration |
 |---|--------|----------------|----------|
-| 00 | [Environment Setup](00-setup/) | Install Python, Java, PostgreSQL; configure Llama Stack | 30 min |
-| 01 | [Backend APIs](01-backend-apis/) | Build and run ACME Customer and Finance REST APIs | 30 min |
+| 00 | [Environment Setup](00-setup/) | Install Python, Java; configure OpenShift and Llama Stack | 30 min |
+| 01 | [Backend APIs](01-backend-apis/) | Build and deploy ACME Customer and Finance REST APIs | 30 min |
 | 02 | [MCP Servers](02-mcp-servers/) | Wrap REST APIs as LLM-callable tools using FastMCP | 20 min |
 | 03 | [Llama Stack Basics](03-llama-stack-basics/) | Create your first agent, streaming responses, tool inspection | 20 min |
 | 04 | [Agents with MCP Tools](04-agents-with-tools/) | Bind tools to agents, single-domain and multi-domain reasoning | 30 min |
@@ -165,6 +164,9 @@ createdb acme_mortgage    # for the capstone
 | 08 | [RAG](08-rag/) | Vector stores, hybrid search (BM25 + semantic), `file_search` tool | 30 min |
 | 09 | [Safety Shields](09-safety-shields/) | Register safety shields, input/output content safety | 20 min |
 | 10 | [Evaluations](10-evaluations/) | Datasets, scoring functions, benchmarks, LLM-as-judge | 30 min |
+
+> [!NOTE]
+> **Module numbering:** Modules 06-07 are reserved for future content. The workshop follows the sequence above -- proceed from 05 directly to 08.
 
 ### Capstone
 
@@ -181,8 +183,9 @@ createdb acme_mortgage    # for the capstone
 | Python | 3.12+ | Agent scripts, MCP servers |
 | Java | 21+ | Backend Spring Boot APIs |
 | Maven | 3.8+ | Java build tool |
-| PostgreSQL | 15+ | Database for Customer, Finance, Mortgage APIs |
-| Llama Stack server | Any | Pre-deployed on RHOAI -- provides inference, embedding, and safety models |
+| `oc` CLI | 4.x | OpenShift command-line tool |
+
+**Provided for you:** An OpenShift cluster with Llama Stack pre-deployed on RHOAI, including inference, embedding, and safety models. PostgreSQL runs on the cluster -- no local database installation needed.
 
 ---
 
@@ -240,10 +243,12 @@ All modules share a single `.env` file at the repo root. See [.env.example](.env
 | `CANDIDATE_MODEL` | Model to evaluate in evals | `vllm-inference/gpt-oss-120b` |
 | `JUDGE_MODEL` | LLM-as-judge model for evals | `vllm-inference/gpt-oss-120b` |
 
-### Port Reference
+### Port Reference (Internal Container Ports)
 
-| Service | Port | Module |
-|---------|------|--------|
+These are the internal container ports used by each service on OpenShift. You access them via OpenShift route URLs (HTTPS), not directly by port number.
+
+| Service | Container Port | Module |
+|---------|---------------|--------|
 | Llama Stack | 8321 | All |
 | Customer API | 8081 | 01 |
 | Finance API | 8082 | 01 |
@@ -265,8 +270,9 @@ All modules share a single `.env` file at the repo root. See [.env.example](.env
 | `LLAMA_STACK_BASE_URL not set` | Copy `.env.example` to `.env` and set `LLAMA_STACK_BASE_URL` to the pre-deployed RHOAI server URL |
 | Model not found | Check `INFERENCE_MODEL` matches a model on your Llama Stack server (`curl $LLAMA_STACK_BASE_URL/v1/models`) |
 | `429 Too Many Requests` / rate limiting | MaaS backend has rate limits. Wait 30-60 seconds and retry. Eval scripts include built-in retry logic. |
-| Database errors (Linux) | Set postgres password: `sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"` and check `pg_hba.conf` |
 | Import errors | Activate your venv and run `pip install -r requirements.txt` |
+| `oc` command not found | Install the OpenShift CLI from https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/ |
+| `"already exists"` on `oc new-build` | The build config already exists. Skip `oc new-build` and just re-run `oc start-build`. |
 
 ---
 
