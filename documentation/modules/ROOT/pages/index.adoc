@@ -40,7 +40,7 @@ TIP: _"Llama Stack is less about replacing your favorite agent library, and more
 * *Multi-Turn Conversational Agents* -- Agents that remember context across sequential exchanges
 * *Human-in-the-Loop Agents* -- Interactive agents with human oversight for high-stakes decisions
 * *RAG-Powered Agents* -- Agents that retrieve and reason over documents using vector stores
-* *Safety-Guarded Agents* -- Content safety shields with Llama Guard for input and output filtering
+* *Safety-Guarded Agents* -- Content safety shields for input and output filtering
 * *Evaluation Pipelines* -- Automated scoring, benchmarks, and LLM-as-judge quality measurement
 
 Then, in the *capstone*, you apply everything to a real business problem: building a *Mortgage Approval Agent* that automates ACME's conditional approval workflow.
@@ -112,7 +112,7 @@ flowchart TD
 
 |09
 |xref:09-safety-shields.adoc[Safety Shields]
-|Register Llama Guard shields, input/output content safety
+|Register safety shields, input/output content safety
 |20 min
 
 |10
@@ -130,7 +130,7 @@ flowchart TD
 |Duration
 
 |xref:mortgage-capstone.adoc[Mortgage Approval Agent]
-|End-to-end agent combining MCP tools + RAG + multi-turn + HITL + safety shields + evaluation
+|End-to-end agent combining client tools + RAG + multi-turn + HITL + safety shields + evaluation
 |90 min
 |===
 
@@ -234,6 +234,8 @@ NOTE: *Llama Stack server required.* You need access to a Llama Stack server wit
                           │    PostgreSQL     │
                           └──────────────────┘
 ----
+
+NOTE: *Capstone architecture note:* The capstone mortgage agent uses *client-side tools* (`@client_tool`) that call the Mortgage API directly from your machine, bypassing the MCP server. The Customer and Finance agents in Modules 03-05 use MCP tools via Llama Stack. See `mortgage_client_tools.py` for the client-tool implementation.
 
 *Tech stack:* Python 3.12 | Java 21 + Spring Boot | PostgreSQL | Llama Stack | FastMCP
 

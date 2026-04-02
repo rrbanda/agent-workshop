@@ -1,8 +1,11 @@
 # Llama Stack Server Configuration for ACME Agent Workshop
 #
 # This run.yaml configures all providers the workshop requires:
-#   - Inference (vLLM remote + sentence-transformers for embedding)
-#   - Vector I/O (Milvus for RAG)
+#   - Inference (vLLM remote)
+#   - Embedding (sentence-transformers inline; replace with remote::vllm if
+#     your deployment uses a vLLM-hosted embedding model)
+#   - Vector I/O (Milvus for RAG; workshop scripts default to provider_id "faiss"
+#     -- add a faiss provider or update the scripts if needed)
 #   - Agents, Safety, Eval, Scoring, Files, Datasets, Tool Runtime
 #
 # Usage:
@@ -31,6 +34,9 @@ apis:
 
 providers:
   inference:
+    # Inline sentence-transformers for embedding. If your deployment uses a
+    # vLLM-hosted embedding model instead, replace this with a remote::vllm
+    # provider pointing to your embedding endpoint.
     - provider_id: sentence-transformers
       provider_type: inline::sentence-transformers
       config: {}
@@ -43,6 +49,8 @@ providers:
         max_tokens: ${env.VLLM_MAX_TOKENS:=4096}
 
   vector_io:
+    # Workshop scripts default to provider_id "faiss". If you only have milvus,
+    # either add a faiss provider below or change the scripts' provider_id to "milvus".
     - provider_id: milvus
       provider_type: inline::milvus
       config:

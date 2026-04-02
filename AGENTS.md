@@ -5,7 +5,7 @@
 This is a progressive workshop organized into numbered modules:
 
 - `00-setup/`: Environment setup guide
-  - `llama-stack-config/`: Reference Llama Stack server config (run.yaml, RHOAI CRD, admin guide)
+  - `llama-stack-config/`: Admin reference -- Llama Stack server config (run.yaml, RHOAI CRD, deployment guide)
   - `verify_llama_stack.py`: Server readiness check (tests all 6 required capabilities)
 - `01-backend-apis/`: Spring Boot Customer and Finance APIs (Java 21, Maven, PostgreSQL)
 - `02-mcp-servers/`: Python MCP servers wrapping the backend APIs
@@ -13,7 +13,7 @@ This is a progressive workshop organized into numbered modules:
 - `04-agents-with-tools/`: Single and multi-domain agents with MCP tools
 - `05-multi-turn-and-hitl/`: Multi-turn conversations, human-in-the-loop
 - `08-rag/`: RAG with vector stores and hybrid search
-- `09-safety-shields/`: Content safety with Llama Guard
+- `09-safety-shields/`: Content safety with safety shields (TrustyAI Guardrails or Llama Guard)
 - `10-evaluations/`: Eval pipelines, scoring, LLM-as-judge
 - `mortgage-use-case/`: Capstone -- Mortgage Approval Agent
 
@@ -32,10 +32,7 @@ python 02-mcp-servers/finance-mcp/finance-api-mcp-server.py
 ```
 
 ### Llama Stack Server
-```bash
-python3.12 -m venv .venv && source .venv/bin/activate
-uv run --with llama-stack llama stack run starter
-```
+The Llama Stack server is pre-deployed (OpenShift or instructor-provided). Set `LLAMA_STACK_BASE_URL` in `.env` to the server URL. For admin setup instructions, see `00-setup/llama-stack-config/`.
 
 ## Coding Style & Naming Conventions
 
@@ -47,8 +44,8 @@ uv run --with llama-stack llama stack run starter
 ## Configuration
 
 - All environment variables documented in `.env.example`
-- Common vars: `LLAMA_STACK_BASE_URL`, `INFERENCE_MODEL`, `CUSTOMER_MCP_SERVER_URL`, `FINANCE_MCP_SERVER_URL`
-- Database: `acme_customer` (port 5432), `acme_finance` (port 5432)
+- Key variable groups: Llama Stack connection (`LLAMA_STACK_BASE_URL`, `INFERENCE_MODEL`), backend APIs (`CUSTOMER_API_BASE_URL`, `FINANCE_API_BASE_URL`, `MORTGAGE_API_BASE_URL`), MCP servers (`CUSTOMER_MCP_SERVER_URL`, `FINANCE_MCP_SERVER_URL`, `MORTGAGE_MCP_SERVER_URL`), RAG (`EMBEDDING_MODEL`, `EMBEDDING_DIMENSION`), safety (`SHIELD_PROVIDER`, `SHIELD_ID`), evaluations (`CANDIDATE_MODEL`, `JUDGE_MODEL`)
+- Database: `acme_customer` (port 5432), `acme_finance` (port 5432), `acme_mortgage` (port 5432)
 
 ## Domain
 

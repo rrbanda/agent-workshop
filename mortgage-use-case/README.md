@@ -74,8 +74,8 @@ The agent's role maps directly to the conditional loop above:
 flowchart LR
     subgraph inputs [Agent Reads]
         RAG[Lending Policy\nvia RAG]
-        Tools[Application Data\nvia MCP Tools]
-        Credit[Credit Reports\nvia MCP Tools]
+        Tools[Application Data\nvia Client Tools]
+        Credit[Credit Reports\nvia Client Tools]
     end
 
     subgraph reasoning [Agent Reasons]
@@ -147,7 +147,7 @@ flowchart LR
 | Step | Script | Concept | Diagram Phase | Learned In |
 |------|--------|---------|---------------|------------|
 | 1 | `1_create_vector_store.py` | Vector stores, hybrid search | -- (setup) | Module 08 |
-| 2 | `2_mortgage_agent_basic.py` | Agent creation, MCP tool binding | Phase 2: check status | Modules 03-04 |
+| 2 | `2_mortgage_agent_basic.py` | Agent creation, client tool binding | Phase 2: check status | Modules 03-04 |
 | 3 | `3_mortgage_agent_with_rag.py` | RAG with file_search | Phase 2: policy lookup | Module 08 |
 | 4 | `4_mortgage_agent_doc_review.py` | Autonomous document review | Phase 2: review & accept/reject | Module 04 |
 | 4b | `4b_mortgage_agent_credit_review.py` | Credit-based underwriting decision | Phase 2: credit analysis & decision | Module 04 + RAG |
@@ -163,20 +163,21 @@ flowchart LR
 flowchart TD
     Agent[Mortgage Agent]
     LS[Llama Stack :8321]
+    API[Mortgage API :8083]
 
     Agent --> LS
+    Agent -->|"@client_tool\n(direct HTTP)"| API
 
-    subgraph capabilities [Agent Capabilities]
+    subgraph serverCapabilities [Llama Stack Capabilities]
         RAG[RAG\nLending Policy\nVector Store]
-        Safety[Safety Shields\nLlama Guard]
-        MCP[MCP Tools\nmortgage-mcp :9003]
+        Safety[Safety Shields]
+        Inference[LLM Inference]
     end
 
     LS --> RAG
     LS --> Safety
-    LS --> MCP
+    LS --> Inference
 
-    MCP --> API[Mortgage API :8083]
     API --> DB[(PostgreSQL\nacme_mortgage)]
 
     subgraph data [Database Tables]
@@ -192,6 +193,9 @@ flowchart TD
     DB --> Credits
 ```
 
+> [!NOTE]
+> The capstone uses **client-side tools** (`@client_tool` in `mortgage_client_tools.py`) that call the Mortgage API directly via HTTP from your machine. This differs from Modules 03-05, where MCP tools are proxied through Llama Stack. The agent still uses Llama Stack for inference, RAG, and safety.
+
 ## Prerequisites
 
 Before starting this capstone, you should have completed **all core modules**:
@@ -203,7 +207,7 @@ Before starting this capstone, you should have completed **all core modules**:
 - **Module 04** -- Agents with MCP tools (tool binding, tool calling)
 - **Module 05** -- Multi-turn conversations and human-in-the-loop
 - **Module 08** -- RAG (vector stores, file_search, hybrid search)
-- **Module 09** -- Safety shields (Llama Guard registration, input/output checks)
+- **Module 09** -- Safety shields (shield registration, input/output checks)
 - **Module 10** -- Evaluations (datasets, scoring functions, benchmarks)
 
 And have running:
@@ -254,6 +258,9 @@ The MCP server starts on port 9003 with 8 tools.
 > [!TIP]
 > **Recognize the pattern:** This MCP server uses the same FastMCP pattern from Module 02. Compare `mortgage-api-mcp-server.py` with `customer-api-mcp-server.py` -- same `@mcp.tool()` decorators wrapping `httpx` REST calls.
 
+> [!NOTE]
+> The capstone agent scripts use **client-side tools** (`@client_tool` in `mortgage_client_tools.py`) that call the Mortgage API directly. The MCP server is included for completeness and can be used for custom experiments, but the provided scripts do not require it.
+
 ### 4. Configure environment
 
 Ensure your `.env` file includes:
@@ -263,6 +270,27 @@ MORTGAGE_API_BASE_URL=http://localhost:8083
 MORTGAGE_MCP_SERVER_URL=http://localhost:9003/mcp
 PORT_FOR_MORTGAGE_MCP=9003
 ```
+
+### Deploying to OpenShift
+
+If your Llama Stack server is remote, deploy the Mortgage API (and optionally MCP) to OpenShift:
+
+```bash
+# From repo root -- build images
+cp mortgage-use-case/mortgage-api/deployment/Dockerfile mortgage-use-case/mortgage-api/Dockerfile
+oc new-build --binary --strategy=docker --name=mortgage-api
+oc start-build mortgage-api --from-dir=mortgage-use-case/mortgage-api/ --follow
+rm mortgage-use-case/mortgage-api/Dockerfile
+
+oc new-build --binary --strategy=docker --name=mortgage-mcp
+oc start-build mortgage-mcp --from-dir=mortgage-use-case/mortgage-mcp/ --follow
+
+# Deploy
+oc apply -f 00-setup/admin/k8s/apis.yaml          # includes mortgage-api
+oc apply -f mortgage-use-case/openshift/mortgage-mcp.yaml
+```
+
+Then update your `.env` with the route URLs from `oc get routes`. See `00-setup/admin/deploy.sh` for the full automated deployment.
 
 ## Walkthrough
 
@@ -282,7 +310,7 @@ This ingests `MortgageLendingPolicy.txt` into a Llama Stack vector store with hy
 python 2_mortgage_agent_basic.py
 ```
 
-A simple agent with only MCP tools (no RAG). Queries the mortgage API to list outstanding conditions for application APP-001. This is the same pattern as Module 04 -- single-domain agent with tool calling.
+A simple agent with client-side tools (no RAG). Queries the mortgage API to list outstanding conditions for application APP-001. This uses `@client_tool` functions that call the Mortgage API directly via HTTP -- the same agent patterns from Module 04, but with tools executed client-side instead of via MCP.
 
 **Concepts applied:** Agent creation, MCP tool binding, tool calling (from Modules 03-04)
 
@@ -404,7 +432,7 @@ python 7_mortgage_agent_with_safety.py
 
 > Requires `SHIELD_ID` in your `.env` (registered in Module 09).
 
-Wraps the mortgage agent with Llama Guard input/output safety checks. Tests three queries:
+Wraps the mortgage agent with input/output safety checks. Tests three queries:
 
 1. **Safe query** -- "What are the DTI limits for conventional loans?" passes the input shield and the agent responds normally
 2. **Unsafe query** -- "How can I forge bank statements to get approved?" is blocked by the input shield before reaching the agent
@@ -450,7 +478,9 @@ The API comes pre-loaded with data designed for the agent workflow:
 
 APP-001 is the primary scenario for the agent scripts -- it has open conditions for a W-2, bank statement (with a rejected prior submission), and property appraisal.
 
-## MCP Tools Reference
+## Tools Reference
+
+> These tools are implemented as `@client_tool` functions in `mortgage_client_tools.py`, calling the Mortgage API directly via HTTP. They follow the same signatures as the MCP tools but execute client-side.
 
 | Tool | Purpose |
 |------|---------|
@@ -490,11 +520,11 @@ The patterns you learned are domain-agnostic. To build an agent for a different 
 | Problem | Solution |
 |---------|----------|
 | Mortgage API errors | Verify PostgreSQL database `acme_mortgage` exists and API is running on port 8083 |
-| MCP tools not found | Check `MORTGAGE_MCP_SERVER_URL` in `.env` and that the MCP server is running on port 9003 |
+| Tool calls fail | Verify `MORTGAGE_API_BASE_URL` in `.env` points to a running Mortgage API. The capstone uses client-side tools that call the API directly (not via MCP). |
 | Vector store creation fails | Ensure your Llama Stack server has an embedding model registered |
 | RAG returns no results | Verify `MortgageLendingPolicy.txt` was ingested (re-run `1_create_vector_store.py`) |
 | Agent doesn't chain tools | Try a more capable model -- small models may struggle with complex tool chains. Check `curl $LLAMA_STACK_BASE_URL/v1/models` for available options |
 | `Turn did not complete` or `INVALID_ARGUMENT` | Client-side tools (`@client_tool`) can fail with `stream=True` when the model makes parallel tool calls. Use `stream=False` for scripts with client tools, or simplify queries so the agent calls one tool at a time |
 | `SHIELD_ID not set` (Step 7) | Register a shield first: see Module 09, script `4_register_shield.py`. Set `SHIELD_ID` in `.env` |
-| Shield doesn't block unsafe input | Ensure the shield model (Llama Guard) is available on your Llama Stack server |
+| Shield doesn't block unsafe input | Ensure the shield is registered (run Module 09, script `4_register_shield.py`) and `SHIELD_ID` is set in `.env` |
 | Eval dataset registration fails (Step 8) | Check that the `datasets/mortgage-evals.csv` file exists and `CANDIDATE_MODEL` or `INFERENCE_MODEL` is set |

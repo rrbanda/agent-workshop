@@ -91,6 +91,25 @@ curl -s http://localhost:9001/mcp | head -c 200
 curl -s http://localhost:9002/mcp | head -c 200
 ```
 
+## Deploying to OpenShift
+
+If your Llama Stack server is remote, MCP servers must also be deployed remotely -- `localhost` MCP URLs are not reachable from a remote Llama Stack. Build and deploy:
+
+```bash
+# From repo root -- build images via OpenShift binary builds
+oc new-build --binary --strategy=docker --name=customer-mcp
+oc start-build customer-mcp --from-dir=02-mcp-servers/customer-mcp/ --follow
+
+oc new-build --binary --strategy=docker --name=finance-mcp
+oc start-build finance-mcp --from-dir=02-mcp-servers/finance-mcp/ --follow
+
+# Deploy (includes Deployment, Service, Route for each MCP server)
+oc apply -f 02-mcp-servers/openshift/customer-mcp.yaml
+oc apply -f 02-mcp-servers/openshift/finance-mcp.yaml
+```
+
+Then update your `.env` with the OpenShift route URLs (e.g., `https://mcp-customer-route-<namespace>.apps.<cluster>/mcp`). See `00-setup/admin/deploy.sh` for the full automated deployment.
+
 ## Key Takeaways
 
 - MCP servers act as a bridge between LLMs and existing APIs

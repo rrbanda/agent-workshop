@@ -9,7 +9,7 @@ ACME Agent Workshop requires:
   [2/6] Chat ............. test prompt returns a response
   [3/6] Embedding ........ generates a vector of expected dimension
   [4/6] Vector Store ..... create / search / delete
-  [5/6] Safety ........... llama-guard provider available
+  [5/6] Safety ........... safety provider available (llama-guard or trustyai_fms)
   [6/6] Tool Runtime ..... rag-runtime + model-context-protocol providers
 
 Usage:
@@ -230,7 +230,7 @@ def check_safety(client):
                 5,
                 "Safety",
                 "warn",
-                f"providers: {', '.join(provider_ids)} (no llama-guard)",
+                f"providers: {', '.join(provider_ids)} (expected llama-guard or trustyai_fms)",
             )
         else:
             result_line(5, "Safety", "fail", "no safety providers found")

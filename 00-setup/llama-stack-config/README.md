@@ -51,7 +51,7 @@ Deploy a Llama Stack server with all capabilities the ACME Agent Workshop requir
    LLAMA_STACK_BASE_URL=https://llamastack-....apps.your-cluster.com
    ```
 
-That's it. The Llama Stack pod connects to your MaaS endpoint for LLM inference and runs embedding, vector store, agents, safety, eval, and tool runtime inline.
+That's it. The Llama Stack pod connects to your MaaS endpoint for LLM inference and runs vector store, agents, eval, and tool runtime inline. Embedding runs either inline (sentence-transformers) or via a remote vLLM embedding endpoint, depending on your configuration.
 
 ## Verify All Capabilities
 
@@ -95,10 +95,10 @@ Then set `LLAMA_STACK_BASE_URL=http://localhost:8321` in your `.env`.
 | Capability | Provider | Workshop Modules |
 |---|---|---|
 | LLM Inference | `remote::vllm` (via MaaS) | All modules |
-| Embedding | `inline::sentence-transformers` | 08-rag, Mortgage |
-| Vector Store | `inline::milvus` | 08-rag, Mortgage |
+| Embedding | `inline::sentence-transformers` (or `remote::vllm` for vLLM-hosted embedding) | 08-rag, Mortgage |
+| Vector Store | `inline::milvus` (workshop scripts use `provider_id: "faiss"` -- ensure your server has a matching provider) | 08-rag, Mortgage |
 | Agents | `inline::meta-reference` | 03-10, Mortgage |
-| Safety | `inline::llama-guard` | 09-safety-shields |
+| Safety | `inline::llama-guard` or `trustyai_fms` (see Module 09) | 09-safety-shields |
 | Eval / Scoring | `inline::meta-reference`, `inline::llm-as-judge` | 10-evaluations |
 | Tool Runtime | `inline::rag-runtime`, `remote::model-context-protocol` | 04, 08, Mortgage |
 | Files / Datasets | `inline::localfs` | 08-rag, 10-evaluations |
@@ -109,5 +109,5 @@ Then set `LLAMA_STACK_BASE_URL=http://localhost:8321` in your `.env`.
 |---|---|
 | Pod in CrashLoopBackOff | Check logs: `oc logs -l llamastack.io/distribution=llamastack-acme-workshop`. Usually a bad `VLLM_API_URL` or token. |
 | Models list empty | The vLLM provider auto-discovers models. Verify your MaaS has models: `curl -H "Authorization: Bearer $TOKEN" $VLLM_API_URL/models` |
-| Embedding model missing | The `sentence-transformers` provider downloads on first use. Pod needs internet access; startup takes 1-2 min. |
+| Embedding model missing | If using `sentence-transformers`: pod needs internet access, downloads on first use (~1-2 min). If using `vllm-embedding`: verify the vLLM embedding endpoint is accessible and supports the `dimensions` parameter (may need `--hf-overrides` for matryoshka models). |
 | Route returns 503 | Pod still starting. Wait for `1/1 Running` in `oc get pods`. |

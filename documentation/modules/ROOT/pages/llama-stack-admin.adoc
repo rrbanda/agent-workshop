@@ -124,11 +124,11 @@ Then set `LLAMA_STACK_BASE_URL=http://localhost:{llama-stack-port}` in your `.en
 |All modules
 
 |Embedding
-|`inline::sentence-transformers`
+|`inline::sentence-transformers` (or `remote::vllm` for vLLM-hosted embedding)
 |xref:08-rag.adoc[08-rag], xref:mortgage-capstone.adoc[Capstone]
 
 |Vector Store
-|`inline::milvus`
+|`inline::milvus` (workshop scripts use `provider_id: "faiss"` -- ensure your server has a matching provider)
 |xref:08-rag.adoc[08-rag], xref:mortgage-capstone.adoc[Capstone]
 
 |Agents
@@ -136,7 +136,7 @@ Then set `LLAMA_STACK_BASE_URL=http://localhost:{llama-stack-port}` in your `.en
 |xref:03-llama-stack-basics.adoc[03]-xref:10-evaluations.adoc[10], xref:mortgage-capstone.adoc[Capstone]
 
 |Safety
-|`inline::llama-guard`
+|`inline::llama-guard` or `trustyai_fms` (see xref:09-safety-shields.adoc[Module 09])
 |xref:09-safety-shields.adoc[09-safety-shields]
 
 |Eval / Scoring
@@ -247,7 +247,7 @@ Participants paste these values into their `.env` file (uncomment the "Remote" l
 |The vLLM provider auto-discovers models. Verify your MaaS has models: `curl -H "Authorization: Bearer $TOKEN" $VLLM_API_URL/models`
 
 |Embedding model missing
-|The `sentence-transformers` provider downloads on first use. Pod needs internet access; startup takes 1-2 min.
+|If using `sentence-transformers`: pod needs internet access, downloads on first use (~1-2 min). If using `vllm-embedding`: verify the vLLM embedding endpoint is accessible and supports the `dimensions` parameter (may need `--hf-overrides` for matryoshka models).
 
 |Route returns 503
 |Pod still starting. Wait for `1/1 Running` in `oc get pods`.

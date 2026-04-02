@@ -39,7 +39,7 @@ NOTE: If your Llama Stack server has a `llama-guard` provider instead, set `SHIE
 |List registered shields
 
 |`4_register_shield.py`
-|Register a Llama Guard shield
+|Register a safety shield
 
 |`5_test_shield.py`
 |Test shield with safe and unsafe messages
@@ -126,8 +126,8 @@ User: My SSN is 123-45-6789 and my email is user@example.com. Can you help with 
 |Problem
 |Solution
 
-|"Shield model not found"
-|Verify `SHIELD_MODEL` is registered on your Llama Stack server
+|"Shield not found"
+|Verify `SHIELD_ID` matches a registered shield on your Llama Stack server (run `3_list_shields.py` to check)
 
 |All inputs flagged as violations
 |Check that `SHIELD_ID` matches the registered shield name

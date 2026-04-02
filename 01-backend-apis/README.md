@@ -85,6 +85,28 @@ curl -X POST http://localhost:8082/api/finance/orders/history \
   -d '{"customerId": "AROUT"}'
 ```
 
+## Deploying to OpenShift
+
+If your Llama Stack server is remote (e.g., on OpenShift), the backend APIs must also be deployed remotely so MCP servers can reach them. Use the admin deploy script or build manually:
+
+```bash
+# From repo root -- build images via OpenShift binary builds
+oc new-build --binary --strategy=docker --name=customer-api
+cp 01-backend-apis/customer-api/deployment/Dockerfile 01-backend-apis/customer-api/Dockerfile
+oc start-build customer-api --from-dir=01-backend-apis/customer-api/ --follow
+rm 01-backend-apis/customer-api/Dockerfile
+
+oc new-build --binary --strategy=docker --name=finance-api
+cp 01-backend-apis/finance-api/deployment/Dockerfile 01-backend-apis/finance-api/Dockerfile
+oc start-build finance-api --from-dir=01-backend-apis/finance-api/ --follow
+rm 01-backend-apis/finance-api/Dockerfile
+
+# Deploy (includes Deployment, Service, Route for each API)
+oc apply -f 00-setup/admin/k8s/apis.yaml
+```
+
+Then update your `.env` with the OpenShift route URLs. See `00-setup/admin/deploy.sh` for the full automated deployment.
+
 ## Key Takeaways
 
 - The Customer API provides CRUD + search operations for customer master data

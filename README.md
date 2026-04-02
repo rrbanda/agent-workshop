@@ -31,7 +31,7 @@ By the end of this workshop, you will have built:
 - **Multi-turn conversational agents** -- agents that remember context across turns
 - **Human-in-the-loop agents** -- interactive agents with human oversight
 - **RAG-powered agents** -- agents that retrieve and reason over documents
-- **Safety-guarded agents** -- agents with Llama Guard content safety shields
+- **Safety-guarded agents** -- agents with content safety shields
 - **Evaluation pipelines** -- automated scoring, benchmarks, and LLM-as-judge
 
 Then, in the **capstone**, you apply everything to a real business problem: building a **Mortgage Approval Agent** that automates ACME's conditional approval workflow -- the most delay-prone step in mortgage processing.
@@ -69,6 +69,9 @@ Then, in the **capstone**, you apply everything to a real business problem: buil
                           │    PostgreSQL     │
                           └──────────────────┘
 ```
+
+> [!NOTE]
+> **Capstone architecture note:** The capstone mortgage agent uses **client-side tools** (`@client_tool`) that call the Mortgage API directly from your machine, bypassing the MCP server. The Customer and Finance agents in Modules 03-05 use MCP tools via Llama Stack. See `mortgage_client_tools.py` for the client-tool implementation.
 
 **Tech stack:** Python 3.12 | Java 21 + Spring Boot | PostgreSQL | Llama Stack | FastMCP
 
@@ -161,7 +164,7 @@ createdb acme_mortgage    # for the capstone
 | 04 | [Agents with MCP Tools](04-agents-with-tools/) | Bind tools to agents, single-domain and multi-domain reasoning | 30 min |
 | 05 | [Multi-Turn & HITL](05-multi-turn-and-hitl/) | Conversation memory across turns, human-in-the-loop interaction | 20 min |
 | 08 | [RAG](08-rag/) | Vector stores, hybrid search (BM25 + semantic), `file_search` tool | 30 min |
-| 09 | [Safety Shields](09-safety-shields/) | Register Llama Guard shields, input/output content safety | 20 min |
+| 09 | [Safety Shields](09-safety-shields/) | Register safety shields, input/output content safety | 20 min |
 | 10 | [Evaluations](10-evaluations/) | Datasets, scoring functions, benchmarks, LLM-as-judge | 30 min |
 
 ### Capstone
@@ -201,7 +204,7 @@ createdb acme_mortgage    # for the capstone
 | **FastMCP** | Python library for building MCP servers with minimal boilerplate | Module 02 |
 | **Agent** | An LLM with tools, instructions, and session management that can reason and act | Modules 03-05 |
 | **RAG** | Retrieval-Augmented Generation -- augmenting LLM responses with relevant documents | Module 08 |
-| **Llama Guard** | Safety classifier that detects harmful content in inputs and outputs | Module 09 |
+| **Safety Shields** | Content classifiers (TrustyAI Guardrails for PII detection, or Llama Guard for broader classification) that check inputs and outputs | Module 09 |
 | **LLM-as-Judge** | Using a separate LLM to evaluate response quality | Module 10 |
 
 ### Script Numbering
@@ -225,9 +228,18 @@ All modules share a single `.env` file at the repo root. See [.env.example](.env
 | `LLAMA_STACK_BASE_URL` | Llama Stack server URL | `http://localhost:8321` |
 | `LLAMA_STACK_API_KEY` | API key for Llama Stack (use `fake` if none required) | `fake` |
 | `INFERENCE_MODEL` | LLM model identifier | `vllm-inference/gpt-oss-120b` |
+| `CUSTOMER_API_BASE_URL` | Customer REST API | `http://localhost:8081` |
+| `FINANCE_API_BASE_URL` | Finance REST API | `http://localhost:8082` |
+| `MORTGAGE_API_BASE_URL` | Mortgage REST API (capstone) | `http://localhost:8083` |
 | `CUSTOMER_MCP_SERVER_URL` | Customer MCP endpoint | `http://localhost:9001/mcp` |
 | `FINANCE_MCP_SERVER_URL` | Finance MCP endpoint | `http://localhost:9002/mcp` |
-| `MORTGAGE_MCP_SERVER_URL` | Mortgage MCP endpoint | `http://localhost:9003/mcp` |
+| `MORTGAGE_MCP_SERVER_URL` | Mortgage MCP endpoint (capstone) | `http://localhost:9003/mcp` |
+| `EMBEDDING_MODEL` | Embedding model for RAG | `vllm-embedding/nomic-embed-text-v1-5` |
+| `EMBEDDING_DIMENSION` | Embedding vector dimension | `768` |
+| `SHIELD_PROVIDER` | Safety shield provider | `trustyai_fms` |
+| `SHIELD_ID` | Registered shield identifier | `pii_detector` |
+| `CANDIDATE_MODEL` | Model to evaluate in evals | `vllm-inference/gpt-oss-120b` |
+| `JUDGE_MODEL` | LLM-as-judge model for evals | `vllm-inference/gpt-oss-120b` |
 
 ### Port Reference
 

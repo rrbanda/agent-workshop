@@ -29,8 +29,8 @@ include::_attributes.adoc[]
 |Retrieval-Augmented Generation -- augmenting LLM responses with relevant documents
 |xref:08-rag.adoc[Module 08]
 
-|*Llama Guard*
-|Safety classifier that detects harmful content in inputs and outputs
+|*Safety Shields*
+|Content classifiers (TrustyAI Guardrails for PII detection, or Llama Guard for broader classification) that check inputs and outputs
 |xref:09-safety-shields.adoc[Module 09]
 
 |*LLM-as-Judge*
@@ -153,13 +153,13 @@ TIP: In an *instructor-led workshop*, your instructor provides the remote URLs f
 |Description
 |Default
 
-|`SHIELD_MODEL`
-|Model used by the Llama Guard safety provider
-|`{inference-model}`
+|`SHIELD_PROVIDER`
+|Safety shield provider (`trustyai_fms` or `llama-guard`)
+|`trustyai_fms`
 
 |`SHIELD_ID`
 |Shield identifier registered on Llama Stack
-|`content_safety`
+|`pii_detector`
 |===
 
 === Evaluations (Module 10, Capstone)

@@ -80,8 +80,8 @@ The agent's role maps directly to the conditional loop above:
 flowchart LR
     subgraph inputs [Agent Reads]
         RAG[Lending Policy via RAG]
-        Tools[Application Data via MCP Tools]
-        Credit[Credit Reports via MCP Tools]
+        Tools[Application Data via Client Tools]
+        Credit[Credit Reports via Client Tools]
     end
 
     subgraph reasoning [Agent Reasons]
@@ -109,7 +109,7 @@ flowchart LR
 In concrete terms, the mortgage agent autonomously:
 
 . *Reads lending policy* (via RAG) to know what documents are required and their acceptance criteria
-. *Checks application status* (via MCP tools) to see what conditions are outstanding
+. *Checks application status* (via client tools) to see what conditions are outstanding
 . *Retrieves credit reports* and analyzes scores, DTI, and debt against policy thresholds
 . *Reviews documents* against policy rules (e.g., "bank statements must be within 60 days")
 . *Accepts or rejects* documents with specific reasons
@@ -169,7 +169,7 @@ flowchart LR
 
 |2
 |`2_mortgage_agent_basic.py`
-|Agent creation, MCP tool binding
+|Agent creation, client tool binding
 |Phase 2: check status
 |Modules 03-04
 
@@ -229,20 +229,21 @@ flowchart LR
 flowchart TD
     Agent[Mortgage Agent]
     LS["Llama Stack :8321"]
+    API["Mortgage API :8083"]
 
     Agent --> LS
+    Agent -->|"@client_tool\n(direct HTTP)"| API
 
-    subgraph capabilities [Agent Capabilities]
+    subgraph serverCapabilities [Llama Stack Capabilities]
         RAG["RAG - Lending Policy Vector Store"]
-        Safety["Safety Shields - Llama Guard"]
-        MCP["MCP Tools - mortgage-mcp :9003"]
+        Safety[Safety Shields]
+        Inference[LLM Inference]
     end
 
     LS --> RAG
     LS --> Safety
-    LS --> MCP
+    LS --> Inference
 
-    MCP --> API["Mortgage API :8083"]
     API --> DB[("PostgreSQL - acme_mortgage")]
 
     subgraph data [Database Tables]
@@ -270,7 +271,7 @@ Before starting this capstone, you should have completed *all core modules*:
 * *Module 04* -- Agents with MCP tools (tool binding, tool calling)
 * *Module 05* -- Multi-turn conversations and human-in-the-loop
 * *Module 08* -- RAG (vector stores, file_search, hybrid search)
-* *Module 09* -- Safety shields (Llama Guard registration, input/output checks)
+* *Module 09* -- Safety shields (shield registration, input/output checks)
 * *Module 10* -- Evaluations (datasets, scoring functions, benchmarks)
 
 And have running:
@@ -380,9 +381,9 @@ This ingests `MortgageLendingPolicy.txt` into a Llama Stack vector store with hy
 python 2_mortgage_agent_basic.py
 ----
 
-A simple agent with only MCP tools (no RAG). Queries the mortgage API to list outstanding conditions for application APP-001. This is the same pattern as Module 04 -- single-domain agent with tool calling.
+A simple agent with client-side tools (no RAG). Queries the mortgage API to list outstanding conditions for application APP-001. This uses `@client_tool` functions that call the Mortgage API directly via HTTP -- the same agent patterns from Module 04, but with tools executed client-side instead of via MCP.
 
-*Concepts applied:* Agent creation, MCP tool binding, tool calling (from Modules 03-04)
+*Concepts applied:* Agent creation, client tool binding, tool calling (from Modules 03-04)
 
 TIP: *Try it yourself:* Open `2_mortgage_agent_basic.py` and change the query to ask about application APP-002 instead. APP-002 is an FHA loan still in underwriting -- how does the agent's response differ from APP-001's conditional approval?
 
@@ -393,14 +394,14 @@ TIP: *Try it yourself:* Open `2_mortgage_agent_basic.py` and change the query to
 python 3_mortgage_agent_with_rag.py
 ----
 
-Adds RAG (`file_search`) alongside MCP tools. The agent can now:
+Adds RAG (`file_search`) alongside client tools. The agent can now:
 
 * Look up policy requirements: "What documents are needed for a conventional loan?"
 * Cross-reference actual data with policy: "Does application 1 have all required documents?"
 
 *Concepts applied:* RAG with file_search, combining tools with file_search (from Module 08)
 
-TIP: *Try it yourself:* Write your own query that asks about VA loan document requirements. Does the agent use file_search, MCP tools, or both? Watch the tool calls in the output to see the agent's reasoning.
+TIP: *Try it yourself:* Write your own query that asks about VA loan document requirements. Does the agent use file_search, client tools, or both? Watch the tool calls in the output to see the agent's reasoning.
 
 === Step 4: Document Review Agent
 
@@ -610,7 +611,7 @@ APP-001 is the primary scenario for the agent scripts -- it has open conditions 
 
 == What's Next
 
-You now have a complete agent stack: REST API, MCP tools, Agent with RAG, safety shields, and evaluation. Here are ways to extend this or apply it to your own domain.
+You now have a complete agent stack: REST API, client tools, Agent with RAG, safety shields, and evaluation. Here are ways to extend this or apply it to your own domain.
 
 === Extend the mortgage agent
 
@@ -640,8 +641,8 @@ The patterns you learned are domain-agnostic. To build an agent for a different 
 |Mortgage API errors
 |Verify PostgreSQL database `acme_mortgage` exists and API is running on port {mortgage-api-port}
 
-|MCP tools not found
-|Check `MORTGAGE_MCP_SERVER_URL` in `.env` and that the MCP server is running on port {mortgage-mcp-port}
+|Tool calls fail
+|Verify `MORTGAGE_API_BASE_URL` in `.env` points to a running Mortgage API. The capstone uses client-side tools that call the API directly (not via MCP).
 
 |Vector store creation fails
 |Ensure your Llama Stack server has an embedding model registered
@@ -659,7 +660,7 @@ The patterns you learned are domain-agnostic. To build an agent for a different 
 |Register a shield first: see Module 09, script `4_register_shield.py`. Set `SHIELD_ID` in `.env`
 
 |Shield doesn't block unsafe input
-|Ensure the shield model (Llama Guard) is available on your Llama Stack server
+|Ensure the shield is registered (run Module 09, script `4_register_shield.py`) and `SHIELD_ID` is set in `.env`
 
 |Eval dataset registration fails (Step 8)
 |Check that the `datasets/mortgage-evals.csv` file exists and `CANDIDATE_MODEL` or `INFERENCE_MODEL` is set

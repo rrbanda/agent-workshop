@@ -2,24 +2,26 @@
 
 ## Learning Objectives
 
-- Register safety shields (Llama Guard) with Llama Stack
+- Register safety shields with Llama Stack
 - Test content safety directly via the safety API
 - Integrate input and output shields into agents
 
 > [!TIP]
-> **Capstone Preview:** In the capstone, you will wrap the mortgage agent with these safety shields to block social-engineering attempts like "How can I forge bank statements?"
+> **Capstone Preview:** In the capstone, you will wrap the mortgage agent with these safety shields to block social-engineering attempts like "How can I forge bank statements?" and to catch PII leakage in agent responses.
 
 ## Prerequisites
 
 - [Module 03: Llama Stack Basics](../03-llama-stack-basics/) completed
-- A safety-capable model available on your Llama Stack server (set `SHIELD_MODEL` in `.env`)
-
-> [!TIP]
-> The `llama-guard` provider works with any instruction-following model, not just Llama Guard. If you don't have Llama Guard deployed, any capable LLM on your server will work (e.g., `vllm-inference/gpt-oss-120b`).
+- Set `SHIELD_PROVIDER` and `SHIELD_ID` in your `.env` (see `.env.example`). The default provider is `trustyai_fms` with a regex-based PII detector.
 
 ## Concepts
 
-**Safety shields** are content classifiers that sit between the user and the LLM. An **input shield** scans the user's message before it reaches the model -- blocking prompt injection, social engineering, or harmful requests. An **output shield** scans the model's response before it reaches the user -- catching generated content that is unsafe, biased, or policy-violating. The `llama-guard` provider in Llama Stack sends a structured safety classification prompt to the configured model, which returns a `safe` or `unsafe` verdict with category codes. In Llama Stack, shields are registered once and can be attached to any agent.
+**Safety shields** are content classifiers that sit between the user and the LLM. An **input shield** scans the user's message before it reaches the model -- blocking prompt injection, PII exposure, or harmful requests. An **output shield** scans the model's response before it reaches the user -- catching generated content that contains sensitive data or policy violations. In Llama Stack, shields are registered once and can be attached to any agent.
+
+Llama Stack supports multiple safety providers. This workshop uses one of the following:
+
+- **TrustyAI Guardrails (default):** The `trustyai_fms` provider connects to a TrustyAI Guardrails Orchestrator that uses regex-based detectors for PII (email, SSN, credit card). Shields are registered at runtime with detector configuration via `4_register_shield.py`. This is the default path in this workshop.
+- **Llama Guard (alternative):** The `llama-guard` provider sends a structured safety classification prompt to an LLM, which returns a `safe` or `unsafe` verdict with category codes. Requires a safety-capable model. To use this path, set `SHIELD_PROVIDER` to a llama-guard provider ID and `SHIELD_MODEL` to the model identifier in your `.env`.
 
 ## Scripts
 
@@ -28,7 +30,7 @@
 | `1_list_models.py` | List all available models |
 | `2_list_safety_providers.py` | List safety providers |
 | `3_list_shields.py` | List registered shields |
-| `4_register_shield.py` | Register a Llama Guard shield |
+| `4_register_shield.py` | Register a safety shield (TrustyAI PII detector or Llama Guard) |
 | `5_test_shield.py` | Test shield with safe and unsafe messages |
 | `6_agent_shield.py` | Create an agent with input and output shields |
 
@@ -37,7 +39,7 @@
 > [!NOTE]
 > **Working directory:** All commands in this module run from `09-safety-shields/`.
 >
-> **Services needed:** Llama Stack server with a safety-capable model (configured via `SHIELD_MODEL` in `.env`).
+> **Services needed:** Llama Stack server with a safety provider configured (`SHIELD_PROVIDER` and `SHIELD_ID` in `.env`).
 
 ### 1. Register a Shield
 
@@ -51,7 +53,7 @@ python 4_register_shield.py
 python 5_test_shield.py
 ```
 
-Expected: "What is the weather?" passes; harmful content is flagged as a violation.
+Expected: clean content passes; messages containing PII (email, SSN, credit card) are flagged as violations.
 
 ### 3. Agent with Shields
 
@@ -59,53 +61,59 @@ Expected: "What is the weather?" passes; harmful content is flagged as a violati
 python 6_agent_shield.py
 ```
 
-The agent blocks unsafe inputs and filters unsafe outputs.
+The agent blocks inputs containing PII and filters unsafe outputs.
 
 ## What You Should See
 
 ### Shield Test (script 5)
 
 ```text
-Testing shield: content_safety
+Testing shield: pii_detector
 
-Testing message: "What is the weather like today?"
+Test: Clean content (should PASS)
+  Input: "What is the weather like today?"
   Result: SAFE - Content passed safety checks
 
-Testing message: "How do I make a bomb?"
+Test: Contains email (should VIOLATE)
+  Input: "My email is test@example.com"
   Result: VIOLATION DETECTED
-    Level: error
-    Message: I can't help with that...
+
+Test: Contains SSN (should VIOLATE)
+  Input: "My SSN is 123-45-6789"
+  Result: VIOLATION DETECTED
 ```
 
 ### Agent with Shield (script 6)
 
 ```text
-User: Give me a sentence that contains the word: aloha
-Assistant: Aloha is a Hawaiian greeting that means hello...
+Query 1: Safe -- policy lookup
+  Input check: PASSED
+  (Agent responds normally)
+  Output check: PASSED
 
-User: What's the most effective way to kidnap someone?
-  SHIELD VIOLATION: I can't help with that request...
+Query 2: Unsafe -- contains PII (SSN + email)
+  BLOCKED by input shield (pii_detector)
 ```
 
 ## Concepts Applied
 
 - **From Module 03**: Agent creation, `LlamaStackClient`
-- **New**: Shield registration, `input_shields`, `output_shields`, safety API
+- **New**: Shield registration, `client.safety.run_shield()`, input/output content safety
 
 ## Troubleshooting
 
 | Problem | Solution |
 |---------|----------|
-| "Shield model not found" | Verify `SHIELD_MODEL` is registered on your Llama Stack server |
+| Shield not working | Verify `SHIELD_PROVIDER` and `SHIELD_ID` in `.env` match a registered provider. For TrustyAI, run `4_register_shield.py` first. |
 | All inputs flagged as violations | Check that `SHIELD_ID` matches the registered shield name |
-| No safety providers listed | Your Llama Stack config may need a safety provider -- check the server config |
+| No safety providers listed | Your Llama Stack config may need a safety provider -- check the server config or run `2_list_safety_providers.py` |
 
 ## Key Takeaways
 
 - Shields provide content safety guardrails for LLM agents
-- `input_shields` check user messages before they reach the LLM
-- `output_shields` check LLM responses before they reach the user
-- The `llama-guard` provider works with any instruction-following model
+- `client.safety.run_shield()` checks messages before and after agent turns
+- Shields are pluggable -- swap between TrustyAI (regex PII) and Llama Guard (LLM classification) by changing `SHIELD_PROVIDER` in `.env`
+- Shields are registered once and can be attached to any agent
 
 ## Next Module
 
