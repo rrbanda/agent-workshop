@@ -4,6 +4,7 @@
 
 - Understand the Model Context Protocol (MCP)
 - Write FastMCP tool wrappers for REST APIs
+- Build and deploy MCP servers on OpenShift
 - Register MCP servers with Llama Stack
 - Test MCP tools independently
 
@@ -12,7 +13,8 @@
 
 ## Prerequisites
 
-- [Module 01: Backend APIs](../01-backend-apis/) running (ports 8081 and 8082)
+- [Module 01: Backend APIs](../01-backend-apis/) deployed on OpenShift
+- Access to an OpenShift cluster (logged in via `oc`)
 
 ## Concepts
 
@@ -37,78 +39,65 @@ The **Model Context Protocol (MCP)** provides a standard way to expose tools to 
 ## Step-by-Step
 
 > [!NOTE]
-> **Working directory:** All commands in this module run from `02-mcp-servers/`.
+> **Working directory:** All commands in this module run from the **repo root** (`agent-workshop/`).
 >
-> **Services needed:** Customer API (8081), Finance API (8082) from Module 01.
+> **Services needed:** Customer API and Finance API deployed on OpenShift (Module 01).
 
-### 1. Start Customer MCP
+Since Llama Stack runs on RHOAI, MCP servers must also be deployed on OpenShift so Llama Stack can reach them.
 
-In a dedicated terminal:
-
-```bash
-cd customer-mcp
-python customer-api-mcp-server.py
-```
-
-> [!NOTE]
-> The MCP server uses `load_dotenv()` which loads `.env` from the current working directory. Since you run these from `02-mcp-servers/customer-mcp/`, make sure your root `.env` is also accessible. The simplest approach: run from the repo root instead (e.g., `python 02-mcp-servers/customer-mcp/customer-api-mcp-server.py`), or set the env vars `CUSTOMER_API_BASE_URL`, `PORT_FOR_CUSTOMER_MCP`, and `HOST_FOR_CUSTOMER_MCP` in your shell before starting.
-
-### 2. Start Finance MCP
-
-In a new terminal:
+### 1. Build Customer MCP
 
 ```bash
-cd finance-mcp
-python finance-api-mcp-server.py
-```
-
-### 3. Register with Llama Stack
-
-> [!IMPORTANT]
-> **Requires:** Llama Stack server running (started in Module 00).
-
-In a new terminal, from the repo root:
-
-```bash
-cd 02-mcp-servers/examples
-python 1_register_customer_mcp.py
-python 1_register_finance_mcp.py
-```
-
-### 4. Verify Registration
-
-```bash
-python 2_list_tools.py
-```
-
-## Verification
-
-The best way to verify MCP registration is `python 2_list_tools.py` (Step 4 above). You can also check that the MCP servers themselves are responding:
-
-```bash
-# Should return a JSON response (MCP protocol handshake)
-curl -s http://localhost:9001/mcp | head -c 200
-curl -s http://localhost:9002/mcp | head -c 200
-```
-
-## Deploying to OpenShift
-
-If your Llama Stack server is remote, MCP servers must also be deployed remotely -- `localhost` MCP URLs are not reachable from a remote Llama Stack. Build and deploy:
-
-```bash
-# From repo root -- build images via OpenShift binary builds
 oc new-build --binary --strategy=docker --name=customer-mcp
 oc start-build customer-mcp --from-dir=02-mcp-servers/customer-mcp/ --follow
+```
 
+### 2. Build Finance MCP
+
+```bash
 oc new-build --binary --strategy=docker --name=finance-mcp
 oc start-build finance-mcp --from-dir=02-mcp-servers/finance-mcp/ --follow
+```
 
-# Deploy (includes Deployment, Service, Route for each MCP server)
+### 3. Deploy to OpenShift
+
+```bash
 oc apply -f 02-mcp-servers/openshift/customer-mcp.yaml
 oc apply -f 02-mcp-servers/openshift/finance-mcp.yaml
 ```
 
-Then update your `.env` with the OpenShift route URLs (e.g., `https://mcp-customer-route-<namespace>.apps.<cluster>/mcp`). See `00-setup/admin/deploy.sh` for the full automated deployment.
+### 4. Get the Route URLs
+
+```bash
+echo "CUSTOMER_MCP_SERVER_URL=https://$(oc get route mcp-customer-route -o jsonpath='{.spec.host}')/mcp"
+echo "FINANCE_MCP_SERVER_URL=https://$(oc get route mcp-finance-route -o jsonpath='{.spec.host}')/mcp"
+```
+
+Set these in your `.env` file.
+
+### 5. Verify Pods are Running
+
+```bash
+oc get pods -l app=customer-mcp
+oc get pods -l app=finance-mcp
+```
+
+Both pods should show `1/1 Running`.
+
+### 6. Register with Llama Stack
+
+```bash
+python 02-mcp-servers/examples/1_register_customer_mcp.py
+python 02-mcp-servers/examples/1_register_finance_mcp.py
+```
+
+### 7. Verify Registration
+
+```bash
+python 02-mcp-servers/examples/2_list_tools.py
+```
+
+You should see `customer_mcp` and `finance_mcp` toolgroups listed with their MCP endpoints.
 
 ## Key Takeaways
 

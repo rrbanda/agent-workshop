@@ -13,14 +13,15 @@ TIP: *Capstone Preview:* In the capstone, a Mortgage MCP server wraps the Mortga
 
 == Prerequisites
 
-* xref:01-backend-apis.adoc[Module 01: Backend APIs] deployed (locally or on OpenShift)
+* xref:01-backend-apis.adoc[Module 01: Backend APIs] deployed on OpenShift
 * xref:00-setup.adoc[Module 00: Environment Setup] completed
+* Access to an OpenShift cluster (logged in via `oc`)
 
 == Concepts
 
 The *Model Context Protocol (MCP)* provides a standard way to expose tools to LLMs. An MCP server wraps existing APIs as tool functions that an LLM can discover and call. FastMCP is a Python library that makes building MCP servers straightforward.
 
-IMPORTANT: *MCP servers must be reachable from the Llama Stack server.* If your Llama Stack runs on OpenShift (remote), MCP servers must also be deployed remotely. MCP servers on `localhost` are invisible to a remote Llama Stack -- you will get `RuntimeError: No response available`. See xref:00-setup.adoc#_deployment_scenarios[Deployment Scenarios].
+NOTE: MCP servers are deployed on OpenShift alongside the backend APIs and Llama Stack, ensuring all services can reach each other.
 
 == ACME MCP Tools
 
@@ -71,38 +72,36 @@ The finance MCP server (`02-mcp-servers/finance-mcp/finance-api-mcp-server.py`) 
 
 == Step-by-Step
 
-Choose the deployment path that matches your setup:
+NOTE: *Working directory:* All commands in this module run from the *repo root* (`agent-workshop/`). +
+*Services needed:* Customer API and Finance API deployed on OpenShift (Module 01).
 
-=== Option A: Deploy MCP Servers on OpenShift (Recommended)
+Since Llama Stack runs on RHOAI, MCP servers must also be deployed on OpenShift so Llama Stack can reach them.
 
-This is the recommended path when your Llama Stack runs on OpenShift. The MCP servers run as pods with OpenShift Routes, so Llama Stack can reach them.
-
-NOTE: *If your instructor has already deployed MCP servers*, skip to <<_3_update_env>> and use the route URLs your instructor provided.
-
-IMPORTANT: The MCP server container images must be built before deploying. If your instructor used the admin deploy script (`00-setup/admin/deploy.sh`), the images are already in the internal registry. If you need to build them yourself, see the xref:llama-stack-admin.adoc#_building_images_manually[Admin Guide: Building Images Manually].
-
-IMPORTANT: Deploy into the *same namespace* as the backend APIs (e.g., `acme-workshop`). The MCP server images are stored in the internal registry under that namespace, and the env vars use cross-namespace DNS to reach the APIs.
+=== 1. Build Customer MCP
 
 [source,bash]
 ----
-oc project acme-workshop
+oc new-build --binary --strategy=docker --name=customer-mcp
+oc start-build customer-mcp --from-dir=02-mcp-servers/customer-mcp/ --follow
 ----
 
-==== 1. Deploy Customer MCP
+=== 2. Build Finance MCP
+
+[source,bash]
+----
+oc new-build --binary --strategy=docker --name=finance-mcp
+oc start-build finance-mcp --from-dir=02-mcp-servers/finance-mcp/ --follow
+----
+
+=== 3. Deploy to OpenShift
 
 [source,bash]
 ----
 oc apply -f 02-mcp-servers/openshift/customer-mcp.yaml
-----
-
-==== 2. Deploy Finance MCP
-
-[source,bash]
-----
 oc apply -f 02-mcp-servers/openshift/finance-mcp.yaml
 ----
 
-==== 3. Get the Route URLs
+=== 4. Get the Route URLs
 
 [source,bash]
 ----
@@ -110,18 +109,9 @@ echo "CUSTOMER_MCP_SERVER_URL=https://$(oc get route mcp-customer-route -o jsonp
 echo "FINANCE_MCP_SERVER_URL=https://$(oc get route mcp-finance-route -o jsonpath='{.spec.host}')/mcp"
 ----
 
-[[_3_update_env]]
-==== 4. Update `.env`
+Set these in your `.env` file.
 
-Set the MCP server URLs in your `.env` file to the route URLs from the previous step (or from your instructor):
-
-[source,bash]
-----
-CUSTOMER_MCP_SERVER_URL=https://mcp-customer-route-<namespace>.apps.<cluster>/mcp
-FINANCE_MCP_SERVER_URL=https://mcp-finance-route-<namespace>.apps.<cluster>/mcp
-----
-
-==== 5. Verify the Pods are Running
+=== 5. Verify Pods are Running
 
 [source,bash]
 ----
@@ -131,37 +121,7 @@ oc get pods -l app=finance-mcp
 
 Both pods should show `1/1 Running`.
 
-=== Option B: Run MCP Servers Locally
-
-Use this only if your Llama Stack also runs locally. A remote Llama Stack cannot reach `localhost`.
-
-In two separate terminals, from the *repo root*:
-
-[source,bash]
-----
-python 02-mcp-servers/customer-mcp/customer-api-mcp-server.py
-----
-
-[source,bash]
-----
-python 02-mcp-servers/finance-mcp/finance-api-mcp-server.py
-----
-
-TIP: Running from the repo root ensures `load_dotenv()` finds your `.env` file.
-
-Your `.env` should have the localhost defaults:
-
-[source,bash]
-----
-CUSTOMER_MCP_SERVER_URL=http://localhost:9001/mcp
-FINANCE_MCP_SERVER_URL=http://localhost:9002/mcp
-----
-
-== Register with Llama Stack
-
-IMPORTANT: *Requires:* Llama Stack server running (started in Module 00) and MCP servers deployed (Option A or B above).
-
-Make sure your venv is activated (`source .venv/bin/activate`), then from the *repo root*:
+=== 6. Register with Llama Stack
 
 [source,bash]
 ----
@@ -169,7 +129,7 @@ python 02-mcp-servers/examples/1_register_customer_mcp.py
 python 02-mcp-servers/examples/1_register_finance_mcp.py
 ----
 
-== Verify Registration
+=== 7. Verify Registration
 
 [source,bash]
 ----
@@ -184,7 +144,7 @@ You should see `customer_mcp` and `finance_mcp` toolgroups listed with their MCP
 * The `@mcp.tool()` decorator turns a Python function into an LLM-callable tool
 * Tools are registered with Llama Stack via `client.toolgroups.register()`
 * MCP uses HTTP transport (streamable HTTP) for communication
-* When Llama Stack is remote, MCP servers must also be deployed remotely (e.g., on OpenShift with routes)
+* MCP servers are deployed on OpenShift with routes so Llama Stack can reach them
 
 == Next Module
 

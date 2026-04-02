@@ -19,16 +19,31 @@ This is a progressive workshop organized into numbered modules:
 
 ## Build, Test, and Development Commands
 
-### Backend APIs (Module 01)
+### Backend APIs (Module 01) -- Build & Deploy to OpenShift
 ```bash
-cd 01-backend-apis/customer-api && mvn clean package -DskipTests && mvn spring-boot:run
-cd 01-backend-apis/finance-api && mvn clean package -DskipTests && mvn spring-boot:run
+oc new-build --binary --strategy=docker --name=customer-api
+cp 01-backend-apis/customer-api/deployment/Dockerfile 01-backend-apis/customer-api/Dockerfile
+oc start-build customer-api --from-dir=01-backend-apis/customer-api/ --follow
+rm 01-backend-apis/customer-api/Dockerfile
+
+oc new-build --binary --strategy=docker --name=finance-api
+cp 01-backend-apis/finance-api/deployment/Dockerfile 01-backend-apis/finance-api/Dockerfile
+oc start-build finance-api --from-dir=01-backend-apis/finance-api/ --follow
+rm 01-backend-apis/finance-api/Dockerfile
+
+oc apply -f 00-setup/admin/k8s/apis.yaml
 ```
 
-### MCP Servers (Module 02)
+### MCP Servers (Module 02) -- Build & Deploy to OpenShift
 ```bash
-python 02-mcp-servers/customer-mcp/customer-api-mcp-server.py
-python 02-mcp-servers/finance-mcp/finance-api-mcp-server.py
+oc new-build --binary --strategy=docker --name=customer-mcp
+oc start-build customer-mcp --from-dir=02-mcp-servers/customer-mcp/ --follow
+
+oc new-build --binary --strategy=docker --name=finance-mcp
+oc start-build finance-mcp --from-dir=02-mcp-servers/finance-mcp/ --follow
+
+oc apply -f 02-mcp-servers/openshift/customer-mcp.yaml
+oc apply -f 02-mcp-servers/openshift/finance-mcp.yaml
 ```
 
 ### Llama Stack Server

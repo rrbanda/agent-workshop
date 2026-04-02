@@ -78,7 +78,7 @@ python 4_debug_vector_search.py
 ### Create Vector Store (script 1)
 
 ```text
-LLAMA_STACK_BASE_URL: http://localhost:8321
+LLAMA_STACK_BASE_URL: <your LLAMA_STACK_BASE_URL>
 EMBEDDING_MODEL: <your-embedding-model>
 EMBEDDING_DIMENSION: 768
 --------------------------------------------------------------------------------

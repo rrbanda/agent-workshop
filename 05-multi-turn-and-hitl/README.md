@@ -114,7 +114,7 @@ agent.create_turn(session_id=session_id, messages=[{"role": "user", "content": "
 |---------|----------|
 | Agent loses context between turns | Verify you're reusing the same `session_id` |
 | HITL agent exits immediately | Make sure you type a question, not just press Enter |
-| "No tools found" | Ensure MCP servers are running (ports 9001, 9002) |
+| "No tools found" | Ensure MCP servers are deployed on OpenShift and registered with Llama Stack (Module 02). |
 
 ## Next Module
 

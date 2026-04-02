@@ -86,9 +86,9 @@ These files are the RHOAI deployment artifacts used to set up the Llama Stack se
 
 == Deploy Backend Services (Instructor-Led Workshop)
 
-For an instructor-led workshop, you also need to deploy the ACME backend APIs, PostgreSQL databases, and MCP servers so that participants use remote services instead of running them locally.
+For an instructor-led workshop, you also need to deploy the ACME backend APIs, PostgreSQL databases, and MCP servers so that participants have pre-deployed services available.
 
-=== Option A: Automated Deploy Script (Recommended)
+=== Automated Deploy Script
 
 A single script builds all container images using OpenShift Binary Builds (no external registry needed) and deploys everything:
 
@@ -116,17 +116,7 @@ To tear down all resources later:
 bash 00-setup/admin/teardown.sh acme-workshop
 ----
 
-=== Option B: Helm Charts
-
-Helm charts are also available in `site/13-deployment/helm/`. Images must be built first (see step 1 from Option A or build manually with `oc new-build`).
-
-[source,bash]
-----
-helm install acme-app site/13-deployment/helm/acme-app/
-helm install acme-mcp site/13-deployment/helm/acme-mcp/
-----
-
-NOTE: The Helm charts currently cover Customer and Finance only. For the full workshop including the Mortgage capstone, use the deploy script (Option A) or deploy the mortgage services separately using `mortgage-use-case/openshift/mortgage-mcp.yaml`.
+TIP: Helm charts are also available in `site/13-deployment/helm/` (Customer and Finance only). Images must be built first via `oc new-build`. For the full workshop including the Mortgage capstone, use the deploy script above.
 
 === Building Images Manually
 
@@ -150,7 +140,7 @@ Each service has a `Dockerfile` in its directory:
 
 === Collect URLs for Participants
 
-After all services are deployed (via deploy script, Helm, or manual), gather the route URLs:
+After all services are deployed, gather the route URLs:
 
 [source,bash]
 ----
@@ -163,7 +153,7 @@ echo "FINANCE_MCP_SERVER_URL=https://$(oc get route mcp-finance-route -o jsonpat
 echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonpath='{.spec.host}')/mcp"
 ----
 
-Participants paste these values into their `.env` file (uncomment the "Remote" lines in `.env.example` and replace the placeholders).
+Participants paste these values into their `.env` file.
 
 == Troubleshooting
 

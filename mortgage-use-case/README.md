@@ -212,85 +212,59 @@ Before starting this capstone, you should have completed **all core modules**:
 
 And have running:
 
-- Llama Stack server
-- PostgreSQL
+- Llama Stack server (pre-deployed on RHOAI)
+- Access to an OpenShift cluster (logged in via `oc`)
 
 ## Setup
 
 > [!NOTE]
-> **Working directory:** All commands in this module run from `mortgage-use-case/`.
+> **Working directory:** All commands run from the **repo root** (`agent-workshop/`).
 >
-> **Services needed:** Llama Stack server, PostgreSQL.
+> **Services needed:** Llama Stack server (RHOAI), Mortgage API (OpenShift).
 >
-> **Environment:** Ensure your root `.env` includes the Mortgage variables (`MORTGAGE_API_BASE_URL`, `MORTGAGE_MCP_SERVER_URL`, etc.) from `.env.example`.
+> **Environment:** Ensure your root `.env` includes the Mortgage variables (`MORTGAGE_API_BASE_URL`, etc.) from `.env.example`.
 
-### 1. Create the database
-
-```bash
-createdb acme_mortgage
-```
-
-### 2. Start the Mortgage API
+### 1. Build the Mortgage API
 
 ```bash
-cd mortgage-api
-mvn clean package -DskipTests
-mvn spring-boot:run
-```
-
-The API starts on port 8083 with seed data (4 applications, 12 documents, 4 conditions, 6 credit reports). Verify at http://localhost:8083/swagger-ui.html.
-
-> [!TIP]
-> **Recognize the pattern:** This API follows the same Spring Boot structure you ran in Module 01. Compare `mortgage-api/src/` with `customer-api/src/` -- same entity/repository/service/controller layers, same `data.sql` seed data approach.
-
-### 3. Start the Mortgage MCP Server
-
-In a new terminal, from the `mortgage-use-case/` directory:
-
-```bash
-cd mortgage-mcp
-pip install -r requirements.txt
-python mortgage-api-mcp-server.py
-```
-
-The MCP server starts on port 9003 with 8 tools.
-
-> [!TIP]
-> **Recognize the pattern:** This MCP server uses the same FastMCP pattern from Module 02. Compare `mortgage-api-mcp-server.py` with `customer-api-mcp-server.py` -- same `@mcp.tool()` decorators wrapping `httpx` REST calls.
-
-> [!NOTE]
-> The capstone agent scripts use **client-side tools** (`@client_tool` in `mortgage_client_tools.py`) that call the Mortgage API directly. The MCP server is included for completeness and can be used for custom experiments, but the provided scripts do not require it.
-
-### 4. Configure environment
-
-Ensure your `.env` file includes:
-
-```text
-MORTGAGE_API_BASE_URL=http://localhost:8083
-MORTGAGE_MCP_SERVER_URL=http://localhost:9003/mcp
-PORT_FOR_MORTGAGE_MCP=9003
-```
-
-### Deploying to OpenShift
-
-If your Llama Stack server is remote, deploy the Mortgage API (and optionally MCP) to OpenShift:
-
-```bash
-# From repo root -- build images
 cp mortgage-use-case/mortgage-api/deployment/Dockerfile mortgage-use-case/mortgage-api/Dockerfile
 oc new-build --binary --strategy=docker --name=mortgage-api
 oc start-build mortgage-api --from-dir=mortgage-use-case/mortgage-api/ --follow
 rm mortgage-use-case/mortgage-api/Dockerfile
-
-oc new-build --binary --strategy=docker --name=mortgage-mcp
-oc start-build mortgage-mcp --from-dir=mortgage-use-case/mortgage-mcp/ --follow
-
-# Deploy
-oc apply -f 00-setup/admin/k8s/apis.yaml          # includes mortgage-api
-oc apply -f mortgage-use-case/openshift/mortgage-mcp.yaml
 ```
 
-Then update your `.env` with the route URLs from `oc get routes`. See `00-setup/admin/deploy.sh` for the full automated deployment.
+### 2. Deploy to OpenShift
+
+```bash
+oc apply -f 00-setup/admin/k8s/apis.yaml
+```
+
+This creates the Deployment, Service, PostgreSQL instance, and Route for the Mortgage API. The database is auto-populated with seed data on startup (4 applications, 12 documents, 4 conditions, 6 credit reports).
+
+> [!TIP]
+> **Recognize the pattern:** This API follows the same Spring Boot structure you deployed in Module 01. Compare `mortgage-api/src/` with `customer-api/src/` -- same entity/repository/service/controller layers, same `data.sql` seed data approach.
+
+### 3. Get the Route URL
+
+```bash
+echo "MORTGAGE_API_BASE_URL=https://$(oc get route mortgage-api-route -o jsonpath='{.spec.host}')"
+```
+
+Set this in your `.env` file. Verify at `https://<mortgage-route>/swagger-ui.html`.
+
+> [!NOTE]
+> The capstone agent scripts use **client-side tools** (`@client_tool` in `mortgage_client_tools.py`) that call the Mortgage API directly via HTTP. The MCP server (`mortgage-mcp/`) is included for completeness and can be used for custom experiments, but the provided scripts do not require it.
+
+### 4. (Optional) Build and Deploy the Mortgage MCP Server
+
+Only needed if you want to experiment with MCP-based tools instead of client-side tools:
+
+```bash
+oc new-build --binary --strategy=docker --name=mortgage-mcp
+oc start-build mortgage-mcp --from-dir=mortgage-use-case/mortgage-mcp/ --follow
+oc apply -f mortgage-use-case/openshift/mortgage-mcp.yaml
+echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonpath='{.spec.host}')/mcp"
+```
 
 ## Walkthrough
 
@@ -519,7 +493,7 @@ The patterns you learned are domain-agnostic. To build an agent for a different 
 
 | Problem | Solution |
 |---------|----------|
-| Mortgage API errors | Verify PostgreSQL database `acme_mortgage` exists and API is running on port 8083 |
+| Mortgage API errors | Verify the Mortgage API pod is running on OpenShift (`oc get pods -l app=mortgage-api`) and `MORTGAGE_API_BASE_URL` in `.env` is correct. |
 | Tool calls fail | Verify `MORTGAGE_API_BASE_URL` in `.env` points to a running Mortgage API. The capstone uses client-side tools that call the API directly (not via MCP). |
 | Vector store creation fails | Ensure your Llama Stack server has an embedding model registered |
 | RAG returns no results | Verify `MortgageLendingPolicy.txt` was ingested (re-run `1_create_vector_store.py`) |

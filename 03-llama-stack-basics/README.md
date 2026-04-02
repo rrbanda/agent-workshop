@@ -68,7 +68,7 @@ python 3_list_finance_tools.py
 ### Hello World (script 1 -- non-streaming)
 
 ```text
-Base URL: http://localhost:8321
+Base URL: <your LLAMA_STACK_BASE_URL>
 Model: vllm-inference/gpt-oss-120b
 An AI agent is a software system that perceives its environment...
 ```
@@ -83,11 +83,11 @@ Registered Toolgroups
 ==================================================
 Toolgroup ID:  customer_mcp
 Provider ID:   ...
-MCP Endpoint:  http://localhost:9001/mcp
+MCP Endpoint:  <your CUSTOMER_MCP_SERVER_URL>
 --------------------------------------------------
 Toolgroup ID:  finance_mcp
 Provider ID:   ...
-MCP Endpoint:  http://localhost:9002/mcp
+MCP Endpoint:  <your FINANCE_MCP_SERVER_URL>
 --------------------------------------------------
 Total toolgroups: 2
 ==================================================
@@ -99,7 +99,7 @@ Total toolgroups: 2
 ==================================================
 Customer MCP Server Tools
 ==================================================
-MCP Server URL: http://localhost:9001/mcp
+MCP Server URL: <your CUSTOMER_MCP_SERVER_URL>
 Tool Name:    search_customers
 Description:  Search for customers by name, email, or company
 Parameters:

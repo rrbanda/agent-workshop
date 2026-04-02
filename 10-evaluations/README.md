@@ -80,7 +80,7 @@ python 9_llm_as_judge.py
 ### Register Dataset (script 2)
 
 ```text
-Connecting to Llama Stack server at: http://localhost:8321
+Connecting to Llama Stack server at: <your LLAMA_STACK_BASE_URL>
 Registering dataset: basic-subset-of-evals
 Using dataset provider: localfs
 Registered dataset: basic-subset-of-evals

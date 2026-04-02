@@ -12,7 +12,7 @@
 
 ## Prerequisites
 
-- [Module 02: MCP Servers](../02-mcp-servers/) running (ports 9001 and 9002)
+- [Module 02: MCP Servers](../02-mcp-servers/) deployed on OpenShift and registered with Llama Stack
 - [Module 03: Llama Stack Basics](../03-llama-stack-basics/) completed
 
 ## Concepts
@@ -32,7 +32,7 @@ An **agent with tools** is an LLM that can take action in the real world. When y
 > [!NOTE]
 > **Working directory:** All commands in this module run from `04-agents-with-tools/`.
 >
-> **Services needed:** Llama Stack, Customer API (8081), Finance API (8082), Customer MCP (9001), Finance MCP (9002).
+> **Services needed:** Llama Stack (RHOAI), Customer API, Finance API, Customer MCP, Finance MCP -- all deployed on OpenShift.
 
 ### 1. Single-Domain: Customer Agent
 
@@ -63,9 +63,9 @@ The agent chains tools: email -> `search_customers` -> customer ID -> `fetch_ord
 ### Customer Agent (script 4)
 
 ```text
-Base URL: http://localhost:8321
+Base URL: <your LLAMA_STACK_BASE_URL>
 Model: vllm-inference/gpt-oss-120b
-Customer MCP: http://localhost:9001/mcp
+Customer MCP: <your CUSTOMER_MCP_SERVER_URL>
 The customer with email thomashardy@example.com is Thomas Hardy,
 contact for Around the Horn (customer ID: AROUT)...
 ```
@@ -75,10 +75,10 @@ The agent calls `search_customers` behind the scenes. Only the final text respon
 ### Multi-Domain Agent (script 5)
 
 ```text
-Base URL: http://localhost:8321
+Base URL: <your LLAMA_STACK_BASE_URL>
 Model: vllm-inference/gpt-oss-120b
-Customer MCP: http://localhost:9001/mcp
-Finance MCP: http://localhost:9002/mcp
+Customer MCP: <your CUSTOMER_MCP_SERVER_URL>
+Finance MCP: <your FINANCE_MCP_SERVER_URL>
 The customer with email thomashardy@example.com is Thomas Hardy from
 Around the Horn (AROUT). Their orders include order #10355...
 ```
@@ -120,9 +120,10 @@ agent = Agent(client, model=MODEL, instructions="...", tools=mcp_tools)
 
 | Problem | Solution |
 |---------|----------|
-| Empty tool list | Verify MCP servers are running on ports 9001/9002 |
-| Connection refused | Check `LLAMA_STACK_BASE_URL` and that the Llama Stack server is running |
-| Agent doesn't call tools | Ensure `INFERENCE_MODEL` supports tool calling (check your Llama Stack server's available models) |
+| `RuntimeError: No response available` | Verify MCP servers are deployed on OpenShift and routes are reachable. Check `CUSTOMER_MCP_SERVER_URL` and `FINANCE_MCP_SERVER_URL` in your `.env`. |
+| Empty tool list | Verify MCP servers are deployed (`oc get pods -l app=customer-mcp`) and registered with Llama Stack (Module 02, step 6). |
+| Connection refused | Check `LLAMA_STACK_BASE_URL` is correct and the Llama Stack server is running on RHOAI. |
+| Agent doesn't call tools | Ensure `INFERENCE_MODEL` supports tool calling (check your Llama Stack server's available models). |
 
 ## Next Module
 

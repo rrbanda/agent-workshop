@@ -44,6 +44,74 @@ These files are the RHOAI deployment artifacts used to set up the Llama Stack se
 | Tool Runtime | `inline::rag-runtime`, `remote::model-context-protocol` | 04, 08, Mortgage |
 | Files / Datasets | `inline::localfs` | 08-rag, 10-evaluations |
 
+## Deploy Backend Services (Instructor-Led Workshop)
+
+For an instructor-led workshop, you also need to deploy the ACME backend APIs, PostgreSQL databases, and MCP servers so that participants have pre-deployed services available.
+
+### Automated Deploy Script
+
+A single script builds all container images using OpenShift Binary Builds (no external registry needed) and deploys everything:
+
+```bash
+cd agent-workshop
+bash 00-setup/admin/deploy.sh acme-workshop
+```
+
+This will:
+
+1. Build 6 container images via `oc new-build --binary`:
+   - 3 Java Spring Boot APIs (Customer, Finance, Mortgage)
+   - 3 Python MCP servers (Customer, Finance, Mortgage)
+2. Deploy 3 PostgreSQL instances
+3. Deploy all 6 services with OpenShift Routes
+4. Print the `.env` block with all URLs ready for participants
+
+The full process takes approximately 15-20 minutes (Java builds take 2-4 minutes each).
+
+To tear down all resources later:
+
+```bash
+bash 00-setup/admin/teardown.sh acme-workshop
+```
+
+> [!TIP]
+> Helm charts are also available in `site/13-deployment/helm/` (Customer and Finance only). Images must be built first via `oc new-build`. For the full workshop including the Mortgage capstone, use the deploy script above.
+
+### Building Images Manually
+
+If you need to build images individually (for example, to update a single service):
+
+```bash
+# MCP server example (Python)
+oc new-build --binary --strategy=docker --name=customer-mcp -n acme-workshop
+oc start-build customer-mcp --from-dir=02-mcp-servers/customer-mcp/ --follow -n acme-workshop
+
+# API example (Java -- uses multi-stage Dockerfile under deployment/)
+oc new-build --binary --strategy=docker --name=customer-api -n acme-workshop
+oc start-build customer-api --from-dir=01-backend-apis/customer-api/ --follow -n acme-workshop
+```
+
+Each service has a `Dockerfile` in its directory:
+
+- APIs: `01-backend-apis/<name>/deployment/Dockerfile` and `mortgage-use-case/mortgage-api/deployment/Dockerfile`
+- MCP servers: `02-mcp-servers/<name>/Dockerfile` and `mortgage-use-case/mortgage-mcp/Dockerfile`
+
+### Collect URLs for Participants
+
+After all services are deployed, gather the route URLs:
+
+```bash
+echo "LLAMA_STACK_BASE_URL=https://$(oc get route llamastack -n llamastack -o jsonpath='{.spec.host}')"
+echo "CUSTOMER_API_BASE_URL=https://$(oc get route acme-customer-service -o jsonpath='{.spec.host}')"
+echo "FINANCE_API_BASE_URL=https://$(oc get route acme-finance-service -o jsonpath='{.spec.host}')"
+echo "MORTGAGE_API_BASE_URL=https://$(oc get route mortgage-api-route -o jsonpath='{.spec.host}')"
+echo "CUSTOMER_MCP_SERVER_URL=https://$(oc get route mcp-customer-route -o jsonpath='{.spec.host}')/mcp"
+echo "FINANCE_MCP_SERVER_URL=https://$(oc get route mcp-finance-route -o jsonpath='{.spec.host}')/mcp"
+echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonpath='{.spec.host}')/mcp"
+```
+
+Participants paste these values into their `.env` file.
+
 ## Troubleshooting
 
 | Problem | Solution |

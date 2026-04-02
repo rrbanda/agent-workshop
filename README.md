@@ -227,12 +227,12 @@ All modules share a single `.env` file at the repo root. See [.env.example](.env
 | `LLAMA_STACK_BASE_URL` | Llama Stack server URL (pre-deployed on RHOAI) | From instructor or `oc get route` |
 | `LLAMA_STACK_API_KEY` | API key for Llama Stack (use `fake` if none required) | `fake` |
 | `INFERENCE_MODEL` | LLM model identifier | `vllm-inference/gpt-oss-120b` |
-| `CUSTOMER_API_BASE_URL` | Customer REST API | `http://localhost:8081` |
-| `FINANCE_API_BASE_URL` | Finance REST API | `http://localhost:8082` |
-| `MORTGAGE_API_BASE_URL` | Mortgage REST API (capstone) | `http://localhost:8083` |
-| `CUSTOMER_MCP_SERVER_URL` | Customer MCP endpoint | `http://localhost:9001/mcp` |
-| `FINANCE_MCP_SERVER_URL` | Finance MCP endpoint | `http://localhost:9002/mcp` |
-| `MORTGAGE_MCP_SERVER_URL` | Mortgage MCP endpoint (capstone) | `http://localhost:9003/mcp` |
+| `CUSTOMER_API_BASE_URL` | Customer REST API (OpenShift route) | From `oc get route` |
+| `FINANCE_API_BASE_URL` | Finance REST API (OpenShift route) | From `oc get route` |
+| `MORTGAGE_API_BASE_URL` | Mortgage REST API (capstone, OpenShift route) | From `oc get route` |
+| `CUSTOMER_MCP_SERVER_URL` | Customer MCP endpoint (OpenShift route) | From `oc get route` |
+| `FINANCE_MCP_SERVER_URL` | Finance MCP endpoint (OpenShift route) | From `oc get route` |
+| `MORTGAGE_MCP_SERVER_URL` | Mortgage MCP endpoint (capstone, OpenShift route) | From `oc get route` |
 | `EMBEDDING_MODEL` | Embedding model for RAG | `vllm-embedding/nomic-embed-text-v1-5` |
 | `EMBEDDING_DIMENSION` | Embedding vector dimension | `768` |
 | `SHIELD_PROVIDER` | Safety shield provider | `trustyai_fms` |
@@ -258,10 +258,10 @@ All modules share a single `.env` file at the repo root. See [.env.example](.env
 
 | Problem | Solution |
 |---------|----------|
-| `RuntimeError: No response available` | Your Llama Stack is remote but MCP servers are on `localhost`. Remote Llama Stack cannot reach your local machine. Deploy MCP servers on OpenShift (`oc apply -f 02-mcp-servers/openshift/`) or run Llama Stack locally. See [Deployment Scenarios](documentation/modules/ROOT/pages/00-setup.adoc). |
+| `RuntimeError: No response available` | Verify MCP servers are deployed on OpenShift and routes are reachable. Check `CUSTOMER_MCP_SERVER_URL` and `FINANCE_MCP_SERVER_URL` in your `.env`. |
 | `Connection refused` on Llama Stack | Verify the server is running: `source .env && curl $LLAMA_STACK_BASE_URL/v1/models` |
-| Empty tool lists | Ensure MCP servers are running on their expected ports. If Llama Stack is remote, MCP servers must also be deployed remotely -- `localhost` MCP URLs are not reachable from a remote server. |
-| MCP tools fail with remote Llama Stack | MCP server URLs must be reachable *from the Llama Stack server*, not just from your laptop. Deploy MCP servers on the same cluster or expose them via public routes. |
+| Empty tool lists | Verify MCP servers are deployed (`oc get pods -l app=customer-mcp`) and registered with Llama Stack (Module 02, step 6). |
+| MCP tools fail | MCP server URLs must be reachable *from the Llama Stack server*. Both run on OpenShift, so use the route URLs from `oc get routes`. |
 | `LLAMA_STACK_BASE_URL not set` | Copy `.env.example` to `.env` and set `LLAMA_STACK_BASE_URL` to the pre-deployed RHOAI server URL |
 | Model not found | Check `INFERENCE_MODEL` matches a model on your Llama Stack server (`curl $LLAMA_STACK_BASE_URL/v1/models`) |
 | `429 Too Many Requests` / rate limiting | MaaS backend has rate limits. Wait 30-60 seconds and retry. Eval scripts include built-in retry logic. |

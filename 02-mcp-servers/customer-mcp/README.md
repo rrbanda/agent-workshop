@@ -1,43 +1,27 @@
-## Setup
+## Deployment
 
-```bash
-python3.12 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
+In this workshop, the Customer MCP server is built and deployed to OpenShift. See [Module 02 README](../README.md) for the full build-deploy workflow.
 
 ## Configuration
 
-Create a `.env` file with the following variables:
+The server uses these environment variables (set via OpenShift deployment manifests or `.env`):
 
 ```env
-CUSTOMER_API_BASE_URL=http://localhost:8081
+CUSTOMER_API_BASE_URL=https://<customer-api-openshift-route>
 PORT_FOR_CUSTOMER_MCP=9001
 HOST_FOR_CUSTOMER_MCP=0.0.0.0
 ```
 
-## Running the Server
+## Local Development (optional)
+
+For local development and testing of the MCP server code itself:
 
 ```bash
+pip install -r requirements.txt
 python customer-api-mcp-server.py
 ```
 
-The server will start on the configured host and port (default: http://0.0.0.0:9001).
-
-## Tests
-
-### Check Server is Running
-
-```bash
-set -a
-source .env
-set +a
-echo $PORT_FOR_CUSTOMER_MCP
-echo $HOST_FOR_CUSTOMER_MCP
-
-# Check if server is listening
-lsof -i :$PORT_FOR_CUSTOMER_MCP
-```
+## Testing with MCP Inspector
 
 ```bash
 brew install mcp-inspector

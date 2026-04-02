@@ -12,7 +12,7 @@ TIP: *Capstone Preview:* In the capstone, these tool-binding patterns drive a mo
 
 == Prerequisites
 
-* xref:02-mcp-servers.adoc[Module 02: MCP Servers] running (ports {customer-mcp-port} and {finance-mcp-port})
+* xref:02-mcp-servers.adoc[Module 02: MCP Servers] deployed on OpenShift and registered with Llama Stack
 * xref:03-llama-stack-basics.adoc[Module 03: Llama Stack Basics] completed
 
 == Concepts
@@ -39,7 +39,7 @@ An *agent with tools* is an LLM that can take action in the real world. When you
 == Step-by-Step
 
 NOTE: *Working directory:* All commands in this module run from `04-agents-with-tools/`. +
-*Services needed:* Llama Stack, Customer API ({customer-api-port}), Finance API ({finance-api-port}), Customer MCP ({customer-mcp-port}), Finance MCP ({finance-mcp-port}).
+*Services needed:* Llama Stack (RHOAI), Customer API, Finance API, Customer MCP, Finance MCP -- all deployed on OpenShift.
 
 === 1. Single-Domain: Customer Agent
 
@@ -137,19 +137,17 @@ agent = Agent(client, model=MODEL, instructions="...", tools=mcp_tools)
 |Solution
 
 |`RuntimeError: No response available`
-|*Most common cause:* Your Llama Stack is remote but your MCP servers are on `localhost`. A remote Llama Stack cannot reach `localhost` on your machine. Either deploy MCP servers remotely (instructor-led) or run Llama Stack locally. Check Module 00's "Deployment Scenarios" section.
+|Verify MCP servers are deployed on OpenShift and routes are reachable. Check `CUSTOMER_MCP_SERVER_URL` and `FINANCE_MCP_SERVER_URL` in your `.env`.
 
 |Empty tool list
-|Verify MCP servers are running on ports {customer-mcp-port}/{finance-mcp-port}
+|Verify MCP servers are deployed (`oc get pods -l app=customer-mcp`) and registered with Llama Stack (Module 02, step 6).
 
 |Connection refused
-|Check `LLAMA_STACK_BASE_URL` and that the Llama Stack server is running
+|Check `LLAMA_STACK_BASE_URL` is correct and the Llama Stack server is running on RHOAI.
 
 |Agent doesn't call tools
-|Ensure `INFERENCE_MODEL` supports tool calling (check your Llama Stack server's available models)
+|Ensure `INFERENCE_MODEL` supports tool calling (check your Llama Stack server's available models).
 |===
-
-IMPORTANT: *Remote Llama Stack + local MCP does not work.* If your Llama Stack runs on OpenShift (remote) and your MCP servers run on `localhost`, the Llama Stack server cannot reach them. You will get `RuntimeError: No response available` with no further explanation. See xref:00-setup.adoc#_deployment_scenarios[Deployment Scenarios] for the correct configuration.
 
 == Next Module
 
