@@ -194,10 +194,13 @@
 <div class="ulist">
 <ul>
 <li>
-<p><a href="01-backend-apis.html" class="page">Module 01: Backend APIs</a> deployed (locally or on OpenShift)</p>
+<p><a href="01-backend-apis.html" class="page">Module 01: Backend APIs</a> deployed on OpenShift</p>
 </li>
 <li>
 <p><a href="00-setup.html" class="page">Module 00: Environment Setup</a> completed</p>
+</li>
+<li>
+<p>Access to an OpenShift cluster (logged in via <code>oc</code>)</p>
 </li>
 </ul>
 </div>
@@ -209,14 +212,14 @@
 <div class="paragraph">
 <p>The <strong>Model Context Protocol (MCP)</strong> provides a standard way to expose tools to LLMs. An MCP server wraps existing APIs as tool functions that an LLM can discover and call. FastMCP is a Python library that makes building MCP servers straightforward.</p>
 </div>
-<div class="admonitionblock important">
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-important" title="Important"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<strong>MCP servers must be reachable from the Llama Stack server.</strong> If your Llama Stack runs on OpenShift (remote), MCP servers must also be deployed remotely. MCP servers on <code>localhost</code> are invisible to a remote Llama Stack&#8201;&#8212;&#8201;you will get <code>RuntimeError: No response available</code>. See <a href="00-setup.html#_deployment_scenarios" class="page">Deployment Scenarios</a>.
+MCP servers are deployed on OpenShift alongside the backend APIs and Llama Stack, ensuring all services can reach each other.
 </td>
 </tr>
 </table>
@@ -316,14 +319,6 @@
 <div class="sect1">
 <h2 id="_step_by_step"><a class="anchor" href="#_step_by_step"></a>Step-by-Step</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Choose the deployment path that matches your setup:</p>
-</div>
-<div class="sect2">
-<h3 id="_option_a_deploy_mcp_servers_on_openshift_recommended"><a class="anchor" href="#_option_a_deploy_mcp_servers_on_openshift_recommended"></a>Option A: Deploy MCP Servers on OpenShift (Recommended)</h3>
-<div class="paragraph">
-<p>This is the recommended path when your Llama Stack runs on OpenShift. The MCP servers run as pods with OpenShift Routes, so Llama Stack can reach them.</p>
-</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -331,79 +326,56 @@
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<strong>If your instructor has already deployed MCP servers</strong>, skip to <a href="#_3_update_env">4. Update <code>.env</code></a> and use the route URLs your instructor provided.
+<strong>Working directory:</strong> All commands in this module run from the <strong>repo root</strong> (<code>agent-workshop/</code>).<br>
+<strong>Services needed:</strong> Customer API and Finance API deployed on OpenShift (Module 01).
 </td>
 </tr>
 </table>
 </div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-The MCP server container images must be built before deploying. If your instructor used the admin deploy script (<code>00-setup/admin/deploy.sh</code>), the images are already in the internal registry. If you need to build them yourself, see the <a href="llama-stack-admin.html#_building_images_manually" class="page">Admin Guide: Building Images Manually</a>.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>Since Llama Stack runs on RHOAI, MCP servers must also be deployed on OpenShift so Llama Stack can reach them.</p>
 </div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-Deploy into the <strong>same namespace</strong> as the backend APIs (e.g., <code>acme-workshop</code>). The MCP server images are stored in the internal registry under that namespace, and the env vars use cross-namespace DNS to reach the APIs.
-</td>
-</tr>
-</table>
-</div>
+<div class="sect2">
+<h3 id="_1_build_customer_mcp"><a class="anchor" href="#_1_build_customer_mcp"></a>1. Build Customer MCP</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc project acme-workshop</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc new-build --binary --strategy=docker --name=customer-mcp
+oc start-build customer-mcp --from-dir=02-mcp-servers/customer-mcp/ --follow</code></pre>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_1_deploy_customer_mcp"><a class="anchor" href="#_1_deploy_customer_mcp"></a>1. Deploy Customer MCP</h4>
+</div>
+<div class="sect2">
+<h3 id="_2_build_finance_mcp"><a class="anchor" href="#_2_build_finance_mcp"></a>2. Build Finance MCP</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f 02-mcp-servers/openshift/customer-mcp.yaml</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc new-build --binary --strategy=docker --name=finance-mcp
+oc start-build finance-mcp --from-dir=02-mcp-servers/finance-mcp/ --follow</code></pre>
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_2_deploy_finance_mcp"><a class="anchor" href="#_2_deploy_finance_mcp"></a>2. Deploy Finance MCP</h4>
+<div class="sect2">
+<h3 id="_3_deploy_to_openshift"><a class="anchor" href="#_3_deploy_to_openshift"></a>3. Deploy to OpenShift</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f 02-mcp-servers/openshift/finance-mcp.yaml</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f 02-mcp-servers/openshift/customer-mcp.yaml
+oc apply -f 02-mcp-servers/openshift/finance-mcp.yaml</code></pre>
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_3_get_the_route_urls"><a class="anchor" href="#_3_get_the_route_urls"></a>3. Get the Route URLs</h4>
+<div class="sect2">
+<h3 id="_4_get_the_route_urls"><a class="anchor" href="#_4_get_the_route_urls"></a>4. Get the Route URLs</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "CUSTOMER_MCP_SERVER_URL=https://$(oc get route mcp-customer-route -o jsonpath='{.spec.host}')/mcp"
 echo "FINANCE_MCP_SERVER_URL=https://$(oc get route mcp-finance-route -o jsonpath='{.spec.host}')/mcp"</code></pre>
 </div>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_3_update_env"><a class="anchor" href="#_3_update_env"></a>4. Update <code>.env</code></h4>
 <div class="paragraph">
-<p>Set the MCP server URLs in your <code>.env</code> file to the route URLs from the previous step (or from your instructor):</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">CUSTOMER_MCP_SERVER_URL=https://mcp-customer-route-&lt;namespace&gt;.apps.&lt;cluster&gt;/mcp
-FINANCE_MCP_SERVER_URL=https://mcp-finance-route-&lt;namespace&gt;.apps.&lt;cluster&gt;/mcp</code></pre>
+<p>Set these in your <code>.env</code> file.</p>
 </div>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_5_verify_the_pods_are_running"><a class="anchor" href="#_5_verify_the_pods_are_running"></a>5. Verify the Pods are Running</h4>
+<div class="sect2">
+<h3 id="_5_verify_pods_are_running"><a class="anchor" href="#_5_verify_pods_are_running"></a>5. Verify Pods are Running</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc get pods -l app=customer-mcp
@@ -414,67 +386,8 @@ oc get pods -l app=finance-mcp</code></pre>
 <p>Both pods should show <code>1/1 Running</code>.</p>
 </div>
 </div>
-</div>
 <div class="sect2">
-<h3 id="_option_b_run_mcp_servers_locally"><a class="anchor" href="#_option_b_run_mcp_servers_locally"></a>Option B: Run MCP Servers Locally</h3>
-<div class="paragraph">
-<p>Use this only if your Llama Stack also runs locally. A remote Llama Stack cannot reach <code>localhost</code>.</p>
-</div>
-<div class="paragraph">
-<p>In two separate terminals, from the <strong>repo root</strong>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 02-mcp-servers/customer-mcp/customer-api-mcp-server.py</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 02-mcp-servers/finance-mcp/finance-api-mcp-server.py</code></pre>
-</div>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-Running from the repo root ensures <code>load_dotenv()</code> finds your <code>.env</code> file.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Your <code>.env</code> should have the localhost defaults:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">CUSTOMER_MCP_SERVER_URL=http://localhost:9001/mcp
-FINANCE_MCP_SERVER_URL=http://localhost:9002/mcp</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_register_with_llama_stack"><a class="anchor" href="#_register_with_llama_stack"></a>Register with Llama Stack</h2>
-<div class="sectionbody">
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<strong>Requires:</strong> Llama Stack server running (started in Module 00) and MCP servers deployed (Option A or B above).
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Make sure your venv is activated (<code>source .venv/bin/activate</code>), then from the <strong>repo root</strong>:</p>
-</div>
+<h3 id="_6_register_with_llama_stack"><a class="anchor" href="#_6_register_with_llama_stack"></a>6. Register with Llama Stack</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 02-mcp-servers/examples/1_register_customer_mcp.py
@@ -482,10 +395,8 @@ python 02-mcp-servers/examples/1_register_finance_mcp.py</code></pre>
 </div>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_verify_registration"><a class="anchor" href="#_verify_registration"></a>Verify Registration</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_7_verify_registration"><a class="anchor" href="#_7_verify_registration"></a>7. Verify Registration</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 02-mcp-servers/examples/2_list_tools.py</code></pre>
@@ -493,6 +404,7 @@ python 02-mcp-servers/examples/1_register_finance_mcp.py</code></pre>
 </div>
 <div class="paragraph">
 <p>You should see <code>customer_mcp</code> and <code>finance_mcp</code> toolgroups listed with their MCP endpoints.</p>
+</div>
 </div>
 </div>
 </div>
@@ -514,7 +426,7 @@ python 02-mcp-servers/examples/1_register_finance_mcp.py</code></pre>
 <p>MCP uses HTTP transport (streamable HTTP) for communication</p>
 </li>
 <li>
-<p>When Llama Stack is remote, MCP servers must also be deployed remotely (e.g., on OpenShift with routes)</p>
+<p>MCP servers are deployed on OpenShift with routes so Llama Stack can reach them</p>
 </li>
 </ul>
 </div>

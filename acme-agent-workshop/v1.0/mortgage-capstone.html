@@ -502,10 +502,10 @@ flowchart TD
 <div class="ulist">
 <ul>
 <li>
-<p>Llama Stack server</p>
+<p>Llama Stack server (pre-deployed on RHOAI)</p>
 </li>
 <li>
-<p>PostgreSQL</p>
+<p>Access to an OpenShift cluster (logged in via <code>oc</code>)</p>
 </li>
 </ul>
 </div>
@@ -521,68 +521,33 @@ flowchart TD
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<strong>Working directory:</strong> All commands in this module run from <code>mortgage-use-case/</code>.<br>
-<strong>Services needed:</strong> Llama Stack server, Mortgage API, Mortgage MCP server.<br>
-<strong>Environment:</strong> Ensure your root <code>.env</code> includes the Mortgage variables (<code>MORTGAGE_API_BASE_URL</code>, <code>MORTGAGE_MCP_SERVER_URL</code>, etc.) from <code>.env.example</code>.
+<strong>Working directory:</strong> All commands run from the <strong>repo root</strong> (<code>agent-workshop/</code>).<br>
+<strong>Services needed:</strong> Llama Stack server (RHOAI), Mortgage API (OpenShift).<br>
+<strong>Environment:</strong> Ensure your root <code>.env</code> includes the Mortgage variables (<code>MORTGAGE_API_BASE_URL</code>, etc.) from <code>.env.example</code>.
 </td>
 </tr>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_option_a_use_pre_deployed_services_recommended"><a class="anchor" href="#_option_a_use_pre_deployed_services_recommended"></a>Option A: Use Pre-Deployed Services (Recommended)</h3>
-<div class="paragraph">
-<p>If your instructor has deployed the Mortgage API and MCP server on OpenShift (or you deployed them yourself), get the route URLs and set them in your <code>.env</code>:</p>
-</div>
+<h3 id="_1_build_the_mortgage_api"><a class="anchor" href="#_1_build_the_mortgage_api"></a>1. Build the Mortgage API</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Get the URLs (or paste what your instructor gives you)
-echo "MORTGAGE_API_BASE_URL=https://$(oc get route mortgage-api-route -o jsonpath='{.spec.host}')"
-echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonpath='{.spec.host}')/mcp"</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cp mortgage-use-case/mortgage-api/deployment/Dockerfile mortgage-use-case/mortgage-api/Dockerfile
+oc new-build --binary --strategy=docker --name=mortgage-api
+oc start-build mortgage-api --from-dir=mortgage-use-case/mortgage-api/ --follow
+rm mortgage-use-case/mortgage-api/Dockerfile</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>Skip to <a href="#_walkthrough">Walkthrough</a>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_option_b_deploy_mortgage_mcp_on_openshift_yourself"><a class="anchor" href="#_option_b_deploy_mortgage_mcp_on_openshift_yourself"></a>Option B: Deploy Mortgage MCP on OpenShift Yourself</h3>
-<div class="paragraph">
-<p>If the Mortgage API is already deployed but the MCP server isn&#8217;t:</p>
-</div>
+<h3 id="_2_deploy_to_openshift"><a class="anchor" href="#_2_deploy_to_openshift"></a>2. Deploy to OpenShift</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f mortgage-use-case/openshift/mortgage-mcp.yaml
-echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonpath='{.spec.host}')/mcp"</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f 00-setup/admin/k8s/apis.yaml</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Set the URL in your <code>.env</code> and skip to <a href="#_walkthrough">Walkthrough</a>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_option_c_run_locally"><a class="anchor" href="#_option_c_run_locally"></a>Option C: Run Locally</h3>
-<div class="paragraph">
-<p>Use this only if your Llama Stack also runs locally.</p>
-</div>
-<div class="sect3">
-<h4 id="_1_create_the_database"><a class="anchor" href="#_1_create_the_database"></a>1. Create the database</h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">createdb acme_mortgage</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_2_start_the_mortgage_api"><a class="anchor" href="#_2_start_the_mortgage_api"></a>2. Start the Mortgage API</h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd mortgage-api
-mvn clean package -DskipTests
-mvn spring-boot:run</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The API starts on port 8083 with seed data (4 applications, 12 documents, 4 conditions, 6 credit reports). Verify at <a href="http://localhost:8083/swagger-ui.html" class="bare">http://localhost:8083/swagger-ui.html</a>.</p>
+<p>This creates the Deployment, Service, PostgreSQL instance, and Route for the Mortgage API. The database is auto-populated with seed data on startup (4 applications, 12 documents, 4 conditions, 6 credit reports).</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -591,51 +556,46 @@ mvn spring-boot:run</code></pre>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-<strong>Recognize the pattern:</strong> This API follows the same Spring Boot structure you ran in Module 01. Compare <code>mortgage-api/src/</code> with <code>customer-api/src/</code>&#8201;&#8212;&#8201;same entity/repository/service/controller layers, same <code>data.sql</code> seed data approach.
+<strong>Recognize the pattern:</strong> This API follows the same Spring Boot structure you deployed in Module 01. Compare <code>mortgage-api/src/</code> with <code>customer-api/src/</code>&#8201;&#8212;&#8201;same entity/repository/service/controller layers, same <code>data.sql</code> seed data approach.
 </td>
 </tr>
 </table>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_3_start_the_mortgage_mcp_server"><a class="anchor" href="#_3_start_the_mortgage_mcp_server"></a>3. Start the Mortgage MCP Server</h4>
-<div class="paragraph">
-<p>In a new terminal, from the <code>mortgage-use-case/</code> directory:</p>
-</div>
+<div class="sect2">
+<h3 id="_3_get_the_route_url"><a class="anchor" href="#_3_get_the_route_url"></a>3. Get the Route URL</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd mortgage-mcp
-pip install -r requirements.txt
-python mortgage-api-mcp-server.py</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo "MORTGAGE_API_BASE_URL=https://$(oc get route mortgage-api-route -o jsonpath='{.spec.host}')"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The MCP server starts on port 9003 with 8 tools.</p>
+<p>Set this in your <code>.env</code> file. Verify at <code><a href="https://&lt;mortgage-route&gt;/swagger-ui.html" class="bare">https://&lt;mortgage-route&gt;/swagger-ui.html</a></code>.</p>
 </div>
-<div class="admonitionblock tip">
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<strong>Recognize the pattern:</strong> This MCP server uses the same FastMCP pattern from Module 02. Compare <code>mortgage-api-mcp-server.py</code> with <code>customer-api-mcp-server.py</code>&#8201;&#8212;&#8201;same <code>@mcp.tool()</code> decorators wrapping <code>httpx</code> REST calls.
+The capstone agent scripts use <strong>client-side tools</strong> (<code>@client_tool</code> in <code>mortgage_client_tools.py</code>) that call the Mortgage API directly via HTTP. The MCP server (<code>mortgage-mcp/</code>) is included for completeness and can be used for custom experiments, but the provided scripts do not require it.
 </td>
 </tr>
 </table>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_4_configure_environment"><a class="anchor" href="#_4_configure_environment"></a>4. Configure environment</h4>
+<div class="sect2">
+<h3 id="_4_optional_build_and_deploy_the_mortgage_mcp_server"><a class="anchor" href="#_4_optional_build_and_deploy_the_mortgage_mcp_server"></a>4. (Optional) Build and Deploy the Mortgage MCP Server</h3>
 <div class="paragraph">
-<p>Ensure your <code>.env</code> file includes:</p>
+<p>Only needed if you want to experiment with MCP-based tools instead of client-side tools:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">MORTGAGE_API_BASE_URL=http://localhost:8083
-MORTGAGE_MCP_SERVER_URL=http://localhost:9003/mcp
-PORT_FOR_MORTGAGE_MCP=9003</code></pre>
-</div>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc new-build --binary --strategy=docker --name=mortgage-mcp
+oc start-build mortgage-mcp --from-dir=mortgage-use-case/mortgage-mcp/ --follow
+oc apply -f mortgage-use-case/openshift/mortgage-mcp.yaml
+echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonpath='{.spec.host}')/mcp"</code></pre>
 </div>
 </div>
 </div>
@@ -1204,7 +1164,7 @@ Requires <code>SHIELD_ID</code> in your <code>.env</code> (registered in Module 
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Mortgage API errors</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Verify PostgreSQL database <code>acme_mortgage</code> exists and API is running on port 8083</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify the Mortgage API pod is running on OpenShift (<code>oc get pods -l app=mortgage-api</code>) and <code>MORTGAGE_API_BASE_URL</code> in <code>.env</code> is correct.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Tool calls fail</p></td>

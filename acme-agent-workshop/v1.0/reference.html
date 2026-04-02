@@ -319,13 +319,13 @@ In an <strong>instructor-led workshop</strong>, your instructor provides the rem
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CUSTOMER_API_BASE_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Customer REST API base URL</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:8081" class="bare">http://localhost:8081</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Customer REST API (OpenShift route)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">From <code>oc get route</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>FINANCE_API_BASE_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Finance REST API base URL</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:8082" class="bare">http://localhost:8082</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Finance REST API (OpenShift route)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">From <code>oc get route</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -348,18 +348,18 @@ In an <strong>instructor-led workshop</strong>, your instructor provides the rem
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>CUSTOMER_MCP_SERVER_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Customer MCP endpoint</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:9001/mcp" class="bare">http://localhost:9001/mcp</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Customer MCP endpoint (OpenShift route)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">From <code>oc get route</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>FINANCE_MCP_SERVER_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Finance MCP endpoint</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:9002/mcp" class="bare">http://localhost:9002/mcp</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Finance MCP endpoint (OpenShift route)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">From <code>oc get route</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MORTGAGE_MCP_SERVER_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mortgage MCP endpoint (capstone)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:9003/mcp" class="bare">http://localhost:9003/mcp</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mortgage MCP endpoint (capstone, OpenShift route)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">From <code>oc get route</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -469,8 +469,8 @@ In an <strong>instructor-led workshop</strong>, your instructor provides the rem
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MORTGAGE_API_BASE_URL</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mortgage REST API base URL</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><a href="http://localhost:8083" class="bare">http://localhost:8083</a></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mortgage REST API (OpenShift route)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">From <code>oc get route</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -550,7 +550,7 @@ In an <strong>instructor-led workshop</strong>, your instructor provides the rem
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>RuntimeError: No response available</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">MCP servers are on <code>localhost</code> but Llama Stack is on RHOAI. The Llama Stack server cannot reach your local machine. Deploy MCP servers on OpenShift. See <a href="00-setup.html#_deployment_scenarios" class="page">Deployment Scenarios</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify MCP servers are deployed on OpenShift and routes are reachable. Check <code>CUSTOMER_MCP_SERVER_URL</code> and <code>FINANCE_MCP_SERVER_URL</code> in your <code>.env</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Connection refused</code> on Llama Stack</p></td>
@@ -562,11 +562,11 @@ In an <strong>instructor-led workshop</strong>, your instructor provides the rem
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Empty tool lists</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ensure MCP servers are running on their expected ports. If Llama Stack is remote, MCP servers must also be deployed remotely&#8201;&#8212;&#8201;<code>localhost</code> MCP URLs are not reachable from a remote server.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verify MCP servers are deployed on OpenShift (<code>oc get pods -l app=customer-mcp</code>) and registered with Llama Stack (Module 02, step 6).</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">MCP tools fail with remote Llama Stack</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">MCP server URLs must be reachable <strong>from the Llama Stack server</strong>, not just from your laptop. Deploy MCP servers on the same cluster or expose them via public routes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MCP tools fail</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MCP server URLs must be reachable <strong>from the Llama Stack server</strong>. Both run on OpenShift, so use the route URLs from <code>oc get routes</code>.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Model not found</p></td>

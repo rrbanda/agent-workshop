@@ -289,10 +289,10 @@ echo $LLAMA_STACK_BASE_URL</code></pre>
 <h2 id="_deploy_backend_services_instructor_led_workshop"><a class="anchor" href="#_deploy_backend_services_instructor_led_workshop"></a>Deploy Backend Services (Instructor-Led Workshop)</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>For an instructor-led workshop, you also need to deploy the ACME backend APIs, PostgreSQL databases, and MCP servers so that participants use remote services instead of running them locally.</p>
+<p>For an instructor-led workshop, you also need to deploy the ACME backend APIs, PostgreSQL databases, and MCP servers so that participants have pre-deployed services available.</p>
 </div>
 <div class="sect2">
-<h3 id="_option_a_automated_deploy_script_recommended"><a class="anchor" href="#_option_a_automated_deploy_script_recommended"></a>Option A: Automated Deploy Script (Recommended)</h3>
+<h3 id="_automated_deploy_script"><a class="anchor" href="#_automated_deploy_script"></a>Automated Deploy Script</h3>
 <div class="paragraph">
 <p>A single script builds all container images using OpenShift Binary Builds (no external registry needed) and deploys everything:</p>
 </div>
@@ -342,26 +342,14 @@ bash 00-setup/admin/deploy.sh acme-workshop</code></pre>
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">bash 00-setup/admin/teardown.sh acme-workshop</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_option_b_helm_charts"><a class="anchor" href="#_option_b_helm_charts"></a>Option B: Helm Charts</h3>
-<div class="paragraph">
-<p>Helm charts are also available in <code>site/13-deployment/helm/</code>. Images must be built first (see step 1 from Option A or build manually with <code>oc new-build</code>).</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">helm install acme-app site/13-deployment/helm/acme-app/
-helm install acme-mcp site/13-deployment/helm/acme-mcp/</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-The Helm charts currently cover Customer and Finance only. For the full workshop including the Mortgage capstone, use the deploy script (Option A) or deploy the mortgage services separately using <code>mortgage-use-case/openshift/mortgage-mcp.yaml</code>.
+Helm charts are also available in <code>site/13-deployment/helm/</code> (Customer and Finance only). Images must be built first via <code>oc new-build</code>. For the full workshop including the Mortgage capstone, use the deploy script above.
 </td>
 </tr>
 </table>
@@ -400,7 +388,7 @@ oc start-build customer-api --from-dir=01-backend-apis/customer-api/ --follow -n
 <div class="sect2">
 <h3 id="_collect_urls_for_participants"><a class="anchor" href="#_collect_urls_for_participants"></a>Collect URLs for Participants</h3>
 <div class="paragraph">
-<p>After all services are deployed (via deploy script, Helm, or manual), gather the route URLs:</p>
+<p>After all services are deployed, gather the route URLs:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -414,7 +402,7 @@ echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonp
 </div>
 </div>
 <div class="paragraph">
-<p>Participants paste these values into their <code>.env</code> file (uncomment the "Remote" lines in <code>.env.example</code> and replace the placeholders).</p>
+<p>Participants paste these values into their <code>.env</code> file.</p>
 </div>
 </div>
 </div>
