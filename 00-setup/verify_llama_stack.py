@@ -29,6 +29,10 @@ logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 
 load_dotenv(find_dotenv())
 
+PASS = "\033[92mPASS\033[0m"
+FAIL = "\033[91mFAIL\033[0m"
+WARN = "\033[93mWARN\033[0m"
+
 LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL")
 if not LLAMA_STACK_BASE_URL:
     print(
@@ -43,10 +47,6 @@ EMBEDDING_MODEL = os.getenv(
     "EMBEDDING_MODEL", "vllm-embedding/nomic-embed-text-v1-5"
 )
 EXPECTED_EMBEDDING_DIM = int(os.getenv("EMBEDDING_DIMENSION", "768"))
-
-PASS = "\033[92mPASS\033[0m"
-FAIL = "\033[91mFAIL\033[0m"
-WARN = "\033[93mWARN\033[0m"
 
 passed = 0
 failed = 0

@@ -39,11 +39,13 @@ None -- this is the starting point.
 |Java build tool _(local-only)_
 |https://maven.apache.org[maven.apache.org,window=_blank]
 
-|PostgreSQL
-|15+
-|Database for APIs _(local-only)_
-|https://postgresql.org[postgresql.org,window=_blank]
+|`oc` CLI
+|4.x
+|OpenShift command-line tool
+|https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/[mirror.openshift.com,window=_blank]
 |===
+
+NOTE: *No local PostgreSQL needed.* The backend APIs run on OpenShift with their own PostgreSQL instances. You do not need to install or configure PostgreSQL locally.
 
 NOTE: *Instructor-led workshops:* You only need *Python 3.12+*. Java, Maven, and PostgreSQL are only required if you are building and deploying the backend APIs yourself. All backend services, MCP servers, and Llama Stack are pre-deployed on OpenShift.
 
@@ -74,7 +76,31 @@ python -c "import llama_stack_client; print('llama-stack-client', llama_stack_cl
 python -c "import fastmcp; print('fastmcp OK')"
 ----
 
-=== 2. Environment Variables
+=== 2. Log In to OpenShift
+
+Use the cluster URL and credentials you were provided:
+
+[source,bash]
+----
+oc login <cluster-api-url> --username=<your-username> --password=<your-password>
+----
+
+Or, if you were given a token (from the OpenShift web console under your username > "Copy login command"):
+
+[source,bash]
+----
+oc login --token=<your-token> --server=<cluster-api-url>
+----
+
+Verify you are logged in:
+
+[source,bash]
+----
+oc whoami
+oc project
+----
+
+=== 3. Environment Variables
 
 [source,bash]
 ----
@@ -104,7 +130,7 @@ The workshop supports two deployment modes. Llama Stack is always pre-deployed o
 
 |*MCP Servers*
 |Pre-deployed; use route URLs
-|`oc apply -f 02-mcp-servers/openshift/` (Module 02)
+|Build and deploy with `sed` + `oc apply` (see xref:02-mcp-servers.adoc[Module 02])
 
 |*PostgreSQL*
 |On cluster
@@ -117,19 +143,18 @@ The workshop supports two deployment modes. Llama Stack is always pre-deployed o
 
 IMPORTANT: *MCP servers must be deployed on OpenShift.* Since Llama Stack runs on RHOAI, MCP server URLs must be reachable from the cluster. MCP servers on `localhost` are not reachable from the Llama Stack server. Deploy MCP servers on OpenShift using `oc apply -f 02-mcp-servers/openshift/` (see xref:02-mcp-servers.adoc[Module 02]).
 
-=== 3. Verify Llama Stack Server
+=== 4. Verify Llama Stack Server
 
 [source,bash]
 ----
-source .env
-curl $LLAMA_STACK_BASE_URL/v1/models
+curl $(grep LLAMA_STACK_BASE_URL .env | cut -d= -f2)/v1/models
 ----
 
 You should see at least an inference model (e.g., `{inference-model}`) and an embedding model (e.g., `{embedding-model}`) in the response.
 
 IMPORTANT: *MCP connectivity:* The Llama Stack server must be able to reach your MCP servers over the network. Since Llama Stack runs on RHOAI, MCP servers must also be deployed on OpenShift with routes (see xref:02-mcp-servers.adoc[Module 02]).
 
-=== 4. PostgreSQL Databases (Self-Deploy Only)
+=== 5. PostgreSQL Databases (Self-Deploy Only)
 
 IMPORTANT: *Skip this step if you are using pre-deployed APIs on OpenShift* (instructor-led). PostgreSQL runs on the cluster and is already configured. This section is only needed if you are building and deploying APIs yourself.
 
@@ -167,12 +192,14 @@ createdb acme_mortgage    # needed for the capstone
 
 [source,bash]
 ----
-source .env
 # Check Llama Stack
-curl $LLAMA_STACK_BASE_URL/v1/models
+curl $(grep LLAMA_STACK_BASE_URL .env | cut -d= -f2)/v1/models
 
 # Check Python
 python --version  # Should be 3.12+
+
+# Check OpenShift
+oc whoami         # Should print your username
 ----
 
 If building backend APIs locally before deploying, also verify:
@@ -181,7 +208,6 @@ If building backend APIs locally before deploying, also verify:
 ----
 java --version    # Should be 21+
 mvn --version     # Should be 3.8+
-pg_isready        # PostgreSQL is running
 ----
 
 === Deep Verification (Optional)
@@ -212,9 +238,10 @@ Result: 6/6 checks passed -- server is ready for the workshop
 
 == Key Takeaways
 
-* All workshop modules share the same `.env` configuration
+* All workshop modules share the same `.env` configuration at the repo root
 * Llama Stack provides a unified API for inference, agents, tools, RAG, safety, and evals
 * The workshop uses ACME (a fictional financial services company) as its example domain
+* Backend APIs and MCP servers run on OpenShift -- you do not need a local database
 
 == Next Module
 

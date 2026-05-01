@@ -19,10 +19,10 @@ import os
 import sys
 import logging
 from dotenv import load_dotenv
-from llama_stack_client import LlamaStackClient, Agent, AgentEventLogger
+from llama_stack_client import LlamaStackClient, AgentEventLogger
 
 sys.path.insert(0, os.path.dirname(__file__))
-from mortgage_client_tools import ALL_TOOLS
+from mortgage_client_tools import ALL_TOOLS, ChatCompletionAgent
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
@@ -62,7 +62,7 @@ print(f"Shield: {SHIELD_ID}")
 print(f"Vector store: {vector_store.id}")
 print("=" * 60)
 
-agent = Agent(
+agent = ChatCompletionAgent(
     client,
     model=INFERENCE_MODEL,
     instructions=(

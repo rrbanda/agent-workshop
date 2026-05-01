@@ -60,7 +60,7 @@ These files are the RHOAI deployment artifacts used to set up the Llama Stack se
 |xref:08-rag.adoc[08-rag], xref:mortgage-capstone.adoc[Capstone]
 
 |Vector Store
-|`inline::milvus` (workshop scripts use `provider_id: "faiss"` -- ensure your server has a matching provider)
+|`inline::milvus` or `inline::faiss` (workshop scripts auto-detect the available vector_io provider)
 |xref:08-rag.adoc[08-rag], xref:mortgage-capstone.adoc[Capstone]
 
 |Agents

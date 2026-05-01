@@ -20,6 +20,8 @@ TIP: *Capstone Preview:* In the capstone, you will build a mortgage-specific eva
 
 == Scripts
 
+=== Core Walkthrough
+
 [cols="2,4", options="header"]
 |===
 |Script
@@ -30,9 +32,6 @@ TIP: *Capstone Preview:* In the capstone, you will build a mortgage-specific eva
 
 |`2_register_dataset_basic_subset_of.py`
 |Register a simple Q&A dataset
-
-|`2_register_dataset_agent_evals_customer.py`
-|Register ACME customer eval dataset
 
 |`3_list_datasets.py`
 |List all registered datasets
@@ -54,6 +53,55 @@ TIP: *Capstone Preview:* In the capstone, you will build a mortgage-specific eva
 
 |`9_llm_as_judge.py`
 |LLM-as-judge scoring
+|===
+
+=== Optional / Exploration
+
+[cols="2,4", options="header"]
+|===
+|Script
+|What It Does
+
+|`0_chat_completions.py`
+|Test basic chat completions (sanity check)
+
+|`0_chat_completions_candidate.py`
+|Test the candidate model directly
+
+|`0_chat_completions_judge.py`
+|Test the judge model directly
+
+|`2_register_dataset_agent_evals_customer.py`
+|Register an ACME customer eval dataset (alternative dataset)
+
+|`4_list_benchmarks.py`
+|List all registered benchmarks
+
+|`6_list_models.py`
+|List available models
+
+|`10_register_dataset.py`
+|Register a custom dataset
+
+|`11_llm_as_judge_what_model_am_i.py`
+|Test LLM-as-judge with model identity questions
+|===
+
+=== Cleanup
+
+[cols="2,4", options="header"]
+|===
+|Script
+|What It Does
+
+|`2_unregister_dataset_basic_subset_of.py`
+|Remove the basic eval dataset
+
+|`2_unregister_dataset_agent_evals_customer.py`
+|Remove the customer eval dataset
+
+|`5_unregister_benchmark.py`
+|Remove a registered benchmark
 |===
 
 == Step-by-Step
@@ -83,7 +131,7 @@ python 5_register_benchmark.py
 python 7_execute_eval.py
 ----
 
-Script 7 will print a job ID when it completes (typically `0` for the first eval run). Copy it and set it before running script 8:
+Script 7 will print a job ID when it completes. Look for a line like `Eval job created: job_id=0` in the output. Set this value before running script 8:
 
 [source,bash]
 ----
@@ -91,7 +139,7 @@ export LLAMA_STACK_JOB_ID=0
 python 8_review_eval_job.py
 ----
 
-TIP: The job ID is printed in the output of script 7 as `Eval job started: 0`. Use whatever value appears after the colon.
+IMPORTANT: You *must* export `LLAMA_STACK_JOB_ID` before running script 8. The value is typically `0` for the first eval run, but always use whatever value script 7 printed. If you skip this step, script 8 will exit with an error.
 
 === 4. LLM-as-Judge
 
@@ -132,7 +180,7 @@ The script scores `"What is 2 + 2?"` with expected answer `"4"` against generate
 ----
 Running eval for benchmark: my-basic-quality-benchmark
 Using candidate model: <your-candidate-model>
-Eval job started: 0
+Eval job created: job_id=0  status=...
 ----
 
 Copy the job ID from this output for the next step.

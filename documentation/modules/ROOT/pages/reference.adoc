@@ -177,6 +177,10 @@ TIP: In an *instructor-led workshop*, your instructor provides the remote URLs f
 |`CANDIDATE_MODEL`
 |Model being evaluated
 |`{inference-model}`
+
+|`LLAMA_STACK_BENCHMARK_PROVIDER_ID`
+|Benchmark provider identifier
+|`meta-reference`
 |===
 
 === Capstone (Mortgage Use Case)
@@ -257,8 +261,11 @@ TIP: In an *instructor-led workshop*, your instructor provides the remote URLs f
 |`429 Too Many Requests` or rate limiting
 |The MaaS inference backend has rate limits. Wait 30-60 seconds and retry. For eval scripts, the built-in retry logic handles this automatically.
 
-|Database errors
-|Verify PostgreSQL is running and databases exist (`createdb acme_customer`)
+|`"already exists"` on `oc new-build`
+|The build config already exists. Skip `oc new-build` and just re-run `oc start-build`.
+
+|`oc` command not found
+|Install the OpenShift CLI from https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/[mirror.openshift.com,window=_blank]
 
 |Import errors
 |Activate your venv and run `pip install -r requirements.txt`

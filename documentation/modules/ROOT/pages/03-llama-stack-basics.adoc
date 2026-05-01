@@ -13,6 +13,7 @@ TIP: *Capstone Preview:* In the capstone, you will use these same `Agent` and `A
 == Prerequisites
 
 * xref:00-setup.adoc[Module 00: Environment Setup] completed
+* xref:02-mcp-servers.adoc[Module 02: MCP Servers] deployed and registered (required for scripts 2 and 3 which list MCP tools)
 * Llama Stack server running
 
 == Concepts

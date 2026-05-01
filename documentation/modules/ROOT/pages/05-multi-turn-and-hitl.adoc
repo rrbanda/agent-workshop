@@ -19,6 +19,8 @@ In a *multi-turn conversation*, the agent maintains context across sequential ex
 
 == Scripts
 
+Scripts continue the global numbering from Module 04 (where scripts were `4_*` and `5_*`).
+
 [cols="2,4", options="header"]
 |===
 |Script

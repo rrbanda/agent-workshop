@@ -1,0 +1,616 @@
+= Presenter Walkthrough
+include::_attributes.adoc[]
+
+[.lead]
+A talk-through guide for presenting the workshop without running code live. Each section shows what the module teaches, the key code, and the actual output.
+
+'''
+
+== Overview: What Are We Building?
+
+We're building AI agents using *Llama Stack* -- an open-source platform that gives you a single, unified API for agents, inference, tools, RAG, safety, and evaluations.
+
+The agents serve *ACME Financial Services*, a fictional company with customer data, financial records, and a mortgage lending operation.
+
+=== Architecture
+
+[source,text]
+----
+┌────────────────┐
+│   Your Code    │  Python scripts using llama-stack-client
+└───────┬────────┘
+        │
+        ▼
+┌────────────────┐
+│  Llama Stack   │  Unified API (agents, inference, tools, RAG, safety, eval)
+│    Server      │  Running on OpenShift (RHOAI)
+└───────┬────────┘
+        │
+   ┌────┴────┐
+   ▼         ▼
+┌──────┐  ┌──────┐
+│ MCP  │  │ MCP  │   Model Context Protocol servers
+│ Cust │  │ Fin  │   Expose REST APIs as LLM-callable tools
+└──┬───┘  └──┬───┘
+   ▼         ▼
+┌──────┐  ┌──────┐
+│ REST │  │ REST │   Spring Boot APIs (Java 21)
+│ API  │  │ API  │
+└──┬───┘  └──┬───┘
+   ▼         ▼
+┌──────────────────┐
+│   PostgreSQL     │   Customer + Finance + Mortgage data
+└──────────────────┘
+----
+
+=== Workshop Flow
+
+[source,text]
+----
+Module 00: Setup & Verify  →  Module 03: Hello World Agent
+    →  Module 04: Agents with Tools (MCP)
+    →  Module 05: Multi-Turn & Human-in-the-Loop
+    →  Module 08: RAG (Vector Stores + file_search)
+    →  Module 09: Safety Shields (PII Detection)
+    →  Module 10: Evaluations (Scoring, LLM-as-Judge)
+    →  Capstone: Mortgage Approval Agent
+----
+
+=== Model
+
+We use *Gemini 2.5 Flash* through the Llama Stack server -- demonstrating that Llama Stack is model-agnostic. You write your code once, swap the model via an environment variable.
+
+'''
+
+== Module 00 -- Setup & Verification
+
+[sidebar]
+****
+*What it does:* Verifies the Llama Stack server is ready -- checks 6 capabilities: models, chat, embedding, vector stores, safety, and tool runtime.
+****
+
+=== Key Code
+
+[source,bash]
+----
+python 00-setup/verify_llama_stack.py
+----
+
+=== Actual Output
+
+[source,text]
+----
+Llama Stack Workshop Readiness Check
+Server: https://llamastack-llamastack.apps.ocp.v7hjl.sandbox2288.opentlc.com
+========================================================
+[1/6] Models .................. PASS (inference: gemini/models/gemini-2.5-flash;
+                                     embedding: vllm-embedding/nomic-embed-text-v1-5)
+[2/6] Chat .................... PASS (response received, ~5 words)
+[3/6] Embedding ............... PASS (dimension: 768)
+[4/6] Vector Store ............ PASS (create/search/delete)
+[5/6] Safety .................. PASS (trustyai_fms provider available)
+[6/6] Tool Runtime ............ PASS (rag-runtime + model-context-protocol)
+========================================================
+Result: 6/6 checks passed — server is ready for the workshop
+----
+
+=== Talking Points
+
+* One script validates the entire stack before participants write any code
+* If anything is misconfigured, it tells you exactly what's wrong
+* Participants just need to set their `.env` file -- everything else is pre-deployed
+
+'''
+
+== Module 03 -- Hello World Agent
+
+[sidebar]
+****
+*What it teaches:* The absolute basics -- create a client, create an agent, ask a question, get an answer. The "Hello World" of agentic AI.
+****
+
+=== Key Code
+
+[source,python]
+----
+from llama_stack_client import LlamaStackClient, Agent
+
+# Connect to the server
+client = LlamaStackClient(base_url=LLAMA_STACK_BASE_URL)
+
+# Create an agent with instructions
+agent = Agent(
+    client,
+    model=INFERENCE_MODEL,
+    instructions="You are a helpful assistant.",
+)
+
+# Start a conversation
+session_id = agent.create_session(session_name="hello_world")
+
+# Ask a question
+response = agent.create_turn(
+    session_id=session_id,
+    messages=[{"role": "user", "content": "Explain what an AI agent is in one sentence."}],
+    stream=False,
+)
+
+print(response.output[0].content[0].text)
+----
+
+=== Actual Output
+
+[source,text]
+----
+Base URL: https://llamastack-llamastack.apps.ocp.v7hjl.sandbox2288.opentlc.com
+Model:    gemini/models/gemini-2.5-flash
+An AI agent is an autonomous entity that perceives its environment, makes
+decisions, and performs actions to achieve specific goals.
+----
+
+=== Talking Points
+
+* *3 objects:* `LlamaStackClient` (connection), `Agent` (brain), `Session` (conversation)
+* *4 lines of actual logic* -- everything else is boilerplate
+* The `instructions` parameter is the system prompt -- tells the agent who it is
+* `stream=False` gives you the complete response; `stream=True` gives you token-by-token
+
+'''
+
+== Module 04 -- Agents with Tools (MCP)
+
+[sidebar]
+****
+*What it teaches:* How to give agents *real capabilities* by connecting them to backend APIs through the Model Context Protocol (MCP). The agent decides which tools to call and chains them together.
+****
+
+=== The MCP Concept
+
+[source,text]
+----
+User: "Find Thomas Hardy's orders"
+
+Agent thinks → "I need to find the customer first"
+  → calls search_customers("Thomas Hardy")
+  → gets back customer ID "AROUT"
+
+Agent thinks → "Now I can look up their orders"
+  → calls fetch_order_history("AROUT")
+  → gets back 3 orders
+
+Agent → formats and presents the answer
+----
+
+=== Key Code
+
+[source,python]
+----
+# Define which MCP servers the agent can use
+mcp_tools = [
+    {
+        "type": "mcp",
+        "server_url": CUSTOMER_MCP_SERVER_URL,   # Customer lookup tools
+        "server_label": "customer",
+    },
+    {
+        "type": "mcp",
+        "server_url": FINANCE_MCP_SERVER_URL,     # Order/invoice tools
+        "server_label": "finance",
+    }
+]
+
+# Create a multi-domain agent
+agent = Agent(
+    client,
+    model=INFERENCE_MODEL,
+    instructions="When given a name, first look up the customer "
+                 "to get their ID, then use that ID to retrieve their orders.",
+    tools=mcp_tools,
+)
+----
+
+=== Actual Output
+
+[source,text]
+----
+Base URL:     https://llamastack-llamastack.apps.ocp.v7hjl.sandbox2288.opentlc.com
+Model:        gemini/models/gemini-2.5-flash
+Customer MCP: https://mcp-customer-route-acme-workshop.../mcp
+Finance MCP:  https://mcp-finance-route-acme-workshop.../mcp
+
+I found 3 orders for Thomas Hardy (AROUT):
+* Order Number: ORD-008, Total Amount: 59.99, Status: PENDING
+* Order Number: ORD-003, Total Amount: 89.99, Status: PENDING
+* Order Number: ORD-004, Total Amount: 199.99, Status: DELIVERED
+----
+
+=== Talking Points
+
+* *MCP = the USB-C of AI tools* -- a standard protocol so any LLM can call any backend
+* The agent *autonomously decides* which tools to call and in what order
+* *Cross-domain reasoning:* the agent chains Customer API -> Finance API without being told how
+* The MCP servers are simple Python wrappers (FastMCP) around existing REST APIs
+* You don't modify your existing APIs -- you just wrap them
+
+'''
+
+== Module 05 -- Multi-Turn Conversations
+
+[sidebar]
+****
+*What it teaches:* Agents remember context across conversation turns. Ask about a person, then say "what are their orders" -- the agent knows who "their" refers to.
+****
+
+=== Key Code
+
+[source,python]
+----
+# Same session for both turns -- that's the magic
+session_id = agent.create_session(session_name="multi_turn_session")
+
+# Turn 1: Who is Thomas Hardy?
+agent.create_turn(
+    messages=[{"role": "user", "content": "who does Thomas Hardy work for?"}],
+    session_id=session_id,   # ← same session
+)
+
+# Turn 2: Pronoun resolution -- "their" = Thomas Hardy's company
+agent.create_turn(
+    messages=[{"role": "user", "content": "what are their orders?"}],
+    session_id=session_id,   # ← same session, context preserved
+)
+----
+
+=== Actual Output
+
+[source,text]
+----
+============================================================
+Turn 1: who does Thomas Hardy work for?
+============================================================
+Thomas Hardy works for Around the Horn.
+
+============================================================
+Turn 2: what are their orders?
+============================================================
+Thomas Hardy, from Around the Horn (customer ID AROUT), has 3 orders:
+* Order number: ORD-008, Total amount: 59.99, Status: PENDING
+* Order number: ORD-003, Total amount: 89.99, Status: PENDING
+* Order number: ORD-004, Total amount: 199.99, Status: DELIVERED
+----
+
+=== Talking Points
+
+* *One line makes it work:* reuse the same `session_id`
+* The agent resolved "their" -> "Around the Horn" from Turn 1 context
+* This is how real chatbots and assistants maintain conversation state
+* Llama Stack manages the session history server-side
+
+'''
+
+== Module 08 -- RAG (Retrieval-Augmented Generation)
+
+[sidebar]
+****
+*What it teaches:* How to give agents access to your *private documents* (HR policies, lending rules, etc.) using vector stores and the `file_search` tool.
+****
+
+=== The RAG Flow
+
+[source,text]
+----
+1. Upload document → Llama Stack chunks it (100 tokens, 10 overlap)
+2. Each chunk → embedding model → vector store (hybrid: BM25 + semantic)
+3. User asks a question
+4. Agent calls file_search → vector store returns top-5 relevant chunks
+5. Agent reads chunks → synthesizes answer with citations
+----
+
+=== Key Code
+
+[source,python]
+----
+# Create agent with file_search tool pointing to vector store
+agent = Agent(
+    client,
+    model=INFERENCE_MODEL,
+    instructions="You MUST use the file_search tool to answer ALL questions.",
+    tools=[
+        {
+            "type": "file_search",
+            "vector_store_ids": [vector_store.id],
+        }
+    ],
+)
+----
+
+=== Actual Output
+
+[source,text]
+----
+Query: What do I receive when I retire?
+--------------------------------------------------------------------------------
+🤔
+
+🔧 Executing file_search (server-side)...
+🤔 When you retire, you receive a life-sized statue of yourself crafted from
+Belgian chocolate or artisanal vegan carob, a lifetime supply of your chosen
+treat, and a personal bard to sing your praises at inconvenient moments.
+The "Midas Touch & Beyond" Retirement Plan also offers a 401(k) where
+contributions are multiplied based on astrological alignment.
+----
+
+=== Talking Points
+
+* The HR benefits document is *intentionally absurd* -- chocolate statues and personal bards -- so you can clearly see the agent is reading from the document, not making things up
+* *Hybrid search* (BM25 + semantic) catches both keyword matches and meaning matches
+* The `file_search` tool is server-side -- the Llama Stack server handles the retrieval
+* Same pattern applies to any document: legal contracts, product manuals, lending policies
+
+'''
+
+== Module 09 -- Safety Shields
+
+[sidebar]
+****
+*What it teaches:* How to protect agents from processing sensitive data using *safety shields*. We use TrustyAI Guardrails with regex-based PII detectors for email, SSN, and credit card numbers.
+****
+
+=== Key Code
+
+[source,python]
+----
+# Run content through a shield
+response = client.safety.run_shield(
+    shield_id="pii_detector",
+    messages=[{"role": "user", "content": "My SSN is 123-45-6789"}],
+)
+
+if response.violation:
+    print(f"VIOLATION: {response.violation.user_message}")
+else:
+    print("SAFE")
+----
+
+=== Actual Output
+
+[source,text]
+----
+Testing shield: pii_detector
+
+Test: Clean content (should PASS)
+  Input: "What is the weather like today?"
+  Result: SAFE
+
+Test: Contains email (should VIOLATE)
+  Input: "My email is test@example.com"
+  Result: VIOLATION DETECTED
+
+Test: Contains SSN (should VIOLATE)
+  Input: "My SSN is 123-45-6789"
+  Result: VIOLATION DETECTED
+
+Test: Contains credit card (should VIOLATE)
+  Input: "Card number: 4111-1111-1111-1111"
+  Result: VIOLATION DETECTED
+
+All 4 tests completed successfully
+----
+
+=== Talking Points
+
+* Shields are *composable* -- wrap any agent with `run_shield()` before/after each turn
+* *Input shields* catch PII before it reaches the model
+* *Output shields* catch the model from leaking sensitive data
+* This is a guardrail pattern -- the shield tells you what was detected and why
+* In production you'd combine regex PII + content safety (harassment, fraud, etc.)
+
+'''
+
+== Module 10 -- Evaluations
+
+[sidebar]
+****
+*What it teaches:* How to systematically test whether your agents give correct answers using *eval datasets*, *scoring functions*, and *LLM-as-judge*.
+****
+
+=== The Eval Pattern
+
+[source,text]
+----
+1. Register a dataset of questions + expected answers
+2. Define a scoring function (e.g., subset_of)
+3. Create a benchmark combining dataset + scoring
+4. Run the benchmark against the model
+5. Review results
+----
+
+=== Actual Output
+
+[source,text]
+----
+Using model: gemini/models/gemini-2.5-flash
+
+Question: Sally's mother has 4 children: Spring, Summer, Fall, and ____.
+          What is the fourth child's name?
+Answer:   The fourth child's name is Sally. ✓
+
+Question: A farmer has 17 sheep. All but 9 run away.
+          How many sheep does the farmer have left?
+Answer:   The farmer has 9 sheep left. ✓
+
+Question: A bat and a ball cost $1.10 in total. The bat costs $1.00 more
+          than the ball. How much does the ball cost?
+Answer:   The ball costs $0.05. ✓
+
+Accuracy: 3/3 (100%)
+----
+
+=== Talking Points
+
+* These "trick questions" are great for showing model reasoning quality
+* *Scoring is automated* -- no manual review needed for pass/fail
+* *LLM-as-judge* uses one model to evaluate another's output (useful when answers aren't exact matches)
+* This is how you catch regressions when you change models, prompts, or RAG configurations
+
+'''
+
+== Capstone -- Mortgage Approval Agent
+
+[sidebar]
+****
+*The scenario:* Build an AI underwriting assistant for ACME's mortgage division. The agent automates the *conditional approval loop* -- the most delay-prone step in mortgage processing.
+****
+
+=== The Conditional Approval Loop
+
+[source,text]
+----
+Conditional Approval Issued
+    → Agent identifies missing documents
+    → Agent notifies borrower ("Please submit W-2")
+    → Borrower uploads document
+    → Agent looks up policy rules via RAG
+    → Agent reviews document against policy
+    → Accept or Reject?
+        → ACCEPTED: mark condition SATISFIED
+        → REJECTED: notify borrower with reason, loop back
+    → All conditions satisfied?
+        → Yes: Clear to Close!
+        → No: continue loop
+----
+
+=== What the Agent Uses
+
+[cols="1,2", options="header"]
+|===
+| Capability | How It's Used
+
+| *Tools* (Module 04)
+| Look up applications, documents, conditions, credit reports
+
+| *RAG* (Module 08)
+| Search the lending policy for acceptance criteria
+
+| *Multi-Turn* (Module 05)
+| Remember context across the review process
+
+| *Safety* (Module 09)
+| Shield inputs/outputs for PII
+
+| *Evals* (Module 10)
+| Score agent answers against expected results
+|===
+
+=== Actual Output (Credit-Based Underwriting Review)
+
+[source,text]
+----
+Model: gemini/models/gemini-2.5-flash
+
+Query: Perform a credit-based underwriting review for mortgage application 1.
+------------------------------------------------------------
+📞 Function call: get_mortgage_application(application_id=1)
+📞 Function call: get_credit_report(customer_id="AROUT")
+📞 Function call: file_search(query="CONVENTIONAL loan policy requirements")
+
+Underwriting Review: Mortgage Application 1 (CONVENTIONAL Loan)
+
+Applicant Details:
+  * Loan Type: CONVENTIONAL
+  * Loan Amount: $320,000
+  * Qualifying Credit Score: 710
+  * Annual Income: $95,000
+  * Debt-to-Income (DTI) Ratio: 38.5%
+
+ACME Conventional Loan Policy Requirements:
+  * Minimum Credit Score: 620
+  * Maximum DTI Ratio: 43%
+  * Maximum Loan Amount: $647,200
+
+Recommendation: APPROVE
+
+Reasoning:
+  * Credit Score: 710 exceeds minimum of 620 ✓
+  * DTI Ratio: 38.5% within maximum of 43% ✓
+  * Loan Amount: $320,000 below limit of $647,200 ✓
+----
+
+=== Actual Output (Multi-Turn Mortgage Agent)
+
+[source,text]
+----
+[Turn 1] What are the outstanding conditions for mortgage application 1?
+  * COND-001: Provide most recent W-2 form (2025) from current employer
+  * COND-002: Provide bank statements from the last 60 days
+  * COND-003: Obtain independent property appraisal for 742 Evergreen Terrace
+
+[Turn 2] What documents have been submitted for that same application?
+  * DOC-001: 2025 W-2 form (Status: REQUESTED)
+  * DOC-002: Bank statement Aug 2025 (Status: UPLOADED)
+  * DOC-003: Pay stub Jan 2026 (Status: ACCEPTED)
+  * DOC-004: Property appraisal (Status: REQUESTED)
+  * DOC-005: Bank statement Dec 2024 (Status: REJECTED — older than 60 days)
+
+[Turn 3] Borrower uploaded a new bank statement dated February 2026.
+         Check the lending policy. Does this meet the criteria?
+  Based on ACME's lending policy, bank statements must be dated within 60 days.
+  A statement dated February 2026 meets this recency requirement.
+  Condition COND-002 updated to SATISFIED.
+
+[Turn 4] Send a notification to borrower AROUT listing remaining missing documents.
+  Notification sent to AROUT:
+  * Most recent W-2 form (2025) from current employer
+  * Independent property appraisal for 742 Evergreen Terrace
+----
+
+=== Talking Points
+
+* Each turn uses *multiple capabilities*: tools + RAG + conversation memory
+* Turn 3 demonstrates *cross-referencing*: agent checks the uploaded document date against the policy rule retrieved via RAG
+* Turn 4 shows the agent *taking action*: sending a notification to the borrower
+* This is a realistic enterprise workflow -- the agent replaces manual back-and-forth that typically takes days
+
+'''
+
+== Key Takeaway
+
+*The pattern is always the same:*
+
+[source,python]
+----
+# 1. Connect
+client = LlamaStackClient(base_url=...)
+
+# 2. Create an agent with capabilities
+agent = Agent(client, model=..., instructions=..., tools=[...])
+
+# 3. Start a conversation
+session_id = agent.create_session(...)
+
+# 4. Ask questions
+response = agent.create_turn(messages=[...], session_id=..., stream=True)
+----
+
+What changes between modules is *what goes into `tools`*:
+
+[cols="1,2", options="header"]
+|===
+| Module | Tools
+
+| Module 03 | No tools (just chat)
+| Module 04 | MCP tools (backend APIs)
+| Module 08 | `file_search` (RAG)
+| Capstone  | Client tools + `file_search` (everything combined)
+|===
+
+And what goes *around* the agent:
+
+[cols="1,2", options="header"]
+|===
+| Module | Wrapper
+
+| Module 05 | Same `session_id` across turns (multi-turn)
+| Module 09 | `run_shield()` before/after each turn (safety)
+| Module 10 | Benchmark + scoring (evaluation)
+|===

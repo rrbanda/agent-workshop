@@ -53,30 +53,43 @@ NOTE: If your Llama Stack server has a `llama-guard` provider instead, set `SHIE
 NOTE: *Working directory:* All commands in this module run from `09-safety-shields/`. +
 *Services needed:* Llama Stack server with a safety provider (default: `trustyai_fms`).
 
-=== 1. Register a Shield
+=== 1. Explore Available Providers (Optional)
+
+Before registering a shield, you can explore what your Llama Stack server has available:
+
+[source,bash]
+----
+python 1_list_models.py
+python 2_list_safety_providers.py
+python 3_list_shields.py
+----
+
+Script 2 lists safety providers -- verify that `trustyai_fms` (or your configured `SHIELD_PROVIDER`) appears in the output. If it does not, contact your workshop administrator.
+
+=== 2. Register a Shield
 
 [source,bash]
 ----
 python 4_register_shield.py
 ----
 
-=== 2. Test the Shield
+=== 3. Test the Shield
 
 [source,bash]
 ----
 python 5_test_shield.py
 ----
 
-Expected: "What is the weather?" passes; harmful content is flagged as a violation.
+Expected: clean content passes; messages containing PII (email, SSN, credit card) are flagged as violations.
 
-=== 3. Agent with Shields
+=== 4. Agent with Shields
 
 [source,bash]
 ----
 python 6_agent_shield.py
 ----
 
-The agent blocks unsafe inputs and filters unsafe outputs.
+The agent blocks inputs containing PII and filters unsafe outputs.
 
 == What You Should See
 
@@ -139,10 +152,9 @@ User: My SSN is 123-45-6789 and my email is user@example.com. Can you help with 
 == Key Takeaways
 
 * Shields provide content safety guardrails for LLM agents
-* `input_shields` check user messages before they reach the LLM
-* `output_shields` check LLM responses before they reach the user
-* The `trustyai_fms` provider uses regex-based PII detectors (email, SSN, credit card)
-* Alternative: the `llama-guard` provider uses an LLM for broader content safety classification
+* `client.safety.run_shield()` checks messages before and after agent turns
+* Shields are pluggable -- swap between TrustyAI (regex PII) and Llama Guard (LLM classification) by changing `SHIELD_PROVIDER` in `.env`
+* Shields are registered once and can be attached to any agent
 
 == Next Module
 

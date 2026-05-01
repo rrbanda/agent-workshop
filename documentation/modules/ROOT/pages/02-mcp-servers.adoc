@@ -85,6 +85,8 @@ oc new-build --binary --strategy=docker --name=customer-mcp
 oc start-build customer-mcp --from-dir=02-mcp-servers/customer-mcp/ --follow
 ----
 
+TIP: If you see `"customer-mcp" already exists`, skip `oc new-build` and just re-run `oc start-build`.
+
 === 2. Build Finance MCP
 
 [source,bash]
@@ -93,13 +95,17 @@ oc new-build --binary --strategy=docker --name=finance-mcp
 oc start-build finance-mcp --from-dir=02-mcp-servers/finance-mcp/ --follow
 ----
 
+TIP: If you see `"finance-mcp" already exists`, skip `oc new-build` and just re-run `oc start-build`.
+
 === 3. Deploy to OpenShift
 
 [source,bash]
 ----
-oc apply -f 02-mcp-servers/openshift/customer-mcp.yaml
-oc apply -f 02-mcp-servers/openshift/finance-mcp.yaml
+sed "s/NAMESPACE/$(oc project -q)/g" 02-mcp-servers/openshift/customer-mcp.yaml | oc apply -f -
+sed "s/NAMESPACE/$(oc project -q)/g" 02-mcp-servers/openshift/finance-mcp.yaml | oc apply -f -
 ----
+
+NOTE: The manifests contain a `NAMESPACE` placeholder in the image references. The `sed` command replaces it with your current OpenShift project name before applying.
 
 === 4. Get the Route URLs
 

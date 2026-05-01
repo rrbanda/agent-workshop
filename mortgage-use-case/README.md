@@ -102,7 +102,7 @@ flowchart LR
 In concrete terms, the mortgage agent autonomously:
 
 1. **Reads lending policy** (via RAG) to know what documents are required and their acceptance criteria
-2. **Checks application status** (via MCP tools) to see what conditions are outstanding
+2. **Checks application status** (via `@client_tool` functions) to see what conditions are outstanding
 3. **Retrieves credit reports** and analyzes scores, DTI, and debt against policy thresholds
 4. **Reviews documents** against policy rules (e.g., "bank statements must be within 60 days")
 5. **Accepts or rejects** documents with specific reasons
@@ -286,7 +286,7 @@ python 2_mortgage_agent_basic.py
 
 A simple agent with client-side tools (no RAG). Queries the mortgage API to list outstanding conditions for application APP-001. This uses `@client_tool` functions that call the Mortgage API directly via HTTP -- the same agent patterns from Module 04, but with tools executed client-side instead of via MCP.
 
-**Concepts applied:** Agent creation, MCP tool binding, tool calling (from Modules 03-04)
+**Concepts applied:** Agent creation, client tool binding, tool calling (from Modules 03-04)
 
 > [!TIP]
 > **Try it yourself:** Open `2_mortgage_agent_basic.py` and change the query to ask about application APP-002 instead. APP-002 is an FHA loan still in underwriting -- how does the agent's response differ from APP-001's conditional approval?
@@ -297,14 +297,14 @@ A simple agent with client-side tools (no RAG). Queries the mortgage API to list
 python 3_mortgage_agent_with_rag.py
 ```
 
-Adds RAG (`file_search`) alongside MCP tools. The agent can now:
+Adds RAG (`file_search`) alongside client tools. The agent can now:
 - Look up policy requirements: "What documents are needed for a conventional loan?"
 - Cross-reference actual data with policy: "Does application 1 have all required documents?"
 
 **Concepts applied:** RAG with file_search, combining tools with file_search (from Module 08)
 
 > [!TIP]
-> **Try it yourself:** Write your own query that asks about VA loan document requirements. Does the agent use file_search, MCP tools, or both? Watch the tool calls in the output to see the agent's reasoning.
+> **Try it yourself:** Write your own query that asks about VA loan document requirements. Does the agent use file_search, client tools, or both? Watch the tool calls in the output to see the agent's reasoning.
 
 ### Step 4: Document Review Agent
 
@@ -470,7 +470,7 @@ APP-001 is the primary scenario for the agent scripts -- it has open conditions 
 
 ## What's Next
 
-You now have a complete agent stack: REST API, MCP tools, Agent with RAG, safety shields, and evaluation. Here are ways to extend this or apply it to your own domain.
+You now have a complete agent stack: REST API, client tools, Agent with RAG, safety shields, and evaluation. Here are ways to extend this or apply it to your own domain.
 
 **Extend the mortgage agent:**
 

@@ -22,7 +22,7 @@ import os
 import sys
 import logging
 from dotenv import load_dotenv
-from llama_stack_client import LlamaStackClient, Agent
+from llama_stack_client import LlamaStackClient
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
@@ -30,7 +30,7 @@ logging.getLogger("llama_stack_client").setLevel(logging.WARNING)
 load_dotenv()
 
 sys.path.insert(0, os.path.dirname(__file__))
-from mortgage_client_tools import ALL_TOOLS
+from mortgage_client_tools import ALL_TOOLS, ChatCompletionAgent
 
 LLAMA_STACK_BASE_URL = os.getenv("LLAMA_STACK_BASE_URL")
 if not LLAMA_STACK_BASE_URL:
@@ -52,7 +52,7 @@ print(f"Model: {INFERENCE_MODEL}")
 print(f"Vector store: {vector_store.id}")
 print("=" * 60)
 
-agent = Agent(
+agent = ChatCompletionAgent(
     client,
     model=INFERENCE_MODEL,
     instructions=(
