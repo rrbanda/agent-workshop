@@ -72,6 +72,9 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="workshop-walkthrough.html">Presenter Walkthrough</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="index.html">Welcome</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -297,19 +300,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>This creates a hybrid vector store, uploads the ACME HR benefits document, and chunks it with static chunking (100 tokens, 10 overlap).</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<strong>Provider note:</strong> The script specifies <code>provider_id: "faiss"</code> for the vector store. If your Llama Stack server only has <code>milvus</code>, change the <code>provider_id</code> in <code>1_create_vector_store.py</code> (line 71) or add a <code>faiss</code> provider to your server config. When multiple <code>vector_io</code> providers exist, you must specify <code>provider_id</code> in <code>extra_body</code>.
-</td>
-</tr>
-</table>
+<p>This creates a hybrid vector store, uploads the ACME HR benefits document, and chunks it with static chunking (100 tokens, 10 overlap). The script auto-detects your server&#8217;s <code>vector_io</code> provider (FAISS or Milvus).</p>
 </div>
 </div>
 <div class="sect2">
@@ -454,6 +445,14 @@ Result 2: Score: 0.72  Content: ...retirement benefits include...</code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bonus_jupyter_notebook"><a class="anchor" href="#_bonus_jupyter_notebook"></a>Bonus: Jupyter Notebook</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This module also includes <code>llamastack-rag-demo.ipynb</code>, a Jupyter notebook that walks through the same RAG concepts interactively. It is optional&#8201;&#8212;&#8201;the Python scripts above cover the same material.</p>
+</div>
 </div>
 </div>
 <div class="sect1">

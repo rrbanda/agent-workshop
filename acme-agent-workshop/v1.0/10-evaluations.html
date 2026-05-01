@@ -72,6 +72,9 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="workshop-walkthrough.html">Presenter Walkthrough</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="index.html">Welcome</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -208,6 +211,8 @@
 <div class="sect1">
 <h2 id="_scripts"><a class="anchor" href="#_scripts"></a>Scripts</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_core_walkthrough"><a class="anchor" href="#_core_walkthrough"></a>Core Walkthrough</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -227,10 +232,6 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>2_register_dataset_basic_subset_of.py</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Register a simple Q&amp;A dataset</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2_register_dataset_agent_evals_customer.py</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Register ACME customer eval dataset</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>3_list_datasets.py</code></p></td>
@@ -262,6 +263,85 @@
 </tr>
 </tbody>
 </table>
+</div>
+<div class="sect2">
+<h3 id="_optional_exploration"><a class="anchor" href="#_optional_exploration"></a>Optional / Exploration</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Script</th>
+<th class="tableblock halign-left valign-top">What It Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0_chat_completions.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Test basic chat completions (sanity check)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0_chat_completions_candidate.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Test the candidate model directly</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0_chat_completions_judge.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Test the judge model directly</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2_register_dataset_agent_evals_customer.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Register an ACME customer eval dataset (alternative dataset)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>4_list_benchmarks.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List all registered benchmarks</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6_list_models.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List available models</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10_register_dataset.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Register a custom dataset</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>11_llm_as_judge_what_model_am_i.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Test LLM-as-judge with model identity questions</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_cleanup"><a class="anchor" href="#_cleanup"></a>Cleanup</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Script</th>
+<th class="tableblock halign-left valign-top">What It Does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2_unregister_dataset_basic_subset_of.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove the basic eval dataset</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2_unregister_dataset_agent_evals_customer.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove the customer eval dataset</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>5_unregister_benchmark.py</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remove a registered benchmark</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -305,7 +385,7 @@ python 7_execute_eval.py</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Script 7 will print a job ID when it completes (typically <code>0</code> for the first eval run). Copy it and set it before running script 8:</p>
+<p>Script 7 will print a job ID when it completes. Look for a line like <code>Eval job created: job_id=0</code> in the output. Set this value before running script 8:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -313,14 +393,14 @@ python 7_execute_eval.py</code></pre>
 python 8_review_eval_job.py</code></pre>
 </div>
 </div>
-<div class="admonitionblock tip">
+<div class="admonitionblock important">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
+<i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-The job ID is printed in the output of script 7 as <code>Eval job started: 0</code>. Use whatever value appears after the colon.
+You <strong>must</strong> export <code>LLAMA_STACK_JOB_ID</code> before running script 8. The value is typically <code>0</code> for the first eval run, but always use whatever value script 7 printed. If you skip this step, script 8 will exit with an error.
 </td>
 </tr>
 </table>
@@ -372,7 +452,7 @@ Row scores:
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">Running eval for benchmark: my-basic-quality-benchmark
 Using candidate model: &lt;your-candidate-model&gt;
-Eval job started: 0</code></pre>
+Eval job created: job_id=0  status=...</code></pre>
 </div>
 </div>
 <div class="paragraph">

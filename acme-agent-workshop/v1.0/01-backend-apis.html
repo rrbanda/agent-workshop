@@ -72,6 +72,9 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="workshop-walkthrough.html">Presenter Walkthrough</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="index.html">Welcome</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -327,6 +330,18 @@ oc start-build customer-api --from-dir=01-backend-apis/customer-api/ --follow
 rm 01-backend-apis/customer-api/Dockerfile</code></pre>
 </div>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+If you see <code>"customer-api" already exists</code>, the build config was already created. You can skip <code>oc new-build</code> and just re-run the <code>cp</code>, <code>oc start-build</code>, and <code>rm</code> commands.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_2_build_the_finance_api"><a class="anchor" href="#_2_build_the_finance_api"></a>2. Build the Finance API</h3>
@@ -338,16 +353,31 @@ oc start-build finance-api --from-dir=01-backend-apis/finance-api/ --follow
 rm 01-backend-apis/finance-api/Dockerfile</code></pre>
 </div>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Same as above&#8201;&#8212;&#8201;if <code>"finance-api" already exists</code>, skip <code>oc new-build</code> and re-run only the build.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_3_deploy_to_openshift"><a class="anchor" href="#_3_deploy_to_openshift"></a>3. Deploy to OpenShift</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f 00-setup/admin/k8s/apis.yaml</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sed "s/NAMESPACE/$(oc project -q)/g" 00-setup/admin/k8s/apis.yaml | oc apply -f -</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This creates Deployments, Services, PostgreSQL instances, and Routes for both APIs. The databases are auto-populated with seed data on startup.</p>
+<p>The manifest contains a <code>NAMESPACE</code> placeholder in the image references. The <code>sed</code> command above replaces it with your current OpenShift project name before applying.</p>
+</div>
+<div class="paragraph">
+<p>This creates Deployments, Services, PostgreSQL instances, and Routes for the Customer and Finance APIs. Each API gets its own PostgreSQL database that is auto-populated with seed data on startup. (This same manifest also includes the Mortgage API used in the capstone&#8201;&#8212;&#8201;it is safe to apply now.)</p>
 </div>
 </div>
 <div class="sect2">

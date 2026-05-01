@@ -72,6 +72,9 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="workshop-walkthrough.html">Presenter Walkthrough</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="index.html">Welcome</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -272,7 +275,7 @@ flowchart LR
 <p><strong>Reads lending policy</strong> (via RAG) to know what documents are required and their acceptance criteria</p>
 </li>
 <li>
-<p><strong>Checks application status</strong> (via client tools) to see what conditions are outstanding</p>
+<p><strong>Checks application status</strong> (via <code>@client_tool</code> functions) to see what conditions are outstanding</p>
 </li>
 <li>
 <p><strong>Retrieves credit reports</strong> and analyzes scores, DTI, and debt against policy thresholds</p>
@@ -457,6 +460,18 @@ flowchart TD
     DB --> Conds
     DB --> Credits
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>Why client-side tools?</strong> The capstone uses <code>@client_tool</code> functions (in <code>mortgage_client_tools.py</code>) that call the Mortgage API directly via HTTP from your machine, rather than MCP tools proxied through Llama Stack. This avoids issues with streaming responses and parallel tool calls that can occur when Llama Stack proxies MCP calls. The agent still uses Llama Stack for inference, RAG, and safety&#8201;&#8212;&#8201;only the tool execution happens client-side. In Modules 03-05, you used MCP tools via Llama Stack to learn that pattern; here, you learn the alternative <code>@client_tool</code> pattern.
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -468,7 +483,7 @@ flowchart TD
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Module 00</strong>&#8201;&#8212;&#8201;Environment setup (Python 3.12, Java 21, PostgreSQL)</p>
+<p><strong>Module 00</strong>&#8201;&#8212;&#8201;Environment setup (Python 3.12, Java 21)</p>
 </li>
 <li>
 <p><strong>Module 01</strong>&#8201;&#8212;&#8201;Understand Spring Boot API patterns</p>
@@ -543,11 +558,11 @@ rm mortgage-use-case/mortgage-api/Dockerfile</code></pre>
 <h3 id="_2_deploy_to_openshift"><a class="anchor" href="#_2_deploy_to_openshift"></a>2. Deploy to OpenShift</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc apply -f 00-setup/admin/k8s/apis.yaml</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sed "s/NAMESPACE/$(oc project -q)/g" 00-setup/admin/k8s/apis.yaml | oc apply -f -</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This creates the Deployment, Service, PostgreSQL instance, and Route for the Mortgage API. The database is auto-populated with seed data on startup (4 applications, 12 documents, 4 conditions, 6 credit reports).</p>
+<p>This is the same manifest you applied in Module 01 (with the <code>NAMESPACE</code> placeholder replaced by your current project). It covers all three APIs (Customer, Finance, and Mortgage). Re-applying it is safe&#8201;&#8212;&#8201;Kubernetes will only create or update resources that changed. The Mortgage API&#8217;s PostgreSQL database is auto-populated with seed data on startup (4 applications, 12 documents, 4 conditions, 6 credit reports).</p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -594,7 +609,7 @@ The capstone agent scripts use <strong>client-side tools</strong> (<code>@client
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">oc new-build --binary --strategy=docker --name=mortgage-mcp
 oc start-build mortgage-mcp --from-dir=mortgage-use-case/mortgage-mcp/ --follow
-oc apply -f mortgage-use-case/openshift/mortgage-mcp.yaml
+sed "s/NAMESPACE/$(oc project -q)/g" mortgage-use-case/openshift/mortgage-mcp.yaml | oc apply -f -
 echo "MORTGAGE_MCP_SERVER_URL=https://$(oc get route mcp-mortgage-route -o jsonpath='{.spec.host}')/mcp"</code></pre>
 </div>
 </div>
@@ -901,7 +916,7 @@ Requires <code>SHIELD_ID</code> in your <code>.env</code> (registered in Module 
 </table>
 </div>
 <div class="paragraph">
-<p>Wraps the mortgage agent with Llama Guard input/output safety checks. Tests three queries:</p>
+<p>Wraps the mortgage agent with input/output safety checks. Tests three queries:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -1042,8 +1057,11 @@ Requires <code>SHIELD_ID</code> in your <code>.env</code> (registered in Module 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_mcp_tools_reference"><a class="anchor" href="#_mcp_tools_reference"></a>MCP Tools Reference</h2>
+<h2 id="_tools_reference"><a class="anchor" href="#_tools_reference"></a>Tools Reference</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>These tools are implemented as <code>@client_tool</code> functions in <code>mortgage_client_tools.py</code>, calling the Mortgage API directly via HTTP. They follow the same signatures as the MCP tools but execute client-side.</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 40%;">

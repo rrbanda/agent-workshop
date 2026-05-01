@@ -71,6 +71,9 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="workshop-walkthrough.html">Presenter Walkthrough</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="index.html">Welcome</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -448,6 +451,11 @@ In an <strong>instructor-led workshop</strong>, your instructor provides the rem
 <td class="tableblock halign-left valign-top"><p class="tableblock">Model being evaluated</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>vllm-inference/gpt-oss-120b</code></p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LLAMA_STACK_BENCHMARK_PROVIDER_ID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Benchmark provider identifier</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>meta-reference</code></p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -577,8 +585,12 @@ In an <strong>instructor-led workshop</strong>, your instructor provides the rem
 <td class="tableblock halign-left valign-top"><p class="tableblock">The MaaS inference backend has rate limits. Wait 30-60 seconds and retry. For eval scripts, the built-in retry logic handles this automatically.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database errors</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Verify PostgreSQL is running and databases exist (<code>createdb acme_customer</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"already exists"</code> on <code>oc new-build</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The build config already exists. Skip <code>oc new-build</code> and just re-run <code>oc start-build</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>oc</code> command not found</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Install the OpenShift CLI from <a href="https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/" target="_blank" rel="noopener">mirror.openshift.com</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Import errors</p></td>

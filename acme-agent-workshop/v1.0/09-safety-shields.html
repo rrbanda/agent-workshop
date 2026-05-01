@@ -72,6 +72,9 @@
   <li class="nav-item" data-depth="0">
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="workshop-walkthrough.html">Presenter Walkthrough</a>
+  </li>
+  <li class="nav-item" data-depth="1">
     <a class="nav-link" href="index.html">Welcome</a>
   </li>
   <li class="nav-item" data-depth="1">
@@ -280,7 +283,23 @@ If your Llama Stack server has a <code>llama-guard</code> provider instead, set 
 </table>
 </div>
 <div class="sect2">
-<h3 id="_1_register_a_shield"><a class="anchor" href="#_1_register_a_shield"></a>1. Register a Shield</h3>
+<h3 id="_1_explore_available_providers_optional"><a class="anchor" href="#_1_explore_available_providers_optional"></a>1. Explore Available Providers (Optional)</h3>
+<div class="paragraph">
+<p>Before registering a shield, you can explore what your Llama Stack server has available:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 1_list_models.py
+python 2_list_safety_providers.py
+python 3_list_shields.py</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Script 2 lists safety providers&#8201;&#8212;&#8201;verify that <code>trustyai_fms</code> (or your configured <code>SHIELD_PROVIDER</code>) appears in the output. If it does not, contact your workshop administrator.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_register_a_shield"><a class="anchor" href="#_2_register_a_shield"></a>2. Register a Shield</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 4_register_shield.py</code></pre>
@@ -288,25 +307,25 @@ If your Llama Stack server has a <code>llama-guard</code> provider instead, set 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_2_test_the_shield"><a class="anchor" href="#_2_test_the_shield"></a>2. Test the Shield</h3>
+<h3 id="_3_test_the_shield"><a class="anchor" href="#_3_test_the_shield"></a>3. Test the Shield</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 5_test_shield.py</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Expected: "What is the weather?" passes; harmful content is flagged as a violation.</p>
+<p>Expected: clean content passes; messages containing PII (email, SSN, credit card) are flagged as violations.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_3_agent_with_shields"><a class="anchor" href="#_3_agent_with_shields"></a>3. Agent with Shields</h3>
+<h3 id="_4_agent_with_shields"><a class="anchor" href="#_4_agent_with_shields"></a>4. Agent with Shields</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python 6_agent_shield.py</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The agent blocks unsafe inputs and filters unsafe outputs.</p>
+<p>The agent blocks inputs containing PII and filters unsafe outputs.</p>
 </div>
 </div>
 </div>
@@ -407,16 +426,13 @@ User: My SSN is 123-45-6789 and my email is user@example.com. Can you help with 
 <p>Shields provide content safety guardrails for LLM agents</p>
 </li>
 <li>
-<p><code>input_shields</code> check user messages before they reach the LLM</p>
+<p><code>client.safety.run_shield()</code> checks messages before and after agent turns</p>
 </li>
 <li>
-<p><code>output_shields</code> check LLM responses before they reach the user</p>
+<p>Shields are pluggable&#8201;&#8212;&#8201;swap between TrustyAI (regex PII) and Llama Guard (LLM classification) by changing <code>SHIELD_PROVIDER</code> in <code>.env</code></p>
 </li>
 <li>
-<p>The <code>trustyai_fms</code> provider uses regex-based PII detectors (email, SSN, credit card)</p>
-</li>
-<li>
-<p>Alternative: the <code>llama-guard</code> provider uses an LLM for broader content safety classification</p>
+<p>Shields are registered once and can be attached to any agent</p>
 </li>
 </ul>
 </div>
